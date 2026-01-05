@@ -85,12 +85,7 @@ export function HomeContent({ tools, categories }: HomeContentProps) {
         </div>
       </div>
 
-      {/* Results count */}
-      {(searchQuery || selectedCategory || showFavoritesOnly) && (
-        <div className="text-center text-sm text-muted-foreground">
-          Found {filteredTools.length} tool{filteredTools.length !== 1 ? 's' : ''}
-        </div>
-      )}
+     
 
       {/* Favorites section (always show if has favorites and not filtering) */}
       {favoriteTools.length > 0 && !selectedCategory && !searchQuery && !showFavoritesOnly && (
