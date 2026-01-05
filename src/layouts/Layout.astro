@@ -21,6 +21,16 @@ const {
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
+
+    <!-- Prevent dark mode flicker - must run before page renders -->
+    <script is:inline>
+      (function() {
+        const theme = localStorage.getItem('devtoys:theme');
+        if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div class="min-h-screen bg-background">
