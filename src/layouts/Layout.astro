@@ -1,0 +1,57 @@
+---
+import '@/styles/global.css';
+import { ThemeToggle } from '@/components/preact/ThemeToggle';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'A collection of developer tools for everyday tasks'
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="min-h-screen bg-background">
+      <!-- Header -->
+      <header class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div class="container flex h-16 items-center justify-between">
+          <div class="flex items-center gap-2">
+            <a href="/" class="text-2xl font-bold">DevToys</a>
+          </div>
+          <ThemeToggle client:load />
+        </div>
+      </header>
+
+      <!-- Main content -->
+      <main class="container py-8">
+        <slot />
+      </main>
+
+      <!-- Footer -->
+      <footer class="border-t py-6 mt-12">
+        <div class="container text-center text-sm text-muted-foreground">
+          <p>Built with Astro, Preact, and Tailwind CSS</p>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      import { initializeTheme } from '@/lib/utils/storage';
+
+      // Initialize theme on page load
+      initializeTheme();
+    </script>
+  </body>
+</html>

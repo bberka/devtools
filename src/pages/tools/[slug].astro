@@ -1,0 +1,44 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { TOOLS } from '@/lib/utils/tools-config';
+import { Button } from '@/components/preact/ui/button';
+import { ArrowLeft } from 'lucide-preact';
+
+export async function getStaticPaths() {
+  return TOOLS.map((tool) => ({
+    params: { slug: tool.id },
+    props: { tool },
+  }));
+}
+
+const { tool } = Astro.props;
+
+if (!tool) {
+  return Astro.redirect('/404');
+}
+---
+
+<Layout title={`${tool.name} - DevToys`} description={tool.description}>
+  <div class="max-w-6xl mx-auto space-y-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <a href="/">
+          <Button variant="ghost" size="icon" client:load>
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+        </a>
+        <div>
+          <h1 class="text-3xl font-bold">{tool.name}</h1>
+          <p class="text-muted-foreground mt-1">{tool.description}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Placeholder for tool implementation -->
+    <div class="border border-dashed rounded-lg p-12 text-center text-muted-foreground">
+      <p class="text-lg">Tool implementation coming soon...</p>
+      <p class="text-sm mt-2">This will be implemented in Phase 2-5</p>
+    </div>
+  </div>
+</Layout>

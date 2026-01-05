@@ -1,0 +1,9 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { HomeContent } from '@/components/preact/HomeContent';
+import { TOOLS, CATEGORIES } from '@/lib/utils/tools-config';
+---
+
+<Layout title="DevToys - Developer Tools">
+  <HomeContent client:load tools={TOOLS} categories={CATEGORIES} />
+</Layout>
