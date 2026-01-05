@@ -1,6 +1,6 @@
 import type { GlobalSettings, ToolSettings } from '../types';
 
-const STORAGE_PREFIX = 'devtoys';
+const STORAGE_PREFIX = 'dev-toolbox';
 
 // Keys
 const KEYS = {

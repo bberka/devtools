@@ -78,7 +78,7 @@
 
 ```
 ┌─────────────────────────────────────────────┐
-│  DevToys  [Search bar...]     [Settings ⚙] │
+│  DevTools  [Search bar...]     [Settings ⚙] │
 ├─────────────────────────────────────────────┤
 │                                             │
 │  Filters: [⭐ Favorites] [🔄 Converters]   │
@@ -449,19 +449,19 @@ Core components (adapt to Preact):
 // localStorage schema
 
 // Global
-localStorage.setItem("devtoys:theme", "dark");
+localStorage.setItem("devtools:theme", "dark");
 localStorage.setItem(
-  "devtoys:favorites",
+  "devtools:favorites",
   JSON.stringify(["base64", "json-format"])
 );
 localStorage.setItem(
-  "devtoys:recent",
+  "devtools:recent",
   JSON.stringify(["uuid", "hash", "base64"])
 );
 
 // Per-tool settings
 localStorage.setItem(
-  "devtoys:tool:markdown-pdf",
+  "devtools:tool:markdown-pdf",
   JSON.stringify({
     method: "jspdf",
     pageSize: "A4",
@@ -471,7 +471,7 @@ localStorage.setItem(
 );
 
 localStorage.setItem(
-  "devtoys:tool:image-converter",
+  "devtools:tool:image-converter",
   JSON.stringify({
     defaultFormat: "png",
     defaultQuality: 90,
