@@ -19,7 +19,7 @@ export function Slider({ value, onChange, min, max, step = 1, className }: Slide
         step={step}
         value={value}
         onInput={(e) => onChange(parseInt((e.target as HTMLInputElement).value))}
-        className="flex-1 h-2 bg-secondary rounded-lg appearance-none cursor-pointer"
+        className="flex-1 h-2 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary"
       />
       <span className="text-sm font-medium w-12 text-right">{value}</span>
     </div>
