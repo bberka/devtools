@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils/cn';
 interface CategoryFilterProps {
   selectedCategory: ToolCategory | null;
   showFavoritesOnly: boolean;
+  favoritesCount: number;
   onCategoryChange: (category: ToolCategory | null) => void;
   onFavoritesToggle: () => void;
 }
@@ -15,6 +16,7 @@ interface CategoryFilterProps {
 export function CategoryFilter({
   selectedCategory,
   showFavoritesOnly,
+  favoritesCount,
   onCategoryChange,
   onFavoritesToggle,
 }: CategoryFilterProps) {
@@ -31,6 +33,9 @@ export function CategoryFilter({
       >
         <Star className={cn('h-4 w-4', showFavoritesOnly && 'fill-current')} />
         Favorites
+        <Badge variant="secondary" className="ml-1">
+          {favoritesCount}
+        </Badge>
       </Button>
 
       {/* Category filters */}

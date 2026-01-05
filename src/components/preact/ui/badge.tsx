@@ -1,4 +1,5 @@
 import { type ComponentChildren } from 'preact';
+import { type JSX } from 'preact';
 import { type VariantProps, cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils/cn';
 
@@ -19,10 +20,10 @@ const badgeVariants = cva(
   }
 );
 
-export interface BadgeProps
-  extends JSX.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof badgeVariants> {
+export interface BadgeProps extends VariantProps<typeof badgeVariants> {
   children?: ComponentChildren;
+  className?: string;
+  onClick?: JSX.MouseEventHandler<HTMLDivElement>;
 }
 
 export function Badge({ className, variant, ...props }: BadgeProps) {

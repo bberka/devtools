@@ -23,6 +23,23 @@ export function HomeContent({ tools, categories }: HomeContentProps) {
     setFavorites(getFavorites());
   }, []);
 
+  // Handle favorites toggle - clears category when favorites is selected
+  const handleFavoritesToggle = () => {
+    const newShowFavorites = !showFavoritesOnly;
+    setShowFavoritesOnly(newShowFavorites);
+    if (newShowFavorites) {
+      setSelectedCategory(null); // Clear category when showing favorites
+    }
+  };
+
+  // Handle category change - clears favorites when category is selected
+  const handleCategoryChange = (category: ToolCategory | null) => {
+    setSelectedCategory(category);
+    if (category !== null) {
+      setShowFavoritesOnly(false); // Clear favorites when selecting a category
+    }
+  };
+
   // Filtered tools
   const filteredTools = useMemo(() => {
     return filterTools(searchQuery, selectedCategory, showFavoritesOnly, favorites);
@@ -61,8 +78,9 @@ export function HomeContent({ tools, categories }: HomeContentProps) {
           <CategoryFilter
             selectedCategory={selectedCategory}
             showFavoritesOnly={showFavoritesOnly}
-            onCategoryChange={setSelectedCategory}
-            onFavoritesToggle={() => setShowFavoritesOnly(!showFavoritesOnly)}
+            favoritesCount={favorites.length}
+            onCategoryChange={handleCategoryChange}
+            onFavoritesToggle={handleFavoritesToggle}
           />
         </div>
       </div>
