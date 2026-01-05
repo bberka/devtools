@@ -1,4 +1,4 @@
-import { useState } from 'preact/hooks';
+import { useState, useEffect } from 'preact/hooks';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Slider } from '../ui/slider';
@@ -6,7 +6,7 @@ import { Checkbox } from '../ui/checkbox';
 import { Copy, Check } from 'lucide-preact';
 
 export function PasswordGenerator() {
-  const [length, setLength] = useState(16);
+  const [length, setLength] = useState(12);
   const [uppercase, setUppercase] = useState(true);
   const [lowercase, setLowercase] = useState(true);
   const [numbers, setNumbers] = useState(true);
@@ -41,6 +41,11 @@ export function PasswordGenerator() {
 
     setPassword(result);
   };
+
+  // Generate password on component mount
+  useEffect(() => {
+    generatePassword();
+  }, []);
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(password);
