@@ -4,6 +4,17 @@ import { TOOLS } from '@/lib/utils/tools-config';
 import { Button } from '@/components/preact/ui/button';
 import { ArrowLeft } from 'lucide-preact';
 
+// Import Phase 2 tools
+import { Base64Converter } from '@/components/preact/tools/Base64Converter';
+import { UrlEncoder } from '@/components/preact/tools/UrlEncoder';
+import { HtmlEncoder } from '@/components/preact/tools/HtmlEncoder';
+import { NumberBaseConverter } from '@/components/preact/tools/NumberBaseConverter';
+import { UuidGenerator } from '@/components/preact/tools/UuidGenerator';
+import { TimestampConverter } from '@/components/preact/tools/TimestampConverter';
+import { LoremIpsumGenerator } from '@/components/preact/tools/LoremIpsumGenerator';
+import { PasswordGenerator } from '@/components/preact/tools/PasswordGenerator';
+import { HashGenerator } from '@/components/preact/tools/HashGenerator';
+
 export async function getStaticPaths() {
   return TOOLS.map((tool) => ({
     params: { slug: tool.id },
@@ -16,6 +27,19 @@ const { tool } = Astro.props;
 if (!tool) {
   return Astro.redirect('/404');
 }
+
+// List of implemented tool IDs (Phase 2)
+const implementedTools = [
+  'base64-converter',
+  'url-encoder',
+  'html-encoder',
+  'number-base-converter',
+  'uuid-generator',
+  'timestamp-converter',
+  'lorem-ipsum',
+  'password-generator',
+  'hash-generator',
+];
 ---
 
 <Layout title={`${tool.name} - DevToys`} description={tool.description}>
@@ -35,10 +59,23 @@ if (!tool) {
       </div>
     </div>
 
-    <!-- Placeholder for tool implementation -->
-    <div class="border border-dashed rounded-lg p-12 text-center text-muted-foreground">
-      <p class="text-lg">Tool implementation coming soon...</p>
-      <p class="text-sm mt-2">This will be implemented in Phase 2-5</p>
-    </div>
+    <!-- Tool Implementation -->
+    {tool.id === 'base64-converter' && <Base64Converter client:load />}
+    {tool.id === 'url-encoder' && <UrlEncoder client:load />}
+    {tool.id === 'html-encoder' && <HtmlEncoder client:load />}
+    {tool.id === 'number-base-converter' && <NumberBaseConverter client:load />}
+    {tool.id === 'uuid-generator' && <UuidGenerator client:load />}
+    {tool.id === 'timestamp-converter' && <TimestampConverter client:load />}
+    {tool.id === 'lorem-ipsum' && <LoremIpsumGenerator client:load />}
+    {tool.id === 'password-generator' && <PasswordGenerator client:load />}
+    {tool.id === 'hash-generator' && <HashGenerator client:load />}
+
+    <!-- Placeholder for unimplemented tools -->
+    {!implementedTools.includes(tool.id) && (
+      <div class="border border-dashed rounded-lg p-12 text-center text-muted-foreground">
+        <p class="text-lg">Tool implementation coming soon...</p>
+        <p class="text-sm mt-2">This will be implemented in Phase 3-5</p>
+      </div>
+    )}
   </div>
 </Layout>
