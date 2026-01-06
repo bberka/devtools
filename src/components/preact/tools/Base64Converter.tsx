@@ -1,36 +1,57 @@
-import { useState } from 'preact/hooks';
+import { useState, useEffect } from 'preact/hooks';
 import { Button } from '../ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Textarea } from '../ui/textarea';
-import { Copy, Check } from 'lucide-preact';
+import { Copy, Check, Trash2, ArrowLeftRight } from 'lucide-preact';
 
 export function Base64Converter() {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [mode, setMode] = useState<'encode' | 'decode'>('encode');
+  const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
 
+  useEffect(() => {
+    handleConvert();
+  }, [input, mode]);
+
   const handleConvert = () => {
+    if (!input.trim()) {
+      setOutput('');
+      setError('');
+      return;
+    }
+
     try {
       if (mode === 'encode') {
         setOutput(btoa(input));
       } else {
         setOutput(atob(input));
       }
-    } catch (error) {
-      setOutput(`Error: ${(error as Error).message}`);
+      setError('');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Conversion failed');
+      setOutput('');
     }
   };
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(output);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    if (output) {
+      await navigator.clipboard.writeText(output);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const handleSwap = () => {
+    setInput(output);
+    setMode(mode === 'encode' ? 'decode' : 'encode');
   };
 
   const handleClear = () => {
     setInput('');
     setOutput('');
+    setError('');
   };
 
   return (
@@ -55,40 +76,59 @@ export function Base64Converter() {
       <Card>
         <CardHeader>
           <CardTitle>Input</CardTitle>
+          <CardDescription>
+            {mode === 'encode' ? 'Enter text to encode' : 'Enter Base64 to decode'}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Textarea
             value={input}
             onInput={(e) => setInput((e.target as HTMLTextAreaElement).value)}
-            placeholder={mode === 'encode' ? 'Enter text to encode...' : 'Enter Base64 to decode...'}
+            placeholder={mode === 'encode' ? 'Type here...' : 'Paste Base64 here...'}
             rows={8}
             className="font-mono"
           />
         </CardContent>
       </Card>
 
-      {/* Action Buttons */}
-      <div className="flex gap-2">
-        <Button onClick={handleConvert} className="flex-1">
-          {mode === 'encode' ? 'Encode' : 'Decode'}
-        </Button>
-        <Button variant="outline" onClick={handleClear}>
-          Clear
-        </Button>
-      </div>
+      {error && (
+        <div className="bg-destructive/10 text-destructive px-4 py-3 rounded-md text-sm">
+          <strong>Error:</strong> {error}
+        </div>
+      )}
 
       {/* Output Section */}
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardHeader>
           <CardTitle>Output</CardTitle>
-          <Button variant="ghost" size="icon" onClick={handleCopy} disabled={!output}>
-            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-          </Button>
+          <CardDescription>
+            {output ? `${output.length} characters` : 'Result will appear here automatically'}
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <pre className="w-full min-h-[200px] p-3 rounded-md bg-muted font-mono text-sm overflow-x-auto whitespace-pre-wrap break-all">
-            {output || 'Output will appear here...'}
-          </pre>
+          <div className="space-y-4">
+            <Textarea
+              value={output}
+              readOnly
+              placeholder="Output will appear here..."
+              rows={8}
+              className="font-mono"
+            />
+            <div className="flex gap-2">
+              <Button onClick={handleCopy} disabled={!output} size="sm">
+                {copied ? <Check className="h-4 w-4 mr-2" /> : <Copy className="h-4 w-4 mr-2" />}
+                {copied ? 'Copied!' : 'Copy'}
+              </Button>
+              <Button onClick={handleSwap} disabled={!output} variant="outline" size="sm">
+                <ArrowLeftRight className="h-4 w-4 mr-2" />
+                Swap
+              </Button>
+              <Button onClick={handleClear} variant="outline" size="sm">
+                <Trash2 className="h-4 w-4 mr-2" />
+                Clear
+              </Button>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>
