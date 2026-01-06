@@ -15,6 +15,14 @@ import { LoremIpsumGenerator } from '@/components/preact/tools/LoremIpsumGenerat
 import { PasswordGenerator } from '@/components/preact/tools/PasswordGenerator';
 import { HashGenerator } from '@/components/preact/tools/HashGenerator';
 
+// Import Phase 3 tools
+import { JsonFormatter } from '@/components/preact/tools/JsonFormatter';
+import { XmlFormatter } from '@/components/preact/tools/XmlFormatter';
+import { SqlFormatter } from '@/components/preact/tools/SqlFormatter';
+import { JwtDecoder } from '@/components/preact/tools/JwtDecoder';
+import { ColorConverter } from '@/components/preact/tools/ColorConverter';
+import { CaseConverter } from '@/components/preact/tools/CaseConverter';
+
 export async function getStaticPaths() {
   return TOOLS.map((tool) => ({
     params: { slug: tool.id },
@@ -28,7 +36,7 @@ if (!tool) {
   return Astro.redirect('/404');
 }
 
-// List of implemented tool IDs (Phase 2)
+// List of implemented tool IDs (Phase 2 & 3)
 const implementedTools = [
   'base64-converter',
   'url-encoder',
@@ -39,6 +47,12 @@ const implementedTools = [
   'lorem-ipsum',
   'password-generator',
   'hash-generator',
+  'json-formatter',
+  'xml-formatter',
+  'sql-formatter',
+  'jwt-decoder',
+  'color-converter',
+  'case-converter',
 ];
 ---
 
@@ -69,12 +83,18 @@ const implementedTools = [
     {tool.id === 'lorem-ipsum' && <LoremIpsumGenerator client:load />}
     {tool.id === 'password-generator' && <PasswordGenerator client:load />}
     {tool.id === 'hash-generator' && <HashGenerator client:load />}
+    {tool.id === 'json-formatter' && <JsonFormatter client:load />}
+    {tool.id === 'xml-formatter' && <XmlFormatter client:load />}
+    {tool.id === 'sql-formatter' && <SqlFormatter client:load />}
+    {tool.id === 'jwt-decoder' && <JwtDecoder client:load />}
+    {tool.id === 'color-converter' && <ColorConverter client:load />}
+    {tool.id === 'case-converter' && <CaseConverter client:load />}
 
     <!-- Placeholder for unimplemented tools -->
     {!implementedTools.includes(tool.id) && (
       <div class="border border-dashed rounded-lg p-12 text-center text-muted-foreground">
         <p class="text-lg">Tool implementation coming soon...</p>
-        <p class="text-sm mt-2">This will be implemented in Phase 3-5</p>
+        <p class="text-sm mt-2">This will be implemented in Phase 4-5</p>
       </div>
     )}
   </div>

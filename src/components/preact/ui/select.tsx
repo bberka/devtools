@@ -1,12 +1,14 @@
 import { forwardRef } from 'preact/compat';
+import type { ComponentChildren } from 'preact';
 import { cn } from '@/lib/utils/cn';
 
-export interface SelectProps extends JSX.HTMLAttributes<HTMLSelectElement> {
-  options: { value: string; label: string }[];
+export interface SelectProps extends Omit<preact.JSX.HTMLAttributes<HTMLSelectElement>, 'ref'> {
+  options?: { value: string; label: string }[];
+  children?: ComponentChildren;
 }
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ className, options, ...props }, ref) => {
+  ({ className, options, children, ...props }, ref) => {
     return (
       <select
         className={cn(
@@ -16,11 +18,13 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         ref={ref}
         {...props}
       >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
+        {options
+          ? options.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))
+          : children}
       </select>
     );
   }
