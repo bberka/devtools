@@ -29,6 +29,13 @@ import { XmlValidator } from '@/components/preact/tools/XmlValidator';
 import { RegexTester } from '@/components/preact/tools/RegexTester';
 import { CronParser } from '@/components/preact/tools/CronParser';
 
+// Import Phase 5 tools (Advanced Converters & Text Tools)
+import { JsonYamlXmlConverter } from '@/components/preact/tools/JsonYamlXmlConverter';
+import { MarkdownPreviewer } from '@/components/preact/tools/MarkdownPreviewer';
+import { TextDiff } from '@/components/preact/tools/TextDiff';
+import { ImageConverter } from '@/components/preact/tools/ImageConverter';
+import { MarkdownToPdf } from '@/components/preact/tools/MarkdownToPdf';
+
 export async function getStaticPaths() {
   return TOOLS.map((tool) => ({
     params: { slug: tool.id },
@@ -42,7 +49,7 @@ if (!tool) {
   return Astro.redirect('/404');
 }
 
-// List of implemented tool IDs (Phase 2, 3 & 4)
+// List of implemented tool IDs (Phase 2, 3, 4 & 5)
 const implementedTools = [
   'base64-converter',
   'url-encoder',
@@ -63,6 +70,11 @@ const implementedTools = [
   'xml-validator',
   'regex-tester',
   'cron-parser',
+  'json-yaml-xml',
+  'markdown-preview',
+  'text-diff',
+  'image-converter',
+  'markdown-to-pdf',
 ];
 ---
 
@@ -103,6 +115,11 @@ const implementedTools = [
     {tool.id === 'xml-validator' && <XmlValidator client:load />}
     {tool.id === 'regex-tester' && <RegexTester client:load />}
     {tool.id === 'cron-parser' && <CronParser client:load />}
+    {tool.id === 'json-yaml-xml' && <JsonYamlXmlConverter client:load />}
+    {tool.id === 'markdown-preview' && <MarkdownPreviewer client:load />}
+    {tool.id === 'text-diff' && <TextDiff client:load />}
+    {tool.id === 'image-converter' && <ImageConverter client:load />}
+    {tool.id === 'markdown-to-pdf' && <MarkdownToPdf client:load />}
 
     <!-- Placeholder for unimplemented tools -->
     {!implementedTools.includes(tool.id) && (

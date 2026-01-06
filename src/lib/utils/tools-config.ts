@@ -114,6 +114,22 @@ export const TOOLS: Tool[] = [
     icon: 'Code2',
     keywords: ['html', 'encode', 'decode', 'entities'],
   },
+  {
+    id: 'color-converter',
+    name: 'Color Converter',
+    description: 'Convert between HEX, RGB, HSL color formats',
+    category: 'converters',
+    icon: 'Palette',
+    keywords: ['color', 'hex', 'rgb', 'hsl', 'convert'],
+  },
+  {
+    id: 'case-converter',
+    name: 'Case Converter',
+    description: 'Transform text case (camelCase, snake_case, etc.)',
+    category: 'converters',
+    icon: 'CaseSensitive',
+    keywords: ['case', 'camel', 'snake', 'pascal', 'kebab', 'convert'],
+  },
 
   // Encoders & Decoders (5)
   {
