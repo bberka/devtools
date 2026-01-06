@@ -317,7 +317,7 @@ export function MarkdownToPdf() {
                   type="number"
                   value={topMargin}
                   onInput={(e) => setTopMargin(parseInt((e.target as HTMLInputElement).value) || 0)}
-                  className="w-full px-3 py-2 border rounded-md"
+                  className="w-full px-3 py-2 border border-input bg-background text-foreground rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 />
               </div>
               <div>
@@ -326,7 +326,7 @@ export function MarkdownToPdf() {
                   type="number"
                   value={rightMargin}
                   onInput={(e) => setRightMargin(parseInt((e.target as HTMLInputElement).value) || 0)}
-                  className="w-full px-3 py-2 border rounded-md"
+                  className="w-full px-3 py-2 border border-input bg-background text-foreground rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 />
               </div>
               <div>
@@ -335,7 +335,7 @@ export function MarkdownToPdf() {
                   type="number"
                   value={bottomMargin}
                   onInput={(e) => setBottomMargin(parseInt((e.target as HTMLInputElement).value) || 0)}
-                  className="w-full px-3 py-2 border rounded-md"
+                  className="w-full px-3 py-2 border border-input bg-background text-foreground rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 />
               </div>
               <div>
@@ -344,7 +344,7 @@ export function MarkdownToPdf() {
                   type="number"
                   value={leftMargin}
                   onInput={(e) => setLeftMargin(parseInt((e.target as HTMLInputElement).value) || 0)}
-                  className="w-full px-3 py-2 border rounded-md"
+                  className="w-full px-3 py-2 border border-input bg-background text-foreground rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 />
               </div>
             </div>
@@ -374,14 +374,16 @@ export function MarkdownToPdf() {
             <Eye className="h-5 w-5" />
             Preview
           </CardTitle>
-          <CardDescription>Preview how your PDF will look</CardDescription>
+          <CardDescription>Preview how your PDF will look (always shown in light mode for PDF accuracy)</CardDescription>
         </CardHeader>
         <CardContent>
-          <div
-            ref={previewRef}
-            className="prose prose-sm dark:prose-invert max-w-none min-h-[400px] p-8 border rounded-md bg-white text-black"
-            dangerouslySetInnerHTML={{ __html: html }}
-          />
+          <div className="border rounded-md overflow-hidden">
+            <div
+              ref={previewRef}
+              className="prose prose-sm max-w-none min-h-[400px] p-8 bg-white text-black"
+              dangerouslySetInnerHTML={{ __html: html }}
+            />
+          </div>
         </CardContent>
       </Card>
     </div>
