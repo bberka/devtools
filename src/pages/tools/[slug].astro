@@ -23,6 +23,12 @@ import { JwtDecoder } from '@/components/preact/tools/JwtDecoder';
 import { ColorConverter } from '@/components/preact/tools/ColorConverter';
 import { CaseConverter } from '@/components/preact/tools/CaseConverter';
 
+// Import Phase 4 tools
+import { TextEscape } from '@/components/preact/tools/TextEscape';
+import { XmlValidator } from '@/components/preact/tools/XmlValidator';
+import { RegexTester } from '@/components/preact/tools/RegexTester';
+import { CronParser } from '@/components/preact/tools/CronParser';
+
 export async function getStaticPaths() {
   return TOOLS.map((tool) => ({
     params: { slug: tool.id },
@@ -36,7 +42,7 @@ if (!tool) {
   return Astro.redirect('/404');
 }
 
-// List of implemented tool IDs (Phase 2 & 3)
+// List of implemented tool IDs (Phase 2, 3 & 4)
 const implementedTools = [
   'base64-converter',
   'url-encoder',
@@ -53,6 +59,10 @@ const implementedTools = [
   'jwt-decoder',
   'color-converter',
   'case-converter',
+  'text-escape',
+  'xml-validator',
+  'regex-tester',
+  'cron-parser',
 ];
 ---
 
@@ -89,6 +99,10 @@ const implementedTools = [
     {tool.id === 'jwt-decoder' && <JwtDecoder client:load />}
     {tool.id === 'color-converter' && <ColorConverter client:load />}
     {tool.id === 'case-converter' && <CaseConverter client:load />}
+    {tool.id === 'text-escape' && <TextEscape client:load />}
+    {tool.id === 'xml-validator' && <XmlValidator client:load />}
+    {tool.id === 'regex-tester' && <RegexTester client:load />}
+    {tool.id === 'cron-parser' && <CronParser client:load />}
 
     <!-- Placeholder for unimplemented tools -->
     {!implementedTools.includes(tool.id) && (
