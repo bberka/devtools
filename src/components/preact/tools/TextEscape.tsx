@@ -1,9 +1,9 @@
-import { useState } from 'preact/hooks';
+import { useState, useEffect } from 'preact/hooks';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/preact/ui/card';
 import { Button } from '@/components/preact/ui/button';
 import { Textarea } from '@/components/preact/ui/textarea';
 import { Select } from '@/components/preact/ui/select';
-import { Copy, Quote, Trash2, ArrowLeftRight } from 'lucide-preact';
+import { Copy, Quote, Trash2, ArrowLeftRight, Check } from 'lucide-preact';
 
 type EscapeMode = 'javascript' | 'json' | 'html' | 'xml' | 'csv' | 'sql' | 'regex';
 
@@ -11,7 +11,9 @@ export function TextEscape() {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [mode, setMode] = useState<EscapeMode>('javascript');
+  const [direction, setDirection] = useState<'escape' | 'unescape'>('escape');
   const [error, setError] = useState('');
+  const [copied, setCopied] = useState(false);
 
   const escapeText = (text: string, escapeMode: EscapeMode): string => {
     if (!text) return '';
@@ -119,7 +121,11 @@ export function TextEscape() {
     }
   };
 
-  const handleEscape = () => {
+  useEffect(() => {
+    handleConvert();
+  }, [input, mode, direction]);
+
+  const handleConvert = () => {
     if (!input.trim()) {
       setOutput('');
       setError('');
@@ -127,28 +133,16 @@ export function TextEscape() {
     }
 
     try {
-      const escaped = escapeText(input, mode);
-      setOutput(escaped);
+      if (direction === 'escape') {
+        const escaped = escapeText(input, mode);
+        setOutput(escaped);
+      } else {
+        const unescaped = unescapeText(input, mode);
+        setOutput(unescaped);
+      }
       setError('');
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to escape text');
-      setOutput('');
-    }
-  };
-
-  const handleUnescape = () => {
-    if (!input.trim()) {
-      setOutput('');
-      setError('');
-      return;
-    }
-
-    try {
-      const unescaped = unescapeText(input, mode);
-      setOutput(unescaped);
-      setError('');
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to unescape text');
+      setError(e instanceof Error ? e.message : 'Failed to convert text');
       setOutput('');
     }
   };
@@ -162,6 +156,8 @@ export function TextEscape() {
   const handleCopy = async () => {
     if (output) {
       await navigator.clipboard.writeText(output);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
   };
 
@@ -172,96 +168,98 @@ export function TextEscape() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      <div className="flex gap-2">
+        <Button
+          variant={direction === 'escape' ? 'default' : 'outline'}
+          onClick={() => setDirection('escape')}
+        >
+          Escape
+        </Button>
+        <Button
+          variant={direction === 'unescape' ? 'default' : 'outline'}
+          onClick={() => setDirection('unescape')}
+        >
+          Unescape
+        </Button>
+      </div>
+
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Quote className="h-5 w-5" />
-            Input Text
+            Input
           </CardTitle>
-          <CardDescription>Enter text to escape or unescape</CardDescription>
+          <CardDescription>
+            {direction === 'escape' ? 'Enter text to escape' : 'Enter escaped text to unescape'}
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <label htmlFor="mode" className="text-sm font-medium">
+              Escape Mode
+            </label>
+            <Select
+              id="mode"
+              value={mode}
+              options={[
+                { value: 'javascript', label: 'JavaScript/TypeScript' },
+                { value: 'json', label: 'JSON' },
+                { value: 'html', label: 'HTML' },
+                { value: 'xml', label: 'XML' },
+                { value: 'csv', label: 'CSV' },
+                { value: 'sql', label: 'SQL' },
+                { value: 'regex', label: 'Regex' },
+              ]}
+              onChange={(e: Event) => {
+                setMode((e.target as HTMLSelectElement).value as EscapeMode);
+              }}
+            />
+          </div>
+
           <Textarea
             value={input}
             onInput={(e) => setInput((e.target as HTMLTextAreaElement).value)}
-            placeholder='Enter text here...'
-            rows={10}
-            className="font-mono text-sm"
+            placeholder={direction === 'escape' ? 'Enter text here...' : 'Enter escaped text here...'}
+            rows={8}
+            className="font-mono"
           />
-
-          <div className="flex items-center gap-4 flex-wrap">
-            <div className="flex items-center gap-2">
-              <label htmlFor="mode" className="text-sm font-medium">
-                Escape Mode:
-              </label>
-              <Select
-                id="mode"
-                value={mode}
-                options={[
-                  { value: 'javascript', label: 'JavaScript/TypeScript' },
-                  { value: 'json', label: 'JSON' },
-                  { value: 'html', label: 'HTML' },
-                  { value: 'xml', label: 'XML' },
-                  { value: 'csv', label: 'CSV' },
-                  { value: 'sql', label: 'SQL' },
-                  { value: 'regex', label: 'Regex' },
-                ]}
-                onChange={(e: Event) => {
-                  setMode((e.target as HTMLSelectElement).value as EscapeMode);
-                }}
-              />
-            </div>
-
-            <div className="flex gap-2">
-              <Button onClick={handleEscape} variant="default" size="sm">
-                Escape
-              </Button>
-
-              <Button onClick={handleUnescape} variant="default" size="sm">
-                Unescape
-              </Button>
-
-              <Button onClick={handleSwap} variant="outline" size="sm" disabled={!output}>
-                <ArrowLeftRight className="h-4 w-4 mr-2" />
-                Swap
-              </Button>
-            </div>
-
-            <Button onClick={handleClear} variant="outline" size="sm">
-              <Trash2 className="h-4 w-4 mr-2" />
-              Clear
-            </Button>
-          </div>
-
-          {error && (
-            <div className="bg-destructive/10 text-destructive px-4 py-3 rounded-md text-sm">
-              <strong>Error:</strong> {error}
-            </div>
-          )}
         </CardContent>
       </Card>
+
+      {error && (
+        <div className="bg-destructive/10 text-destructive px-4 py-3 rounded-md text-sm">
+          <strong>Error:</strong> {error}
+        </div>
+      )}
 
       <Card>
         <CardHeader>
           <CardTitle>Output</CardTitle>
           <CardDescription>
-            {output ? `${output.length} characters` : 'Result will appear here'}
+            {output ? `${output.length} characters` : 'Result will appear here automatically'}
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <Textarea
-            value={output}
-            readOnly
-            placeholder="Escaped/unescaped text will appear here..."
-            rows={10}
-            className="font-mono text-sm"
-          />
-
-          <Button onClick={handleCopy} disabled={!output} size="sm">
-            <Copy className="h-4 w-4 mr-2" />
-            Copy to Clipboard
-          </Button>
+        <CardContent>
+          <div className="space-y-4">
+            <pre className="w-full min-h-[200px] p-3 rounded-md bg-muted font-mono text-sm overflow-x-auto whitespace-pre-wrap break-all border border-input">
+              {output || 'Output will appear here...'}
+            </pre>
+            <div className="flex gap-2">
+              <Button onClick={handleCopy} disabled={!output} size="sm">
+                {copied ? <Check className="h-4 w-4 mr-2" /> : <Copy className="h-4 w-4 mr-2" />}
+                {copied ? 'Copied!' : 'Copy'}
+              </Button>
+              <Button onClick={handleSwap} disabled={!output} variant="outline" size="sm">
+                <ArrowLeftRight className="h-4 w-4 mr-2" />
+                Swap
+              </Button>
+              <Button onClick={handleClear} variant="outline" size="sm">
+                <Trash2 className="h-4 w-4 mr-2" />
+                Clear
+              </Button>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>

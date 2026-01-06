@@ -2,6 +2,8 @@ import { useState, useEffect } from 'preact/hooks';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
 import { Select } from '../ui/select';
+import { Button } from '../ui/button';
+import { Trash2 } from 'lucide-preact';
 
 type Base = 'binary' | 'octal' | 'decimal' | 'hex';
 
@@ -29,6 +31,12 @@ export function NumberBaseConverter() {
     hex: '',
   });
   const [error, setError] = useState('');
+
+  const handleClear = () => {
+    setInputValue('');
+    setResults({ binary: '', octal: '', decimal: '', hex: '' });
+    setError('');
+  };
 
   useEffect(() => {
     if (!inputValue) {
@@ -86,6 +94,10 @@ export function NumberBaseConverter() {
           {error && (
             <div className="text-sm text-destructive">{error}</div>
           )}
+          <Button onClick={handleClear} variant="outline" size="sm">
+            <Trash2 className="h-4 w-4 mr-2" />
+            Clear
+          </Button>
         </CardContent>
       </Card>
 

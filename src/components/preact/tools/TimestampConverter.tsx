@@ -3,6 +3,7 @@ import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
 import { Select } from '../ui/select';
+import { Trash2 } from 'lucide-preact';
 
 type Mode = 'to-date' | 'to-timestamp';
 type Unit = 'seconds' | 'milliseconds';
@@ -100,6 +101,11 @@ export function TimestampConverter() {
     }
   };
 
+  const handleClear = () => {
+    setInput('');
+    setResults({ iso: '', local: '', utc: '', relative: '', seconds: '', milliseconds: '' });
+  };
+
   return (
     <div className="space-y-6">
       {/* Settings */}
@@ -140,8 +146,12 @@ export function TimestampConverter() {
                 placeholder={mode === 'to-date' ? '1640995200' : '2022-01-01T00:00:00Z'}
                 className="font-mono"
               />
-              <Button onClick={handleNow} variant="outline">
+              <Button onClick={handleNow} variant="outline" size="sm">
                 Now
+              </Button>
+              <Button onClick={handleClear} variant="outline" size="sm">
+                <Trash2 className="h-4 w-4 mr-2" />
+                Clear
               </Button>
             </div>
           </div>
