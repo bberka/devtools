@@ -30,49 +30,92 @@
     global.css
 ```
 
+## Core Development Principles
+
+### Real-time Processing Rule
+
+**CRITICAL**: All tools that convert input to output (encoders, formatters, converters, etc.) MUST process input in real-time as the user types. NO "Generate" or "Convert" buttons unless the operation is:
+
+- Computationally expensive (image processing, PDF generation)
+- Requires explicit user confirmation
+- Involves file uploads
+
+**Goal**: Minimize clicks, maximize immediate feedback, create a fluid user experience.
+
+**Examples**:
+
+- ✅ Base64 encoder updates output as user types
+- ✅ JSON formatter auto-formats on input change
+- ✅ Hash generator shows all hashes instantly
+- ❌ Image converter needs explicit "Convert" (file upload + processing)
+- ❌ PDF generation needs explicit "Generate" (heavy operation)
+
 ## Tool Categories
 
-1. **Converters** (9 tools)
+### Currently Implemented (19 tools)
 
+1. **Converters**
+   - Base64 Encoder/Decoder ✅
+   - Number Base Converter ✅
+   - Unix Timestamp Converter ✅
+   - URL Encoder/Decoder ✅
+   - HTML Encoder/Decoder ✅
+   - Color Converter ✅
+   - Case Converter ✅
+
+2. **Encoders & Decoders**
+   - JWT Decoder ✅
+   - Text Escape/Unescape ✅
+
+3. **Generators**
+   - Hash Generator ✅
+   - UUID Generator (v4, v7, Snowflake) ✅
+   - Password Generator ✅
+   - Lorem Ipsum Generator ✅
+
+4. **Formatters & Validators**
+   - SQL Formatter (multi-DB support) ✅
+   - JSON Formatter ✅
+   - XML Formatter ✅
+   - XML Validator ✅
+
+5. **Text Tools**
+   - Regex Tester ✅
+
+6. **Utilities**
+   - Cron Expression Parser/Generator ✅
+
+### Planned Tools
+
+1. **Converters (Continued)**
    - Markdown to PDF
    - Image Converter
-   - Base64 Encoder/Decoder
-   - Number Base Converter
    - JSON ↔ YAML ↔ XML
-   - Unix Timestamp Converter
-   - URL Encoder/Decoder
-   - HTML Encoder/Decoder
 
-2. **Encoders & Decoders** (5 tools)
+2. **CSS Tools** (New Category)
+   - Glassmorphism Generator
+   - Box Shadow Visualizer
+   - Clamp() Calculator (responsive typography)
+   - Color Picker
 
-   - JWT Decoder
-   - Text Escape/Unescape
-   - Base64
-   - URL
-   - HTML
+3. **Security Tools** (New Category)
+   - RSA Key Pair Generator (Client-side)
+   - AES Encryption/Decryption
+   - Bcrypt/Argon2 Hasher
 
-3. **Generators** (4 tools)
+4. **Networking Tools** (New Category)
+   - IP Address Lookup (via public API)
+   - DNS Records Lookup
+   - Subnet Calculator
 
-   - Hash Generator
-   - UUID Generator (v4, v7, Snowflake)
-   - Password Generator
-   - Lorem Ipsum Generator
+5. **Design Tools** (New Category)
+   - SVG Path Editor/Optimizer
+   - Color Contrast Checker (WCAG)
+   - Icon Font Search
 
-4. **Formatters & Validators** (4 tools)
-
-   - SQL Formatter (multi-DB support)
-   - JSON Formatter
-   - XML Formatter
-   - XML Validator
-
-5. **Text Tools** (3 tools)
-
+6. **Text Tools (Continued)**
    - Markdown Previewer
    - Text Diff Visualizer
-   - Regex Tester
-
-6. **Utilities** (1 tool)
-   - Cron Expression Parser/Generator
 
 ## Home Page Design
 
@@ -365,6 +408,152 @@ Core components (adapt to Preact):
 - **Tooltip** (help text on hover)
 - **Slider** (quality, brightness, etc.)
 
+## Advanced UI Features
+
+### Command Palette (Ctrl+K / Cmd+K)
+
+**Implementation**: Use `cmdk` library for instant tool switching
+
+**Features**:
+
+- Global keyboard shortcut (Ctrl+K or Cmd+K)
+- Fuzzy search across all tools
+- Quick navigation without mouse
+- Recent tools at the top
+- Keyboard-only navigation (↑↓ arrows, Enter to select)
+- Refactor existing search to integrate with command palette
+
+**UI Design**:
+
+```
+┌─────────────────────────────────────────────┐
+│  Quick Open                            ✕    │
+├─────────────────────────────────────────────┤
+│  Search tools...                            │
+│                                             │
+│  Recent:                                    │
+│  ⏱️  Base64 Encoder                         │
+│  ⏱️  JSON Formatter                         │
+│                                             │
+│  All Tools:                                 │
+│  🔄 Base64 Encoder/Decoder                  │
+│  📝 JSON Formatter                          │
+│  🔐 Hash Generator                          │
+└─────────────────────────────────────────────┘
+```
+
+### Drag-and-Drop File Support
+
+**Target Tools**:
+
+- JSON/XML/YAML Formatters (drop .json, .xml, .yaml files)
+- Image Converter (drop image files)
+- Markdown to PDF (drop .md files)
+- Text tools (drop .txt files)
+
+**Implementation**:
+
+- Use HTML5 drag-and-drop API
+- Visual feedback on drag hover
+- Auto-detect file type
+- Error handling for unsupported formats
+
+**UI State**:
+
+```
+Normal:
+┌─────────────────────────────────────────┐
+│  Input:                                 │
+│  ┌───────────────────────────────────┐ │
+│  │ [Text area]                       │ │
+│  └───────────────────────────────────┘ │
+└─────────────────────────────────────────┘
+
+Dragging file over:
+┌─────────────────────────────────────────┐
+│  Input:                                 │
+│  ┌───────────────────────────────────┐ │
+│  │                                   │ │
+│  │  📁 Drop your file here           │ │
+│  │                                   │ │
+│  └───────────────────────────────────┘ │
+└─────────────────────────────────────────┘
+```
+
+## SEO & Performance Optimizations
+
+### SEO Features
+
+1. **Sitemap Generation**
+   - Auto-generate sitemap.xml for all tool pages
+   - Use Astro's `@astrojs/sitemap` integration
+   - Update on build
+
+2. **Robots.txt**
+   - Configure crawling rules
+   - Allow all tools to be indexed
+   - Point to sitemap location
+
+3. **Meta Tags** (per tool page)
+   - Unique title: "Tool Name | DevTools"
+   - Description from tool metadata
+   - Canonical URLs
+   - Open Graph tags for social sharing
+
+4. **Open Graph Images**
+   - Use `@astrojs/satori` for dynamic OG image generation
+   - Generate unique preview images per tool
+   - Example: "Base64 Encoder" image when shared on social media
+
+### PWA Support
+
+**Features**:
+
+- Offline access to recently used tools
+- Install as standalone app
+- App-like experience on mobile
+- Service worker for caching
+
+**Implementation**:
+
+- Use `@vite-pwa/astro` or similar
+- Cache tool pages and assets
+- Offline fallback page
+- App manifest (name, icons, colors)
+
+**Manifest Config**:
+
+```json
+{
+  "name": "DevTools Collection",
+  "short_name": "DevTools",
+  "description": "Developer tools for encoding, formatting, and more",
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "icons": [...]
+}
+```
+
+### Performance Optimizations
+
+1. **Dynamic Imports**
+   - Lazy load tool components
+   - Only load active tool's JS
+   - Reduce initial bundle size
+   - Use Astro's `client:load` strategically
+
+2. **Code Splitting**
+   - Split by route (each tool = separate chunk)
+   - Shared dependencies in common chunk
+   - Preload critical paths
+
+3. **Asset Optimization**
+   - Compress images (WebP format)
+   - Minify CSS/JS
+   - Tree-shake unused code
+   - Use Astro's built-in optimizations
+
 ## Cloudflare Pages Deployment
 
 ### Build Configuration
@@ -390,58 +579,112 @@ Core components (adapt to Preact):
 ### Why Workers Not Needed
 
 - All processing happens client-side
-- No API routes required
+- No API routes required (except external API calls from browser)
 - No server-side rendering needed
 - Astro generates pure static HTML + JS
 
 ## Implementation Phases
 
-### Phase 1: Foundation (Week 1)
+### Phase 1: Foundation ✅ (Completed)
 
-- [ ] Astro + Preact + Tailwind setup
-- [ ] shadcn/ui component library setup (Preact adapters)
-- [ ] Home page with category grid
-- [ ] LocalStorage utilities (favorites, settings only)
-- [ ] Search & filter system
-- [ ] Responsive layout
-- [ ] Dark mode toggle
+- [x] Astro + Preact + Tailwind setup
+- [x] shadcn/ui component library setup (Preact adapters)
+- [x] Home page with category grid
+- [x] LocalStorage utilities (favorites, settings only)
+- [x] Search & filter system
+- [x] Responsive layout
+- [x] Dark mode toggle
 
-### Phase 2: Easy Tools (Week 2)
+### Phase 2: Basic Tools ✅ (Completed - 19 tools)
 
-- [ ] Base64 Encoder/Decoder
-- [ ] URL Encoder/Decoder
-- [ ] HTML Encoder/Decoder
-- [ ] UUID Generator (v4, v7, Snowflake)
-- [ ] Hash Generator (MD5, SHA-1, SHA-256, SHA-512)
-- [ ] Password Generator
-- [ ] Lorem Ipsum Generator
-- [ ] Number Base Converter
-- [ ] Unix Timestamp Converter
+- [x] Base64 Encoder/Decoder
+- [x] URL Encoder/Decoder
+- [x] HTML Encoder/Decoder
+- [x] UUID Generator (v4, v7, Snowflake)
+- [x] Hash Generator (MD5, SHA-1, SHA-256, SHA-512)
+- [x] Password Generator
+- [x] Lorem Ipsum Generator
+- [x] Number Base Converter
+- [x] Unix Timestamp Converter
+- [x] Color Converter
+- [x] Case Converter
+- [x] Text Escape/Unescape
+- [x] JSON Formatter
+- [x] XML Formatter
+- [x] XML Validator
+- [x] SQL Formatter
+- [x] JWT Decoder
+- [x] Regex Tester
+- [x] Cron Expression Parser/Generator
 
-### Phase 3: Medium Tools (Week 3)
+### Phase 3: Advanced Converters & Text Tools
 
-- [ ] JSON Formatter & Validator
 - [ ] JSON ↔ YAML ↔ XML Converter
-- [ ] XML Formatter
-- [ ] XML Validator
-- [ ] Text Escape/Unescape
-- [ ] Cron Expression Parser/Generator
-- [ ] JWT Decoder
-- [ ] Regex Tester (with match highlighting)
-
-### Phase 4: Complex Tools (Week 4)
-
 - [ ] Markdown Previewer (katex, highlight.js, mermaid support)
-- [ ] SQL Formatter (PostgreSQL, MySQL, MSSQL, BigQuery, etc.)
 - [ ] Text Diff Visualizer (side-by-side + inline modes)
-
-### Phase 5: Advanced Features (Week 5)
-
 - [ ] **Image Converter** (resize, crop, compress, filters)
 - [ ] **Markdown to PDF** (both jsPDF and Print API options)
+
+### Phase 4: CSS Tools (New)
+
+- [ ] Glassmorphism Generator
+- [ ] Box Shadow Visualizer
+- [ ] Clamp() Calculator (responsive typography)
+- [ ] Color Picker
+
+### Phase 5: Security Tools (New)
+
+- [ ] RSA Key Pair Generator (Client-side)
+- [ ] AES Encryption/Decryption
+- [ ] Bcrypt/Argon2 Hasher
+
+### Phase 6: Networking Tools (New)
+
+- [ ] IP Address Lookup (via public API)
+- [ ] DNS Records Lookup
+- [ ] Subnet Calculator
+
+### Phase 7: Design Tools (New)
+
+- [ ] SVG Path Editor/Optimizer
+- [ ] Color Contrast Checker (WCAG)
+- [ ] Icon Font Search
+
+### Phase 8: UX Enhancements
+
+- [ ] Command Palette (Ctrl+K / Cmd+K) with cmdk
+- [ ] Drag-and-Drop file support for applicable tools
 - [ ] Settings modal (global + per-tool)
 - [ ] Export/Import settings
-- [ ] Keyboard shortcuts (Ctrl+K for search, etc.)
+- [ ] Favorites system (fully implemented)
+- [ ] Recent tools tracking
+
+### Phase 9: SEO & Performance
+
+- [ ] Sitemap.xml generation (@astrojs/sitemap)
+- [ ] Robots.txt configuration
+- [ ] Meta tags per tool page (title, description, OG tags)
+- [ ] Open Graph image generation (@astrojs/satori)
+- [ ] Dynamic imports for code splitting
+- [ ] Bundle size optimization
+- [ ] Performance audits (Lighthouse)
+
+### Phase 10: PWA Support
+
+- [ ] Service worker setup
+- [ ] App manifest configuration
+- [ ] Offline support for tools
+- [ ] Install prompt
+- [ ] Caching strategy
+- [ ] Offline fallback page
+
+### Future Enhancements (Later)
+
+- [ ] End-to-End Testing (Playwright/Cypress) for complex tools
+- [ ] A11y Audit - keyboard navigation & ARIA labels
+- [ ] Analytics integration (privacy-focused)
+- [ ] Tool usage statistics (local only)
+- [ ] Multi-language support (i18n)
 
 ## Storage Structure
 
