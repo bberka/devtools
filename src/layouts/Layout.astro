@@ -22,32 +22,23 @@ const {
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
 
-    <!-- Prevent dark mode flicker - must run before page renders -->
-     <script is:inline>
-    (function () {
-      const theme = (function () {
-        if (
-          typeof localStorage !== "undefined" &&
-          localStorage.getItem("devtoys:theme")
-        ) {
-          return localStorage.getItem("devtoys:theme");
+    <!-- Prevent theme flicker - must run before page renders -->
+    <script is:inline>
+      (function() {
+        const THEME_KEY = 'dev-toolbox:theme';
+        const theme = localStorage.getItem(THEME_KEY) ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
         }
-        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-          return "dark";
-        }
-        return "light";
+
+        // Ensure theme is persisted
+        localStorage.setItem(THEME_KEY, theme);
       })();
-
-      if (theme === "dark") {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-
-      // Sync the storage to ensure consistency
-      window.localStorage.setItem("devtoys:theme", theme);
-    })();
-  </script>
+    </script>
   </head>
   <body>
     <div class="min-h-screen bg-background">
@@ -130,12 +121,5 @@ const {
         </div>
       </footer>
     </div>
-
-    <script>
-      import { initializeTheme } from '@/lib/utils/storage';
-
-      // Initialize theme on page load
-      initializeTheme();
-    </script>
   </body>
 </html>
