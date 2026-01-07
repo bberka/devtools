@@ -2,110 +2,131 @@
 
 > A modern, fast, and privacy-focused collection of developer tools built with Astro and Preact.
 
-[![Status](https://img.shields.io/badge/status-WIP-yellow)](https://github.com/bberka/devtools)
+[![Status](https://img.shields.io/badge/status-Stable-green)](https://github.com/bberka/devtools)
+[![Tools](https://img.shields.io/badge/tools-24%2F24-success)](https://github.com/bberka/devtools)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 ## About
 
 DevTools Collection is a web-based toolkit providing essential utilities for developers. All processing happens client-side in your browser - your data never leaves your machine.
 
-**Current Status**: Work in Progress (WIP)
-This project is actively under development. Some features may be incomplete, and bugs are expected. Contributions and feedback are welcome!
+**Current Status**: ✅ **All Core Tools Implemented** (24/24 - 100%)
+
+All planned core tools are now implemented and functional! The project is stable and ready for use. We're now focusing on UX enhancements and advanced features. Contributions and feedback are welcome!
 
 ## Features
 
 - **100% Client-Side**: All tools run locally in your browser - no data sent to servers
 - **Privacy-First**: Your sensitive data (tokens, keys, passwords) never leaves your device
-- **Dark Mode**: Built-in theme switching for comfortable coding at any time
+- **Instant Conversion**: Real-time output updates as you type - no button clicks needed
+- **Dark Mode**: Built-in theme switching with persistent preference across tabs
+- **Favorites System**: Star your frequently used tools for quick access
 - **Fast & Lightweight**: Optimized bundle sizes with code splitting
-- **Mobile-Friendly**: Responsive design works on all devices
+- **Mobile-Friendly**: Responsive design works perfectly on all devices
 - **No Installation**: Just open in your browser and start using
 
-## Available Tools (19 Implemented)
+## Available Tools (24/24 Implemented - 100%)
 
-### Converters
-- **Base64 Encoder/Decoder** - Convert text to/from Base64 encoding
-- **Number Base Converter** - Convert between binary, octal, decimal, and hexadecimal
-- **Unix Timestamp Converter** - Convert between Unix timestamps and human-readable dates
-- **URL Encoder/Decoder** - Encode/decode URLs and query parameters
-- **HTML Encoder/Decoder** - Escape/unescape HTML entities
-- **Color Converter** - Convert between HEX, RGB, HSL color formats
-- **Case Converter** - Transform text case (camelCase, snake_case, etc.)
+### Converters (10 tools)
+- ✅ **Base64 Encoder/Decoder** - Encode and decode Base64 strings with instant conversion
+- ✅ **Number Base Converter** - Convert between binary, octal, decimal, and hexadecimal
+- ✅ **Unix Timestamp Converter** - Convert Unix timestamps to readable dates (seconds/milliseconds)
+- ✅ **URL Encoder/Decoder** - Encode and decode URL strings
+- ✅ **HTML Encoder/Decoder** - Encode and decode HTML entities
+- ✅ **Color Converter** - Convert between HEX, RGB, HSL color formats with live preview
+- ✅ **Case Converter** - Transform text case (camelCase, snake_case, PascalCase, kebab-case, etc.)
+- ✅ **JSON ↔ YAML ↔ XML** - Convert between JSON, YAML, and XML formats
+- ✅ **Image Converter** - Convert, resize, crop, and compress images
+- ✅ **Markdown Converter** - Convert Markdown to PDF, HTML, TXT, PNG, or JPG
 
-### Encoders & Decoders
-- **JWT Decoder** - Decode and inspect JSON Web Tokens
-- **Text Escape/Unescape** - Escape special characters in strings
+### Encoders & Decoders (2 tools)
+- ✅ **JWT Decoder** - Decode and inspect JSON Web Tokens with timestamp formatting
+- ✅ **Text Escape/Unescape** - Escape special characters (JavaScript, JSON, HTML, XML, CSV, SQL, Regex)
 
-### Generators
-- **Hash Generator** - Generate MD5, SHA-1, SHA-256, SHA-512 hashes
-- **UUID Generator** - Generate UUIDs (v4, v7, Snowflake IDs)
-- **Password Generator** - Create secure random passwords
-- **Lorem Ipsum Generator** - Generate placeholder text
+### Generators (4 tools)
+- ✅ **Hash Generator** - Generate MD5, SHA-1, SHA-256, SHA-512 hashes instantly
+- ✅ **UUID Generator** - Generate UUIDs (v4, v7, Snowflake IDs) with bulk generation
+- ✅ **Password Generator** - Create secure random passwords with customizable options
+- ✅ **Lorem Ipsum Generator** - Generate placeholder text (paragraphs, words, sentences)
 
-### Formatters & Validators
-- **SQL Formatter** - Format SQL queries (PostgreSQL, MySQL, MSSQL, BigQuery)
-- **JSON Formatter** - Format and validate JSON
-- **XML Formatter** - Format XML documents
-- **XML Validator** - Validate XML structure
+### Formatters & Validators (4 tools)
+- ✅ **SQL Formatter** - Format SQL queries (PostgreSQL, MySQL, MSSQL, BigQuery, SQLite)
+- ✅ **JSON Formatter** - Format and validate JSON with syntax highlighting
+- ✅ **XML Formatter** - Format XML documents with proper indentation
+- ✅ **XML Validator** - Validate XML syntax and structure
 
-### Text Tools
-- **Regex Tester** - Test regular expressions with live matching
+### Text Tools (3 tools)
+- ✅ **Regex Tester** - Test regular expressions with live matching and capture groups
+- ✅ **Markdown Previewer** - Preview Markdown with syntax highlighting, math (KaTeX), and diagrams (Mermaid)
+- ✅ **Text Diff Visualizer** - Compare text with side-by-side and inline diff views
 
-### Utilities
-- **Cron Expression Parser** - Parse and generate cron expressions
+### Utilities (1 tool)
+- ✅ **Cron Expression Parser** - Parse and explain cron expressions with human-readable output
+
+## Implemented Features
+
+### UX Features
+- ✅ **Instant Conversion** - Real-time output updates as you type (no button clicks needed)
+- ✅ **Dark Mode** - Seamless theme switching with persistent preference
+- ✅ **Favorites System** - Star your frequently used tools for quick access
+- ✅ **Search & Filter** - Find tools quickly by name, description, or keywords
+- ✅ **Category Filters** - Browse tools by category (Converters, Generators, etc.)
+- ✅ **Copy to Clipboard** - One-click copy with visual feedback
+- ✅ **Clear Buttons** - Reset tool state instantly
+- ✅ **Swap Functionality** - Bidirectional conversion tools (encode/decode)
+- ✅ **Responsive Design** - Works perfectly on mobile, tablet, and desktop
+- ✅ **Cross-Tab Sync** - Theme and favorites sync across browser tabs
+
+### Technical Features
+- ✅ **100% Client-Side** - All processing happens locally in your browser
+- ✅ **SSR Compatible** - Optimized server-side rendering with Astro
+- ✅ **Code Splitting** - Fast initial load with on-demand tool loading
+- ✅ **LocalStorage** - Persistent favorites and theme preferences
+- ✅ **Error Handling** - Clear error messages with visual feedback
+- ✅ **Keyboard Accessible** - Full keyboard navigation support
 
 ## Planned Features
 
-### Upcoming Tools
+### UX Enhancements (Phase 8)
+- [ ] **Command Palette** (Ctrl+K / Cmd+K) - Quick tool switching with keyboard
+- [ ] **Drag-and-Drop** - Drop files directly into applicable tools
+- [ ] **Recent Tools** - Quick access to recently used tools
+- [ ] **Export/Import Settings** - Backup and restore preferences
 
-#### CSS Tools
-- Glassmorphism Generator
-- Box Shadow Visualizer
-- Clamp() Calculator (responsive typography)
-- Color Picker
+### CSS Tools (Phase 4)
+- [ ] Glassmorphism Generator
+- [ ] Box Shadow Visualizer
+- [ ] Clamp() Calculator (responsive typography)
+- [ ] Advanced Color Picker with palettes
 
-#### Security Tools
-- RSA Key Pair Generator (Client-side)
-- AES Encryption/Decryption
-- Bcrypt/Argon2 Hasher
+### Security Tools (Phase 5)
+- [ ] RSA Key Pair Generator (Client-side)
+- [ ] AES Encryption/Decryption
+- [ ] Bcrypt/Argon2 Hasher
 
-#### Networking Tools
-- IP Address Lookup (via public API)
-- DNS Records Lookup
-- Subnet Calculator
+### Networking Tools (Phase 6)
+- [ ] IP Address Lookup (via public API)
+- [ ] DNS Records Lookup
+- [ ] Subnet Calculator
 
-#### Design Tools
-- SVG Path Editor/Optimizer
-- Color Contrast Checker (WCAG)
-- Icon Font Search
+### Design Tools (Phase 7)
+- [ ] SVG Path Editor/Optimizer
+- [ ] Color Contrast Checker (WCAG)
+- [ ] Icon Font Search
 
-#### Advanced Converters
-- Markdown to PDF
-- Image Converter (resize, crop, compress, filters)
-- JSON ↔ YAML ↔ XML
-
-#### Text Tools
-- Markdown Previewer (with math & diagrams support)
-- Text Diff Visualizer (side-by-side comparison)
-
-### UX Enhancements
-- **Command Palette** (Ctrl+K / Cmd+K) - Quick tool switching with keyboard
-- **Drag-and-Drop** - Drop files directly into tools
-- **Favorites System** - Mark frequently used tools
-- **Recent Tools** - Quick access to recently used tools
-
-### Performance & SEO
-- PWA Support - Install as standalone app, offline access
-- Dynamic Imports - Faster initial load times
-- SEO Optimization - Sitemap, meta tags, Open Graph images
-- Performance Optimization - Bundle splitting, lazy loading
+### Performance & SEO (Phase 9)
+- [ ] PWA Support - Install as standalone app, offline access
+- [ ] Sitemap Generation - Better search engine indexing
+- [ ] Open Graph Images - Beautiful social media previews
+- [ ] Performance Optimization - Further bundle size reduction
 
 ## Tech Stack
 
-- **Framework**: [Astro](https://astro.build/) - Fast static site generation
-- **UI Library**: [Preact](https://preactjs.com/) - Lightweight React alternative
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS
-- **Components**: [shadcn/ui](https://ui.shadcn.com/) - Beautiful, accessible components
+- **Framework**: [Astro 5.x](https://astro.build/) - Fast static site generation with SSR support
+- **UI Library**: [Preact 10.x](https://preactjs.com/) - Lightweight React alternative (3KB)
+- **Styling**: [Tailwind CSS v3](https://tailwindcss.com/) - Utility-first CSS framework
+- **Components**: [shadcn/ui](https://ui.shadcn.com/) - Beautiful, accessible components (adapted for Preact)
+- **Icons**: [Lucide Preact](https://lucide.dev/) - Beautiful, consistent icons
 - **Deployment**: [Cloudflare Pages](https://pages.cloudflare.com/) - Fast, global CDN
 
 ## Getting Started
@@ -137,62 +158,90 @@ npm run build
 
 The static site will be generated in the `dist/` directory.
 
+### Preview Production Build
+
+```bash
+npm run preview
+```
+
 ## Development
 
 ### Project Structure
 
 ```
-/src
-  /pages
-    index.astro              # Home page with tool cards
-    /tools
-      [tool-slug].astro      # Individual tool pages
-  /components
-    /preact
-      /tools                 # Tool implementations
-      /ui                    # shadcn/ui components
-    ToolCard.astro
-    CategoryFilter.astro
-    SearchBar.astro
-  /lib
-    /utils
-      storage.ts             # LocalStorage utilities
-      tools-config.ts        # Tool metadata & categories
-  /styles
-    global.css
+/devtools
+├── src/
+│   ├── components/
+│   │   ├── preact/           # Preact components
+│   │   │   ├── tools/        # Tool implementations (24 tools)
+│   │   │   ├── ui/           # shadcn/ui components
+│   │   │   ├── hooks/        # Custom React hooks
+│   │   │   ├── SearchBar.tsx
+│   │   │   ├── CategoryFilter.tsx
+│   │   │   ├── FavoriteButton.tsx
+│   │   │   ├── ThemeToggle.tsx
+│   │   │   └── HomeContent.tsx
+│   │   └── ToolCard.astro   # Tool card component
+│   ├── layouts/
+│   │   └── Layout.astro     # Main layout
+│   ├── lib/
+│   │   ├── types.ts         # TypeScript types
+│   │   └── utils/
+│   │       ├── cn.ts        # Utility functions
+│   │       ├── storage.ts   # LocalStorage utilities
+│   │       └── tools-config.ts  # Tool metadata
+│   ├── pages/
+│   │   ├── index.astro      # Home page
+│   │   └── tools/
+│   │       └── [slug].astro # Dynamic tool pages
+│   └── styles/
+│       └── globals.css      # Global styles
+├── docs/
+│   └── DEV-PLAN.md         # Development roadmap
+├── public/                  # Static assets
+├── README.md
+├── CONTRIBUTING.md
+└── package.json
 ```
 
 ### Development Principles
 
-**Real-time Processing**: Tools that convert input to output (encoders, formatters, etc.) process in real-time as you type - no "Generate" button needed unless the operation is computationally expensive.
+**Real-time Processing**: All conversion tools update instantly as you type - no "Convert" button needed unless the operation is computationally expensive (like image processing or PDF generation). This creates a fluid, responsive user experience.
 
-**Privacy-First**: All processing happens client-side. No analytics, no tracking, no data collection.
+**Privacy-First**: All processing happens client-side in your browser. No analytics, no tracking, no data collection. Your sensitive data (tokens, keys, passwords) never leaves your device.
 
-**Accessibility**: Keyboard navigation, ARIA labels, and screen reader support throughout.
+**Accessibility**: Full keyboard navigation support, ARIA labels, and semantic HTML throughout. Works with screen readers and assistive technologies.
+
+**SSR Compatible**: All components are Server-Side Rendering compatible, using pure JavaScript implementations where needed (no browser-only APIs during build).
 
 ## Known Issues & Limitations
 
-- Some tools are still under development
-- Mobile experience may have minor UI issues on some devices
-- Browser compatibility tested primarily on Chrome/Firefox (latest versions)
-- Some advanced features (PWA, command palette) are not yet implemented
+- Advanced features (PWA support, command palette) are not yet implemented
+- Browser compatibility tested primarily on Chrome, Firefox, and Edge (latest versions)
+- Some complex image operations may be slow on older devices
+- PDF generation from Markdown may have limitations with complex layouts
 
 ## Contributing
 
-Contributions are welcome! This is a WIP project, so there's plenty to improve:
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+
+### Quick Start for Contributors
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-tool`)
-3. Commit your changes (`git commit -m 'Add some amazing tool'`)
+3. Commit your changes (`git commit -m 'feat: add amazing tool'`)
 4. Push to the branch (`git push origin feature/amazing-tool`)
 5. Open a Pull Request
 
 ### Areas to Contribute
-- Implement new tools (see [DEV-PLAN.md](docs/DEV-PLAN.md))
-- Fix bugs and improve existing tools
-- Improve UI/UX
-- Add tests
-- Improve documentation
+- **New Tools**: Implement tools from [DEV-PLAN.md](docs/DEV-PLAN.md) (CSS, Security, Networking tools)
+- **Bug Fixes**: Check [open issues](https://github.com/bberka/devtools/issues)
+- **UI/UX**: Improve responsiveness, accessibility, dark mode consistency
+- **Performance**: Optimize bundle sizes, reduce re-renders
+- **Documentation**: Improve guides, add examples, write tutorials
+- **Testing**: Add automated tests (unit, integration, e2e)
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for comprehensive contribution guidelines.
 
 ## License
 
@@ -203,6 +252,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Built with [Astro](https://astro.build/)
 - UI components from [shadcn/ui](https://ui.shadcn.com/)
 - Icons from [Lucide](https://lucide.dev/)
+- Syntax highlighting by [highlight.js](https://highlightjs.org/)
+- Math rendering by [KaTeX](https://katex.org/)
+- Diagrams by [Mermaid](https://mermaid.js.org/)
 
 ## Roadmap
 
@@ -210,4 +262,4 @@ See [DEV-PLAN.md](docs/DEV-PLAN.md) for detailed development roadmap and impleme
 
 ---
 
-**Note**: This is a work-in-progress project and may contain bugs or incomplete features. Use at your own discretion. For production use cases, always verify outputs independently.
+**Note**: While all core features are implemented and functional, always verify outputs independently for production use cases.
