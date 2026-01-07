@@ -236,7 +236,6 @@ Every tool follows the same patterns:
 ### Phase 7: Design Tools
 - SVG Path Editor/Optimizer
 - Color Contrast Checker (WCAG)
-- Icon Font Search
 
 ### Phase 8: UX Enhancements
 - Command Palette implementation

@@ -31,8 +31,9 @@ export function DnsLookup() {
   const [recordType, setRecordType] = useState<RecordType>('A');
   const [dnsResponse, setDnsResponse] = useState<DnsResponse | null>(null);
   const [error, setError] = useState('');
+  const [copiedItem, setCopiedItem] = useState<string | null>(null);
 
-  const { copyToClipboard, isCopied } = useCopyToClipboard();
+  const { copyToClipboard } = useCopyToClipboard();
   const { executeAction: executeLookup, isLoading } = useActionButton();
 
   const recordTypes: RecordType[] = ['A', 'AAAA', 'MX', 'TXT', 'NS', 'CNAME', 'SOA'];
@@ -100,8 +101,16 @@ export function DnsLookup() {
     await executeLookup(lookupDNS);
   };
 
-  const handleCopy = async (text: string) => {
-    await copyToClipboard(text);
+  const handleCopy = async (text: string, itemId: string) => {
+    try {
+      await copyToClipboard(text);
+      setCopiedItem(itemId);
+      setTimeout(() => {
+        setCopiedItem(null);
+      }, 2000);
+    } catch (error) {
+      console.error('Failed to copy to clipboard:', error);
+    }
   };
 
   const handleClear = () => {
@@ -120,7 +129,7 @@ export function DnsLookup() {
   const copyAllRecords = () => {
     if (!dnsResponse?.Answer) return;
     const text = dnsResponse.Answer.map(r => r.data).join('\n');
-    handleCopy(text);
+    handleCopy(text, 'all-records');
   };
 
   return (
@@ -209,7 +218,7 @@ export function DnsLookup() {
               onClick={copyAllRecords}
               title="Copy all records"
             >
-              {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+              {copiedItem === 'all-records' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             </Button>
           </CardHeader>
           <CardContent>
@@ -233,11 +242,11 @@ export function DnsLookup() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => handleCopy(record.data)}
+                      onClick={() => handleCopy(record.data, `record-${index}`)}
                       title="Copy record"
                       className="shrink-0"
                     >
-                      {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      {copiedItem === `record-${index}` ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                     </Button>
                   </div>
                   {record.name && record.name !== domain && (

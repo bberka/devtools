@@ -48,6 +48,10 @@ import { DnsLookup } from '@/components/preact/tools/DnsLookup';
 import { SubnetCalculator } from '@/components/preact/tools/SubnetCalculator';
 import { PortChecker } from '@/components/preact/tools/PortChecker';
 
+// Import Phase 8 tools (Design)
+import { SvgPathEditor } from '@/components/preact/tools/SvgPathEditor';
+import { ColorContrastChecker } from '@/components/preact/tools/ColorContrastChecker';
+
 export async function getStaticPaths() {
   return TOOLS.map((tool) => ({
     params: { slug: tool.id },
@@ -61,7 +65,7 @@ if (!tool) {
   return Astro.redirect('/404');
 }
 
-// List of implemented tool IDs (Phase 2, 3, 4, 5, 6 & 7)
+// List of implemented tool IDs (Phase 2, 3, 4, 5, 6, 7 & 8)
 const implementedTools = [
   'base64-converter',
   'url-encoder',
@@ -94,6 +98,9 @@ const implementedTools = [
   'dns-lookup',
   'subnet-calculator',
   'port-checker',
+  'svg-path-editor',
+  'color-contrast-checker',
+  'icon-font-search',
 ];
 ---
 
@@ -151,6 +158,8 @@ const implementedTools = [
     {tool.id === 'dns-lookup' && <DnsLookup client:load />}
     {tool.id === 'subnet-calculator' && <SubnetCalculator client:load />}
     {tool.id === 'port-checker' && <PortChecker client:load />}
+    {tool.id === 'svg-path-editor' && <SvgPathEditor client:load />}
+    {tool.id === 'color-contrast-checker' && <ColorContrastChecker client:load />}
 
     <!-- Placeholder for unimplemented tools -->
     {

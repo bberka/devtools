@@ -26,8 +26,9 @@ export function SubnetCalculator() {
   const [cidrInput, setCidrInput] = useState('24');
   const [subnetInfo, setSubnetInfo] = useState<SubnetInfo | null>(null);
   const [error, setError] = useState('');
+  const [copiedField, setCopiedField] = useState<string | null>(null);
 
-  const { copyToClipboard, isCopied } = useCopyToClipboard();
+  const { copyToClipboard } = useCopyToClipboard();
 
   const ipToNumber = (ip: string): number => {
     const parts = ip.split('.');
@@ -151,8 +152,16 @@ export function SubnetCalculator() {
     }
   };
 
-  const handleCopy = async (text: string) => {
-    await copyToClipboard(text);
+  const handleCopy = async (text: string, fieldId: string) => {
+    try {
+      await copyToClipboard(text);
+      setCopiedField(fieldId);
+      setTimeout(() => {
+        setCopiedField(null);
+      }, 2000);
+    } catch (error) {
+      console.error('Failed to copy to clipboard:', error);
+    }
   };
 
   const handleClear = () => {
@@ -239,10 +248,10 @@ export function SubnetCalculator() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => handleCopy(`${subnetInfo.ipAddress}/${subnetInfo.cidr}`)}
+                      onClick={() => handleCopy(`${subnetInfo.ipAddress}/${subnetInfo.cidr}`, 'ip-cidr')}
                       title="Copy IP/CIDR"
                     >
-                      {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      {copiedField === 'ip-cidr' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                     </Button>
                   </div>
                 </div>
@@ -257,10 +266,10 @@ export function SubnetCalculator() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => handleCopy(subnetInfo.subnetMask)}
+                      onClick={() => handleCopy(subnetInfo.subnetMask, 'subnet-mask')}
                       title="Copy subnet mask"
                     >
-                      {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      {copiedField === 'subnet-mask' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                     </Button>
                   </div>
                 </div>
@@ -275,10 +284,10 @@ export function SubnetCalculator() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => handleCopy(subnetInfo.wildcardMask)}
+                      onClick={() => handleCopy(subnetInfo.wildcardMask, 'wildcard-mask')}
                       title="Copy wildcard mask"
                     >
-                      {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      {copiedField === 'wildcard-mask' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                     </Button>
                   </div>
                 </div>
@@ -295,10 +304,10 @@ export function SubnetCalculator() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => handleCopy(subnetInfo.binarySubnetMask)}
+                      onClick={() => handleCopy(subnetInfo.binarySubnetMask, 'binary-mask')}
                       title="Copy binary mask"
                     >
-                      {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      {copiedField === 'binary-mask' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                     </Button>
                   </div>
                 </div>
@@ -326,10 +335,10 @@ export function SubnetCalculator() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => handleCopy(subnetInfo.networkAddress)}
+                      onClick={() => handleCopy(subnetInfo.networkAddress, 'network-address')}
                       title="Copy network address"
                     >
-                      {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      {copiedField === 'network-address' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                     </Button>
                   </div>
                 </div>
@@ -346,10 +355,10 @@ export function SubnetCalculator() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => handleCopy(subnetInfo.broadcastAddress)}
+                      onClick={() => handleCopy(subnetInfo.broadcastAddress, 'broadcast-address')}
                       title="Copy broadcast address"
                     >
-                      {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      {copiedField === 'broadcast-address' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                     </Button>
                   </div>
                 </div>
@@ -366,10 +375,10 @@ export function SubnetCalculator() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => handleCopy(subnetInfo.firstUsableIP)}
+                      onClick={() => handleCopy(subnetInfo.firstUsableIP, 'first-ip')}
                       title="Copy first IP"
                     >
-                      {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      {copiedField === 'first-ip' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                     </Button>
                   </div>
                 </div>
@@ -386,10 +395,10 @@ export function SubnetCalculator() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => handleCopy(subnetInfo.lastUsableIP)}
+                      onClick={() => handleCopy(subnetInfo.lastUsableIP, 'last-ip')}
                       title="Copy last IP"
                     >
-                      {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      {copiedField === 'last-ip' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                     </Button>
                   </div>
                 </div>

@@ -58,6 +58,13 @@ export const CATEGORIES: Record<ToolCategory, CategoryInfo> = {
     description: 'Network utilities and diagnostics',
     color: 'text-indigo-500',
   },
+  design: {
+    id: 'design',
+    name: 'Design',
+    icon: 'Palette',
+    description: 'Design and accessibility tools',
+    color: 'text-violet-500',
+  },
 };
 
 // Tool definitions (Phase 1 - just metadata, no implementations)
@@ -329,6 +336,24 @@ export const TOOLS: Tool[] = [
     icon: 'Radar',
     keywords: ['port', 'scanner', 'check', 'services', 'network'],
   },
+
+  // Design Tools (3)
+  {
+    id: 'svg-path-editor',
+    name: 'SVG Path Editor/Optimizer',
+    description: 'Edit, visualize, and optimize SVG path data',
+    category: 'design',
+    icon: 'Pen',
+    keywords: ['svg', 'path', 'editor', 'optimize', 'visualize', 'vector'],
+  },
+  {
+    id: 'color-contrast-checker',
+    name: 'Color Contrast Checker',
+    description: 'Check color contrast ratios for WCAG compliance',
+    category: 'design',
+    icon: 'Eye',
+    keywords: ['color', 'contrast', 'wcag', 'accessibility', 'a11y', 'compliance'],
+  }
 ];
 
 // Helper functions
