@@ -1,5 +1,4 @@
 import { useState, useMemo, useEffect } from 'preact/hooks';
-import { SearchBar } from './SearchBar';
 import { CategoryFilter } from './CategoryFilter';
 import { filterTools, CATEGORIES } from '@/lib/utils/tools-config';
 import { getFavorites } from '@/lib/utils/storage';
@@ -14,7 +13,6 @@ interface HomeContentProps {
 }
 
 export function HomeContent({ tools, categories }: HomeContentProps) {
-  const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<ToolCategory | null>(null);
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
@@ -63,8 +61,8 @@ export function HomeContent({ tools, categories }: HomeContentProps) {
 
   // Filtered tools
   const filteredTools = useMemo(() => {
-    return filterTools(searchQuery, selectedCategory, showFavoritesOnly, favorites);
-  }, [searchQuery, selectedCategory, showFavoritesOnly, favorites]);
+    return filterTools('', selectedCategory, showFavoritesOnly, favorites);
+  }, [selectedCategory, showFavoritesOnly, favorites]);
 
   // Group by category
   const groupedTools = useMemo(() => {
@@ -93,26 +91,19 @@ export function HomeContent({ tools, categories }: HomeContentProps) {
 
   return (
     <div className="space-y-8">
-      {/* Search and filters */}
-      <div className="space-y-4">
-        <div className="flex justify-center">
-          <SearchBar value={searchQuery} onSearch={setSearchQuery} />
-        </div>
-        <div className="flex justify-center">
-          <CategoryFilter
-            selectedCategory={selectedCategory}
-            showFavoritesOnly={showFavoritesOnly}
-            favoritesCount={favorites.length}
-            onCategoryChange={handleCategoryChange}
-            onFavoritesToggle={handleFavoritesToggle}
-          />
-        </div>
+      {/* Category filters */}
+      <div className="flex justify-center">
+        <CategoryFilter
+          selectedCategory={selectedCategory}
+          showFavoritesOnly={showFavoritesOnly}
+          favoritesCount={favorites.length}
+          onCategoryChange={handleCategoryChange}
+          onFavoritesToggle={handleFavoritesToggle}
+        />
       </div>
 
-     
-
       {/* Favorites section (always show if has favorites and not filtering) */}
-      {favoriteTools.length > 0 && !selectedCategory && !searchQuery && !showFavoritesOnly && (
+      {favoriteTools.length > 0 && !selectedCategory && !showFavoritesOnly && (
         <section>
           <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
             <Star className="h-6 w-6 text-yellow-500 fill-yellow-500" />
@@ -173,10 +164,10 @@ export function HomeContent({ tools, categories }: HomeContentProps) {
       )}
 
       {/* No results */}
-      {filteredTools.length === 0 && (searchQuery || selectedCategory) && (
+      {filteredTools.length === 0 && selectedCategory && (
         <div className="text-center py-12 text-muted-foreground">
-          <p>No tools found matching your criteria</p>
-          <p className="text-sm mt-2">Try adjusting your search or filters</p>
+          <p>No tools found in this category</p>
+          <p className="text-sm mt-2">Try selecting a different category</p>
         </div>
       )}
     </div>

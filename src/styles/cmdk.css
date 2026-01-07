@@ -1,0 +1,39 @@
+/* cmdk Command Palette Styles */
+
+[cmdk-root] {
+  @apply flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground;
+}
+
+[cmdk-group-heading] {
+  @apply px-3 py-1.5 text-xs font-medium text-muted-foreground;
+}
+
+[cmdk-group]:not([hidden]) + [cmdk-group] {
+  @apply pt-0;
+}
+
+[cmdk-separator] {
+  @apply -mx-1 h-px bg-border;
+}
+
+[cmdk-input] {
+  @apply flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+[cmdk-list] {
+  @apply max-h-[300px] overflow-y-auto overflow-x-hidden;
+}
+
+[cmdk-list-sizer] {
+  @apply flex flex-col gap-1;
+}
+
+[cmdk-item] {
+  @apply relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none;
+  @apply data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50;
+  @apply data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground;
+}
+
+[cmdk-empty] {
+  @apply py-6 text-center text-sm;
+}

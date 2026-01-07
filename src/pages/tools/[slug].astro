@@ -105,6 +105,19 @@ const implementedTools = [
 ---
 
 <Layout title={`${tool.name} - Dev Tools`} description={tool.description}>
+  <!-- Track recent tool visit -->
+  <script>
+    import { addRecentTool } from '@/lib/utils/storage';
+
+    // Get tool ID from URL path
+    const pathParts = window.location.pathname.split('/');
+    const toolId = pathParts[pathParts.length - 1];
+
+    if (toolId) {
+      addRecentTool(toolId);
+    }
+  </script>
+
   <div class="max-w-6xl mx-auto space-y-6">
     <!-- Header -->
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-6">
