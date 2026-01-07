@@ -2,8 +2,6 @@
 
 > A modern, fast, and privacy-focused collection of developer tools built with Astro and Preact.
 
-[![Status](https://img.shields.io/badge/status-Stable-green)](https://github.com/bberka/devtools)
-[![Tools](https://img.shields.io/badge/tools-24%2F24-success)](https://github.com/bberka/devtools)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 ## About
@@ -28,6 +26,7 @@ All planned core tools plus Phase 5 security tools are now implemented and funct
 ## Available Tools (27/27 Implemented - 100%)
 
 ### Converters (10 tools)
+
 - ✅ **Base64 Encoder/Decoder** - Encode and decode Base64 strings with instant conversion
 - ✅ **Number Base Converter** - Convert between binary, octal, decimal, and hexadecimal
 - ✅ **Unix Timestamp Converter** - Convert Unix timestamps to readable dates (seconds/milliseconds)
@@ -40,30 +39,36 @@ All planned core tools plus Phase 5 security tools are now implemented and funct
 - ✅ **Markdown Converter** - Convert Markdown to PDF, HTML, TXT, PNG, or JPG
 
 ### Encoders & Decoders (2 tools)
+
 - ✅ **JWT Decoder** - Decode and inspect JSON Web Tokens with timestamp formatting
 - ✅ **Text Escape/Unescape** - Escape special characters (JavaScript, JSON, HTML, XML, CSV, SQL, Regex)
 
 ### Generators (4 tools)
+
 - ✅ **Hash Generator** - Generate MD5, SHA-1, SHA-256, SHA-512 hashes instantly
 - ✅ **UUID Generator** - Generate UUIDs (v4, v7, Snowflake IDs) with bulk generation
 - ✅ **Password Generator** - Create secure random passwords with customizable options
 - ✅ **Lorem Ipsum Generator** - Generate placeholder text (paragraphs, words, sentences)
 
 ### Formatters & Validators (4 tools)
+
 - ✅ **SQL Formatter** - Format SQL queries (PostgreSQL, MySQL, MSSQL, BigQuery, SQLite)
 - ✅ **JSON Formatter** - Format and validate JSON with syntax highlighting
 - ✅ **XML Formatter** - Format XML documents with proper indentation
 - ✅ **XML Validator** - Validate XML syntax and structure
 
 ### Text Tools (3 tools)
+
 - ✅ **Regex Tester** - Test regular expressions with live matching and capture groups
 - ✅ **Markdown Previewer** - Preview Markdown with syntax highlighting, math (KaTeX), and diagrams (Mermaid)
 - ✅ **Text Diff Visualizer** - Compare text with side-by-side and inline diff views
 
 ### Utilities (1 tool)
+
 - ✅ **Cron Expression Parser** - Parse and explain cron expressions with human-readable output
 
 ### Security (3 tools)
+
 - ✅ **RSA Key Pair Generator** - Generate RSA public/private key pairs (2048/3072/4096 bits, PEM/PKCS8/JWK formats)
 - ✅ **AES Encryption/Decryption** - Encrypt and decrypt text using AES-256-GCM with PBKDF2 key derivation
 - ✅ **Bcrypt Hasher** - Hash and verify passwords with bcrypt (configurable cost factor)
@@ -71,6 +76,7 @@ All planned core tools plus Phase 5 security tools are now implemented and funct
 ## Implemented Features
 
 ### UX Features
+
 - ✅ **Instant Conversion** - Real-time output updates as you type (no button clicks needed)
 - ✅ **Dark Mode** - Seamless theme switching with persistent preference
 - ✅ **Favorites System** - Star your frequently used tools for quick access
@@ -83,6 +89,7 @@ All planned core tools plus Phase 5 security tools are now implemented and funct
 - ✅ **Cross-Tab Sync** - Theme and favorites sync across browser tabs
 
 ### Technical Features
+
 - ✅ **100% Client-Side** - All processing happens locally in your browser
 - ✅ **SSR Compatible** - Optimized server-side rendering with Astro
 - ✅ **Code Splitting** - Fast initial load with on-demand tool loading
@@ -93,28 +100,33 @@ All planned core tools plus Phase 5 security tools are now implemented and funct
 ## Planned Features
 
 ### UX Enhancements (Phase 8)
+
 - [ ] **Command Palette** (Ctrl+K / Cmd+K) - Quick tool switching with keyboard
 - [ ] **Drag-and-Drop** - Drop files directly into applicable tools
 - [ ] **Recent Tools** - Quick access to recently used tools
 - [ ] **Export/Import Settings** - Backup and restore preferences
 
 ### CSS Tools (Phase 4)
+
 - [ ] Glassmorphism Generator
 - [ ] Box Shadow Visualizer
 - [ ] Clamp() Calculator (responsive typography)
 - [ ] Advanced Color Picker with palettes
 
 ### Networking Tools (Phase 6)
+
 - [ ] IP Address Lookup (via public API)
 - [ ] DNS Records Lookup
 - [ ] Subnet Calculator
 
 ### Design Tools (Phase 7)
+
 - [ ] SVG Path Editor/Optimizer
 - [ ] Color Contrast Checker (WCAG)
 - [ ] Icon Font Search
 
 ### Performance & SEO (Phase 9)
+
 - [ ] PWA Support - Install as standalone app, offline access
 - [ ] Sitemap Generation - Better search engine indexing
 - [ ] Open Graph Images - Beautiful social media previews
@@ -132,6 +144,7 @@ All planned core tools plus Phase 5 security tools are now implemented and funct
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js 18+ and npm
 
 ### Installation
@@ -234,6 +247,7 @@ Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed g
 5. Open a Pull Request
 
 ### Areas to Contribute
+
 - **New Tools**: Implement tools from [DEV-PLAN.md](docs/DEV-PLAN.md) (CSS, Security, Networking tools)
 - **Bug Fixes**: Check [open issues](https://github.com/bberka/devtools/issues)
 - **UI/UX**: Improve responsiveness, accessibility, dark mode consistency
