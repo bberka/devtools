@@ -51,6 +51,13 @@ export const CATEGORIES: Record<ToolCategory, CategoryInfo> = {
     description: 'Encryption, hashing, and key generation',
     color: 'text-red-500',
   },
+  networking: {
+    id: 'networking',
+    name: 'Networking',
+    icon: 'Globe',
+    description: 'Network utilities and diagnostics',
+    color: 'text-indigo-500',
+  },
 };
 
 // Tool definitions (Phase 1 - just metadata, no implementations)
@@ -287,6 +294,40 @@ export const TOOLS: Tool[] = [
     category: 'security',
     icon: 'ShieldCheck',
     keywords: ['bcrypt', 'argon2', 'hash', 'password', 'verify', 'security'],
+  },
+
+  // Networking Tools (4)
+  {
+    id: 'ip-lookup',
+    name: 'IP Address Lookup',
+    description: 'Get detailed information about an IP address',
+    category: 'networking',
+    icon: 'MapPin',
+    keywords: ['ip', 'address', 'lookup', 'geolocation', 'network'],
+  },
+  {
+    id: 'dns-lookup',
+    name: 'DNS Records Lookup',
+    description: 'Query DNS records (A, AAAA, MX, TXT, NS, etc.)',
+    category: 'networking',
+    icon: 'Server',
+    keywords: ['dns', 'lookup', 'records', 'domain', 'nameserver'],
+  },
+  {
+    id: 'subnet-calculator',
+    name: 'Subnet Calculator',
+    description: 'Calculate subnet masks, CIDR, IP ranges',
+    category: 'networking',
+    icon: 'Network',
+    keywords: ['subnet', 'cidr', 'netmask', 'ip', 'calculator'],
+  },
+  {
+    id: 'port-checker',
+    name: 'Port Scanner',
+    description: 'Check common ports and services (browser-compatible)',
+    category: 'networking',
+    icon: 'Radar',
+    keywords: ['port', 'scanner', 'check', 'services', 'network'],
   },
 ];
 

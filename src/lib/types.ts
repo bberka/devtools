@@ -5,7 +5,8 @@ export type ToolCategory =
   | 'formatters-validators'
   | 'text-tools'
   | 'utilities'
-  | 'security';
+  | 'security'
+  | 'networking';
 
 export interface Tool {
   id: string; // slug-style: 'base64-encoder'

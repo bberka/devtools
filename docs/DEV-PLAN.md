@@ -98,15 +98,16 @@
    - Clamp() Calculator (responsive typography)
    - Color Picker
 
-2. **Security Tools** (New Category - Phase 5)
-   - RSA Key Pair Generator (Client-side)
-   - AES Encryption/Decryption
-   - Bcrypt/Argon2 Hasher
+2. **Security Tools** (New Category - Phase 5) ✅ Completed
+   - RSA Key Pair Generator (Client-side) ✅
+   - AES Encryption/Decryption ✅
+   - Bcrypt/Argon2 Hasher ✅
 
-3. **Networking Tools** (New Category - Phase 6)
-   - IP Address Lookup (via public API)
-   - DNS Records Lookup
-   - Subnet Calculator
+3. **Networking Tools** (New Category - Phase 6) ✅ Completed
+   - IP Address Lookup (via ipinfo.io API) ✅
+   - DNS Records Lookup (Google DNS-over-HTTPS) ✅
+   - Subnet Calculator (CIDR notation) ✅
+   - Port Scanner (browser-compatible) ✅
 
 4. **Design Tools** (New Category - Phase 7)
    - SVG Path Editor/Optimizer
@@ -639,11 +640,12 @@ Dragging file over:
 - [x] AES Encryption/Decryption
 - [x] Bcrypt/Argon2 Hasher
 
-### Phase 6: Networking Tools (New)
+### Phase 6: Networking Tools ✅ (Completed - 4 tools)
 
-- [ ] IP Address Lookup (via public API)
-- [ ] DNS Records Lookup
-- [ ] Subnet Calculator
+- [x] IP Address Lookup (via ipinfo.io public API)
+- [x] DNS Records Lookup (Google DNS-over-HTTPS)
+- [x] Subnet Calculator (CIDR notation, IP ranges)
+- [x] Port Scanner (browser-compatible with limitations)
 
 ### Phase 7: Design Tools (New)
 

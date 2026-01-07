@@ -42,6 +42,12 @@ import { RsaKeyGenerator } from '@/components/preact/tools/RsaKeyGenerator';
 import { AesEncryption } from '@/components/preact/tools/AesEncryption';
 import { BcryptHasher } from '@/components/preact/tools/BcryptHasher';
 
+// Import Phase 7 tools (Networking)
+import { IpLookup } from '@/components/preact/tools/IpLookup';
+import { DnsLookup } from '@/components/preact/tools/DnsLookup';
+import { SubnetCalculator } from '@/components/preact/tools/SubnetCalculator';
+import { PortChecker } from '@/components/preact/tools/PortChecker';
+
 export async function getStaticPaths() {
   return TOOLS.map((tool) => ({
     params: { slug: tool.id },
@@ -55,7 +61,7 @@ if (!tool) {
   return Astro.redirect('/404');
 }
 
-// List of implemented tool IDs (Phase 2, 3, 4, 5 & 6)
+// List of implemented tool IDs (Phase 2, 3, 4, 5, 6 & 7)
 const implementedTools = [
   'base64-converter',
   'url-encoder',
@@ -84,6 +90,10 @@ const implementedTools = [
   'rsa-key-generator',
   'aes-encryption',
   'bcrypt-hasher',
+  'ip-lookup',
+  'dns-lookup',
+  'subnet-calculator',
+  'port-checker',
 ];
 ---
 
@@ -137,6 +147,10 @@ const implementedTools = [
     {tool.id === 'rsa-key-generator' && <RsaKeyGenerator client:load />}
     {tool.id === 'aes-encryption' && <AesEncryption client:load />}
     {tool.id === 'bcrypt-hasher' && <BcryptHasher client:load />}
+    {tool.id === 'ip-lookup' && <IpLookup client:load />}
+    {tool.id === 'dns-lookup' && <DnsLookup client:load />}
+    {tool.id === 'subnet-calculator' && <SubnetCalculator client:load />}
+    {tool.id === 'port-checker' && <PortChecker client:load />}
 
     <!-- Placeholder for unimplemented tools -->
     {

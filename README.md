@@ -8,9 +8,9 @@
 
 DevTools Collection is a web-based toolkit providing essential utilities for developers. All processing happens client-side in your browser - your data never leaves your machine.
 
-**Current Status**: ✅ **All Core Tools + Security Tools Implemented** (27/27 - 100%)
+**Current Status**: ✅ **All Core Tools + Security + Networking Implemented** (31/31 - 100%)
 
-All planned core tools plus Phase 5 security tools are now implemented and functional! The project is stable and ready for use. We're now focusing on additional tool categories and UX enhancements. Contributions and feedback are welcome!
+All planned core tools plus Phase 5 security tools and Phase 6 networking tools are now implemented and functional! The project is stable and ready for use. We're now focusing on additional tool categories and UX enhancements. Contributions and feedback are welcome!
 
 ## Features
 
@@ -23,7 +23,7 @@ All planned core tools plus Phase 5 security tools are now implemented and funct
 - **Mobile-Friendly**: Responsive design works perfectly on all devices
 - **No Installation**: Just open in your browser and start using
 
-## Available Tools (27/27 Implemented - 100%)
+## Available Tools (31/31 Implemented - 100%)
 
 ### Converters (10 tools)
 
@@ -73,6 +73,13 @@ All planned core tools plus Phase 5 security tools are now implemented and funct
 - ✅ **AES Encryption/Decryption** - Encrypt and decrypt text using AES-256-GCM with PBKDF2 key derivation
 - ✅ **Bcrypt Hasher** - Hash and verify passwords with bcrypt (configurable cost factor)
 
+### Networking (4 tools)
+
+- ✅ **IP Address Lookup** - Get detailed geolocation and network information for any IP address
+- ✅ **DNS Records Lookup** - Query DNS records (A, AAAA, MX, TXT, NS, CNAME, SOA) using DNS-over-HTTPS
+- ✅ **Subnet Calculator** - Calculate subnet masks, CIDR notation, IP ranges, and host information
+- ✅ **Port Scanner** - Check common ports and services (browser-compatible with limitations)
+
 ## Implemented Features
 
 ### UX Features
@@ -113,11 +120,12 @@ All planned core tools plus Phase 5 security tools are now implemented and funct
 - [ ] Clamp() Calculator (responsive typography)
 - [ ] Advanced Color Picker with palettes
 
-### Networking Tools (Phase 6)
+### Networking Tools (Phase 6) ✅ Completed
 
-- [ ] IP Address Lookup (via public API)
-- [ ] DNS Records Lookup
-- [ ] Subnet Calculator
+- ✅ **IP Address Lookup** - Lookup IP geolocation via ipinfo.io API
+- ✅ **DNS Records Lookup** - Query DNS records using Google DNS-over-HTTPS
+- ✅ **Subnet Calculator** - Calculate subnets with CIDR notation
+- ✅ **Port Scanner** - Check common ports (browser-compatible)
 
 ### Design Tools (Phase 7)
 
