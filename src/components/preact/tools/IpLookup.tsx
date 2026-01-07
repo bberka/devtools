@@ -23,8 +23,9 @@ export function IpLookup() {
   const [ipAddress, setIpAddress] = useState('');
   const [ipInfo, setIpInfo] = useState<IpInfo | null>(null);
   const [error, setError] = useState('');
+  const [copiedField, setCopiedField] = useState<string | null>(null);
 
-  const { copyToClipboard, isCopied } = useCopyToClipboard();
+  const { copyToClipboard } = useCopyToClipboard();
   const { executeAction: executeLookup, isLoading } = useActionButton();
 
   const isValidIP = (ip: string): boolean => {
@@ -94,8 +95,16 @@ export function IpLookup() {
     await executeLookup(lookupIP);
   };
 
-  const handleCopy = async (text: string) => {
-    await copyToClipboard(text);
+  const handleCopy = async (text: string, fieldId: string) => {
+    try {
+      await copyToClipboard(text);
+      setCopiedField(fieldId);
+      setTimeout(() => {
+        setCopiedField(null);
+      }, 2000);
+    } catch (error) {
+      console.error('Failed to copy to clipboard:', error);
+    }
   };
 
   const handleClear = () => {
@@ -191,10 +200,10 @@ export function IpLookup() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => handleCopy(ipInfo.ip)}
+                      onClick={() => handleCopy(ipInfo.ip, 'ip')}
                       title="Copy IP"
                     >
-                      {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      {copiedField === 'ip' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                     </Button>
                   </div>
                 </div>
@@ -210,10 +219,10 @@ export function IpLookup() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => handleCopy(ipInfo.hostname!)}
+                        onClick={() => handleCopy(ipInfo.hostname!, 'hostname')}
                         title="Copy hostname"
                       >
-                        {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                        {copiedField === 'hostname' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                       </Button>
                     </div>
                   </div>
@@ -270,10 +279,10 @@ export function IpLookup() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => handleCopy(ipInfo.loc!)}
+                        onClick={() => handleCopy(ipInfo.loc!, 'location')}
                         title="Copy coordinates"
                       >
-                        {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                        {copiedField === 'location' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                       </Button>
                     </div>
                   </div>
@@ -300,10 +309,10 @@ export function IpLookup() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => handleCopy(ipInfo.org!)}
+                        onClick={() => handleCopy(ipInfo.org!, 'organization')}
                         title="Copy organization"
                       >
-                        {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                        {copiedField === 'organization' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                       </Button>
                     </div>
                   </div>

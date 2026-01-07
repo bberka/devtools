@@ -77,6 +77,7 @@ export function HomeContent({ tools, categories }: HomeContentProps) {
       utilities: [],
       security: [],
       networking: [],
+      design: [],
     };
 
     filteredTools.forEach((tool) => {

@@ -6,7 +6,8 @@ export type ToolCategory =
   | 'text-tools'
   | 'utilities'
   | 'security'
-  | 'networking';
+  | 'networking'
+  | 'design';
 
 export interface Tool {
   id: string; // slug-style: 'base64-encoder'
