@@ -5,6 +5,7 @@ import { Input } from '../ui/input';
 import { Select } from '../ui/select';
 import { Checkbox } from '../ui/checkbox';
 import { Copy, Check } from 'lucide-preact';
+import { useCopyToClipboard } from '../hooks';
 
 type GenerateType = 'paragraphs' | 'sentences' | 'words';
 
@@ -31,7 +32,7 @@ export function LoremIpsumGenerator() {
   const [startWithLorem, setStartWithLorem] = useState(true);
   const [htmlTags, setHtmlTags] = useState(false);
   const [output, setOutput] = useState('');
-  const [copied, setCopied] = useState(false);
+  const { copyToClipboard, isCopied } = useCopyToClipboard();
 
   const generateWords = (wordCount: number, start: boolean = false) => {
     const words = [];
@@ -87,9 +88,7 @@ export function LoremIpsumGenerator() {
   };
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(output);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    await copyToClipboard(output);
   };
 
   return (
@@ -146,8 +145,13 @@ export function LoremIpsumGenerator() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle>Output</CardTitle>
-            <Button variant="ghost" size="icon" onClick={handleCopy}>
-              {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+            <Button
+              variant={isCopied ? "default" : "ghost"}
+              size="icon"
+              onClick={handleCopy}
+              title={isCopied ? "Copied!" : "Copy output"}
+            >
+              {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             </Button>
           </CardHeader>
           <CardContent>

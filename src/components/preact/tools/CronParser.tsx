@@ -3,7 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/preact/ui/input';
 import { Button } from '@/components/preact/ui/button';
 import { Select } from '@/components/preact/ui/select';
-import { Calendar, Clock, AlertCircle, Copy } from 'lucide-preact';
+import { Calendar, Clock, AlertCircle, Copy, Check } from 'lucide-preact';
+import { useCopyToClipboard } from '../hooks';
 
 interface CronParts {
   minute: string;
@@ -25,6 +26,7 @@ export function CronParser() {
   const [description, setDescription] = useState('');
   const [nextRuns, setNextRuns] = useState<NextRun[]>([]);
   const [error, setError] = useState('');
+  const { copyToClipboard, isCopied } = useCopyToClipboard();
 
   useEffect(() => {
     parseCron(expression);
@@ -164,11 +166,6 @@ export function CronParser() {
     { value: '0 0 1 * *', label: 'First day of every month' },
   ];
 
-  const handleCopy = async () => {
-    if (expression) {
-      await navigator.clipboard.writeText(expression);
-    }
-  };
 
   return (
     <div className="space-y-4">
@@ -189,8 +186,17 @@ export function CronParser() {
                 placeholder="0 9 * * 1-5"
                 className="font-mono flex-1"
               />
-              <Button onClick={handleCopy} variant="outline" size="sm">
-                <Copy className="h-4 w-4" />
+              <Button
+                onClick={() => copyToClipboard(expression)}
+                variant={isCopied ? "default" : "outline"}
+                size="sm"
+                disabled={!expression}
+              >
+                {isCopied ? (
+                  <Check className="h-4 w-4" />
+                ) : (
+                  <Copy className="h-4 w-4" />
+                )}
               </Button>
             </div>
 

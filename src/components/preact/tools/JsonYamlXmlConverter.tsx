@@ -3,7 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/preact/ui/button';
 import { Textarea } from '@/components/preact/ui/textarea';
 import { Select } from '@/components/preact/ui/select';
-import { Copy, Code, Trash2, ArrowRight } from 'lucide-preact';
+import { Copy, Check, Code, Trash2, ArrowRight } from 'lucide-preact';
+import { useCopyToClipboard } from '../hooks';
 import * as yaml from 'js-yaml';
 import { json2xml, xml2json } from 'xml-js';
 
@@ -15,6 +16,7 @@ export function JsonYamlXmlConverter() {
   const [error, setError] = useState('');
   const [inputFormat, setInputFormat] = useState<Format>('json');
   const [outputFormat, setOutputFormat] = useState<Format>('yaml');
+  const { copyToClipboard, isCopied } = useCopyToClipboard();
 
   const convert = (text: string, fromFormat: Format, toFormat: Format) => {
     if (!text.trim()) {
@@ -86,11 +88,6 @@ export function JsonYamlXmlConverter() {
     convert(input, inputFormat, format);
   };
 
-  const handleCopy = async () => {
-    if (output) {
-      await navigator.clipboard.writeText(output);
-    }
-  };
 
   const handleClear = () => {
     setInput('');
@@ -201,9 +198,23 @@ export function JsonYamlXmlConverter() {
             className="font-mono text-sm"
           />
 
-          <Button onClick={handleCopy} disabled={!output} size="sm">
-            <Copy className="h-4 w-4 mr-2" />
-            Copy to Clipboard
+          <Button
+            onClick={() => copyToClipboard(output)}
+            disabled={!output}
+            size="sm"
+            variant={isCopied ? "default" : "outline"}
+          >
+            {isCopied ? (
+              <>
+                <Check className="h-4 w-4 mr-2" />
+                Copied!
+              </>
+            ) : (
+              <>
+                <Copy className="h-4 w-4 mr-2" />
+                Copy to Clipboard
+              </>
+            )}
           </Button>
         </CardContent>
       </Card>

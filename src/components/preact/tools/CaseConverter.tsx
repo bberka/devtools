@@ -2,10 +2,11 @@ import { useState } from 'preact/hooks';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/preact/ui/card';
 import { Button } from '@/components/preact/ui/button';
 import { Textarea } from '@/components/preact/ui/textarea';
-import { Copy, Type, Trash2 } from 'lucide-preact';
+import { Copy, Check, Type, Trash2 } from 'lucide-preact';
 
 export function CaseConverter() {
   const [input, setInput] = useState('');
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   const toCamelCase = (text: string): string => {
     return text
@@ -78,8 +79,10 @@ export function CaseConverter() {
       .replace(/^_/, '');
   };
 
-  const handleCopy = async (value: string) => {
+  const handleCopy = async (value: string, index: number) => {
     await navigator.clipboard.writeText(value);
+    setCopiedIndex(index);
+    setTimeout(() => setCopiedIndex(null), 2000);
   };
 
   const handleClear = () => {
@@ -127,8 +130,9 @@ export function CaseConverter() {
 
       {input && (
         <div className="grid gap-4">
-          {conversions.map((conversion) => {
+          {conversions.map((conversion, index) => {
             const converted = conversion.fn(input);
+            const isCopied = copiedIndex === index;
             return (
               <Card key={conversion.label}>
                 <CardHeader>
@@ -141,9 +145,23 @@ export function CaseConverter() {
                   <div className="bg-muted p-4 rounded-md font-mono text-sm break-all">
                     {converted || <span className="text-muted-foreground italic">Empty result</span>}
                   </div>
-                  <Button onClick={() => handleCopy(converted)} disabled={!converted} size="sm">
-                    <Copy className="h-4 w-4 mr-2" />
-                    Copy
+                  <Button
+                    onClick={() => handleCopy(converted, index)}
+                    disabled={!converted}
+                    size="sm"
+                    variant={isCopied ? "default" : "outline"}
+                  >
+                    {isCopied ? (
+                      <>
+                        <Check className="h-4 w-4 mr-2" />
+                        Copied!
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="h-4 w-4 mr-2" />
+                        Copy
+                      </>
+                    )}
                   </Button>
                 </CardContent>
               </Card>

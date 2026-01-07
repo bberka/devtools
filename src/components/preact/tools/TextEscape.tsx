@@ -4,6 +4,7 @@ import { Button } from '@/components/preact/ui/button';
 import { Textarea } from '@/components/preact/ui/textarea';
 import { Select } from '@/components/preact/ui/select';
 import { Copy, Quote, Trash2, ArrowLeftRight, Check } from 'lucide-preact';
+import { useCopyToClipboard } from '../hooks';
 
 type EscapeMode = 'javascript' | 'json' | 'html' | 'xml' | 'csv' | 'sql' | 'regex';
 
@@ -13,7 +14,7 @@ export function TextEscape() {
   const [mode, setMode] = useState<EscapeMode>('javascript');
   const [direction, setDirection] = useState<'escape' | 'unescape'>('escape');
   const [error, setError] = useState('');
-  const [copied, setCopied] = useState(false);
+  const { copyToClipboard, isCopied } = useCopyToClipboard();
 
   const escapeText = (text: string, escapeMode: EscapeMode): string => {
     if (!text) return '';
@@ -155,9 +156,7 @@ export function TextEscape() {
 
   const handleCopy = async () => {
     if (output) {
-      await navigator.clipboard.writeText(output);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      await copyToClipboard(output);
     }
   };
 
@@ -246,9 +245,23 @@ export function TextEscape() {
               {output || 'Output will appear here...'}
             </pre>
             <div className="flex gap-2">
-              <Button onClick={handleCopy} disabled={!output} size="sm">
-                {copied ? <Check className="h-4 w-4 mr-2" /> : <Copy className="h-4 w-4 mr-2" />}
-                {copied ? 'Copied!' : 'Copy'}
+              <Button
+                onClick={handleCopy}
+                disabled={!output}
+                size="sm"
+                variant={isCopied ? "default" : "outline"}
+              >
+                {isCopied ? (
+                  <>
+                    <Check className="h-4 w-4 mr-2" />
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-4 w-4 mr-2" />
+                    Copy
+                  </>
+                )}
               </Button>
               <Button onClick={handleSwap} disabled={!output} variant="outline" size="sm">
                 <ArrowLeftRight className="h-4 w-4 mr-2" />

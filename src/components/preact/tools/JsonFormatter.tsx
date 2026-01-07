@@ -3,13 +3,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/preact/ui/button';
 import { Textarea } from '@/components/preact/ui/textarea';
 import { Select } from '@/components/preact/ui/select';
-import { Copy, FileJson, Trash2 } from 'lucide-preact';
+import { Copy, Check, FileJson, Trash2 } from 'lucide-preact';
+import { useCopyToClipboard } from '../hooks';
 
 export function JsonFormatter() {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [error, setError] = useState('');
   const [indentation, setIndentation] = useState('2');
+  const { copyToClipboard, isCopied } = useCopyToClipboard();
 
   const formatJson = (text: string) => {
     if (!text.trim()) {
@@ -48,11 +50,6 @@ export function JsonFormatter() {
     }
   };
 
-  const handleCopy = async () => {
-    if (output) {
-      await navigator.clipboard.writeText(output);
-    }
-  };
 
   const handleClear = () => {
     setInput('');
@@ -140,9 +137,23 @@ export function JsonFormatter() {
             className="font-mono text-sm"
           />
 
-          <Button onClick={handleCopy} disabled={!output} size="sm">
-            <Copy className="h-4 w-4 mr-2" />
-            Copy to Clipboard
+          <Button
+            onClick={() => copyToClipboard(output)}
+            disabled={!output}
+            size="sm"
+            variant={isCopied ? "default" : "outline"}
+          >
+            {isCopied ? (
+              <>
+                <Check className="h-4 w-4 mr-2" />
+                Copied!
+              </>
+            ) : (
+              <>
+                <Copy className="h-4 w-4 mr-2" />
+                Copy to Clipboard
+              </>
+            )}
           </Button>
         </CardContent>
       </Card>

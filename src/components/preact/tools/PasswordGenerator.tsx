@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Slider } from '../ui/slider';
 import { Checkbox } from '../ui/checkbox';
 import { Copy, Check } from 'lucide-preact';
+import { useCopyToClipboard } from '../hooks';
 
 export function PasswordGenerator() {
   const [length, setLength] = useState(12);
@@ -13,7 +14,7 @@ export function PasswordGenerator() {
   const [special, setSpecial] = useState(true);
   const [excludeAmbiguous, setExcludeAmbiguous] = useState(false);
   const [password, setPassword] = useState('');
-  const [copied, setCopied] = useState(false);
+  const { copyToClipboard, isCopied } = useCopyToClipboard();
 
   const generatePassword = () => {
     let charset = '';
@@ -48,9 +49,7 @@ export function PasswordGenerator() {
   }, []);
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(password);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    await copyToClipboard(password);
   };
 
   const getStrength = () => {
@@ -147,12 +146,13 @@ export function PasswordGenerator() {
                 </span>
               )}
               <Button
-                variant="ghost"
+                variant={isCopied ? "default" : "ghost"}
                 size="icon"
                 onClick={handleCopy}
                 disabled={password.includes('Please select')}
+                title={isCopied ? "Copied!" : "Copy password"}
               >
-                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
               </Button>
             </div>
           </CardHeader>

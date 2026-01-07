@@ -2,7 +2,8 @@ import { useState, useEffect } from 'preact/hooks';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/preact/ui/card';
 import { Button } from '@/components/preact/ui/button';
 import { Input } from '@/components/preact/ui/input';
-import { Copy, Palette, Trash2 } from 'lucide-preact';
+import { Copy, Check, Palette, Trash2 } from 'lucide-preact';
+import { useCopyToClipboard } from '../hooks';
 
 interface ColorValues {
   hex: string;
@@ -17,6 +18,11 @@ export function ColorConverter() {
   const [hsl, setHsl] = useState('217, 91%, 60%');
   const [hsv, setHsv] = useState('217, 76%, 96%');
   const [error, setError] = useState('');
+
+  const copyHex = useCopyToClipboard();
+  const copyRgb = useCopyToClipboard();
+  const copyHsl = useCopyToClipboard();
+  const copyHsv = useCopyToClipboard();
 
   useEffect(() => {
     updateFromHex(hex);
@@ -200,11 +206,6 @@ export function ColorConverter() {
     }
   };
 
-  const handleCopy = async (value: string) => {
-    if (typeof navigator !== 'undefined' && navigator.clipboard) {
-      await navigator.clipboard.writeText(value);
-    }
-  };
 
   const handleClear = () => {
     setHex('#000000');
@@ -262,9 +263,22 @@ export function ColorConverter() {
             placeholder="#3b82f6"
             className="font-mono"
           />
-          <Button onClick={() => handleCopy(hex)} size="sm">
-            <Copy className="h-4 w-4 mr-2" />
-            Copy HEX
+          <Button
+            onClick={() => copyHex.copyToClipboard(hex)}
+            size="sm"
+            variant={copyHex.isCopied ? "default" : "outline"}
+          >
+            {copyHex.isCopied ? (
+              <>
+                <Check className="h-4 w-4 mr-2" />
+                Copied!
+              </>
+            ) : (
+              <>
+                <Copy className="h-4 w-4 mr-2" />
+                Copy HEX
+              </>
+            )}
           </Button>
         </CardContent>
       </Card>
@@ -285,9 +299,22 @@ export function ColorConverter() {
             placeholder="59, 130, 246"
             className="font-mono"
           />
-          <Button onClick={() => handleCopy(`rgb(${rgb})`)} size="sm">
-            <Copy className="h-4 w-4 mr-2" />
-            Copy RGB
+          <Button
+            onClick={() => copyRgb.copyToClipboard(`rgb(${rgb})`)}
+            size="sm"
+            variant={copyRgb.isCopied ? "default" : "outline"}
+          >
+            {copyRgb.isCopied ? (
+              <>
+                <Check className="h-4 w-4 mr-2" />
+                Copied!
+              </>
+            ) : (
+              <>
+                <Copy className="h-4 w-4 mr-2" />
+                Copy RGB
+              </>
+            )}
           </Button>
         </CardContent>
       </Card>
@@ -308,9 +335,22 @@ export function ColorConverter() {
             placeholder="217, 91%, 60%"
             className="font-mono"
           />
-          <Button onClick={() => handleCopy(`hsl(${hsl})`)} size="sm">
-            <Copy className="h-4 w-4 mr-2" />
-            Copy HSL
+          <Button
+            onClick={() => copyHsl.copyToClipboard(`hsl(${hsl})`)}
+            size="sm"
+            variant={copyHsl.isCopied ? "default" : "outline"}
+          >
+            {copyHsl.isCopied ? (
+              <>
+                <Check className="h-4 w-4 mr-2" />
+                Copied!
+              </>
+            ) : (
+              <>
+                <Copy className="h-4 w-4 mr-2" />
+                Copy HSL
+              </>
+            )}
           </Button>
         </CardContent>
       </Card>
@@ -322,9 +362,22 @@ export function ColorConverter() {
         </CardHeader>
         <CardContent className="space-y-4">
           <Input value={hsv} readOnly className="font-mono bg-muted" />
-          <Button onClick={() => handleCopy(`hsv(${hsv})`)} size="sm">
-            <Copy className="h-4 w-4 mr-2" />
-            Copy HSV
+          <Button
+            onClick={() => copyHsv.copyToClipboard(`hsv(${hsv})`)}
+            size="sm"
+            variant={copyHsv.isCopied ? "default" : "outline"}
+          >
+            {copyHsv.isCopied ? (
+              <>
+                <Check className="h-4 w-4 mr-2" />
+                Copied!
+              </>
+            ) : (
+              <>
+                <Copy className="h-4 w-4 mr-2" />
+                Copy HSV
+              </>
+            )}
           </Button>
         </CardContent>
       </Card>

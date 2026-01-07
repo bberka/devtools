@@ -3,13 +3,14 @@ import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Textarea } from '../ui/textarea';
 import { Copy, Check, Trash2, ArrowLeftRight } from 'lucide-preact';
+import { useCopyToClipboard } from '../hooks';
 
 export function Base64Converter() {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [mode, setMode] = useState<'encode' | 'decode'>('encode');
   const [error, setError] = useState('');
-  const [copied, setCopied] = useState(false);
+  const { copyToClipboard, isCopied } = useCopyToClipboard();
 
   useEffect(() => {
     handleConvert();
@@ -37,9 +38,7 @@ export function Base64Converter() {
 
   const handleCopy = async () => {
     if (output) {
-      await navigator.clipboard.writeText(output);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      await copyToClipboard(output);
     }
   };
 
@@ -115,9 +114,23 @@ export function Base64Converter() {
               className="font-mono"
             />
             <div className="flex gap-2">
-              <Button onClick={handleCopy} disabled={!output} size="sm">
-                {copied ? <Check className="h-4 w-4 mr-2" /> : <Copy className="h-4 w-4 mr-2" />}
-                {copied ? 'Copied!' : 'Copy'}
+              <Button
+                onClick={handleCopy}
+                disabled={!output}
+                size="sm"
+                variant={isCopied ? "default" : "outline"}
+              >
+                {isCopied ? (
+                  <>
+                    <Check className="h-4 w-4 mr-2" />
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-4 w-4 mr-2" />
+                    Copy
+                  </>
+                )}
               </Button>
               <Button onClick={handleSwap} disabled={!output} variant="outline" size="sm">
                 <ArrowLeftRight className="h-4 w-4 mr-2" />

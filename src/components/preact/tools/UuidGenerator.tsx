@@ -3,6 +3,7 @@ import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Select } from '../ui/select';
 import { Copy, Check } from 'lucide-preact';
+import { useCopyToClipboard } from '../hooks';
 
 type UuidType = 'v4' | 'v7' | 'snowflake';
 
@@ -25,6 +26,7 @@ export function UuidGenerator() {
   const [uuids, setUuids] = useState<string[]>([]);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [copiedAll, setCopiedAll] = useState(false);
+  const { copyToClipboard } = useCopyToClipboard();
 
   const generateV4 = () => {
     return crypto.randomUUID();
@@ -58,13 +60,13 @@ export function UuidGenerator() {
   };
 
   const handleCopy = async (index: number) => {
-    await navigator.clipboard.writeText(uuids[index]);
+    await copyToClipboard(uuids[index]);
     setCopiedIndex(index);
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
   const handleCopyAll = async () => {
-    await navigator.clipboard.writeText(uuids.join('\n'));
+    await copyToClipboard(uuids.join('\n'));
     setCopiedAll(true);
     setTimeout(() => setCopiedAll(false), 2000);
   };
@@ -106,7 +108,11 @@ export function UuidGenerator() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle>Generated IDs</CardTitle>
-            <Button variant="ghost" size="sm" onClick={handleCopyAll}>
+            <Button
+              variant={copiedAll ? "default" : "ghost"}
+              size="sm"
+              onClick={handleCopyAll}
+            >
               {copiedAll ? <Check className="h-4 w-4 mr-2" /> : <Copy className="h-4 w-4 mr-2" />}
               Copy All
             </Button>
@@ -119,7 +125,7 @@ export function UuidGenerator() {
                     {uuid}
                   </div>
                   <Button
-                    variant="ghost"
+                    variant={copiedIndex === index ? "default" : "ghost"}
                     size="icon"
                     onClick={() => handleCopy(index)}
                     className="opacity-0 group-hover:opacity-100 transition-opacity"

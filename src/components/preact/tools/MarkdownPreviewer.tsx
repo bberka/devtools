@@ -2,7 +2,8 @@ import { useState, useEffect } from 'preact/hooks';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/preact/ui/card';
 import { Button } from '@/components/preact/ui/button';
 import { Textarea } from '@/components/preact/ui/textarea';
-import { Eye, FileText, Copy, Trash2 } from 'lucide-preact';
+import { Eye, FileText, Copy, Check, Trash2 } from 'lucide-preact';
+import { useCopyToClipboard } from '../hooks';
 import MarkdownIt from 'markdown-it';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github-dark.css';
@@ -74,6 +75,7 @@ function hello() {
 export function MarkdownPreviewer() {
   const [input, setInput] = useState(defaultMarkdown);
   const [output, setOutput] = useState('');
+  const { copyToClipboard, isCopied } = useCopyToClipboard();
 
   useEffect(() => {
     renderMarkdown(input);
@@ -98,11 +100,6 @@ export function MarkdownPreviewer() {
     renderMarkdown(text);
   };
 
-  const handleCopy = async () => {
-    if (input) {
-      await navigator.clipboard.writeText(input);
-    }
-  };
 
   const handleClear = () => {
     setInput('');
@@ -129,9 +126,22 @@ export function MarkdownPreviewer() {
           />
 
           <div className="flex items-center gap-2">
-            <Button onClick={handleCopy} variant="outline" size="sm">
-              <Copy className="h-4 w-4 mr-2" />
-              Copy Markdown
+            <Button
+              onClick={() => copyToClipboard(input)}
+              variant={isCopied ? "default" : "outline"}
+              size="sm"
+            >
+              {isCopied ? (
+                <>
+                  <Check className="h-4 w-4 mr-2" />
+                  Copied!
+                </>
+              ) : (
+                <>
+                  <Copy className="h-4 w-4 mr-2" />
+                  Copy Markdown
+                </>
+              )}
             </Button>
             <Button onClick={handleClear} variant="outline" size="sm">
               <Trash2 className="h-4 w-4 mr-2" />

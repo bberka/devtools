@@ -3,6 +3,7 @@ import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Textarea } from '../ui/textarea';
 import { Copy, Check } from 'lucide-preact';
+import { useCopyToClipboard } from '../hooks';
 import md5 from 'blueimp-md5';
 
 type HashAlgorithm = 'MD5' | 'SHA-1' | 'SHA-256' | 'SHA-512';
@@ -16,6 +17,7 @@ export function HashGenerator() {
     'SHA-512': '',
   });
   const [copiedHash, setCopiedHash] = useState<HashAlgorithm | null>(null);
+  const { copyToClipboard } = useCopyToClipboard();
 
   const generateHash = async (algorithm: HashAlgorithm, text: string): Promise<string> => {
     if (algorithm === 'MD5') {
@@ -57,7 +59,7 @@ export function HashGenerator() {
   };
 
   const handleCopy = async (algorithm: HashAlgorithm) => {
-    await navigator.clipboard.writeText(hashes[algorithm]);
+    await copyToClipboard(hashes[algorithm]);
     setCopiedHash(algorithm);
     setTimeout(() => setCopiedHash(null), 2000);
   };
@@ -90,7 +92,7 @@ export function HashGenerator() {
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-lg">{algorithm}</CardTitle>
               <Button
-                variant="ghost"
+                variant={copiedHash === algorithm ? "default" : "ghost"}
                 size="icon"
                 onClick={() => handleCopy(algorithm)}
                 disabled={!hashes[algorithm]}

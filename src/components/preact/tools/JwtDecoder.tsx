@@ -2,7 +2,8 @@ import { useState } from 'preact/hooks';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/preact/ui/card';
 import { Button } from '@/components/preact/ui/button';
 import { Textarea } from '@/components/preact/ui/textarea';
-import { Copy, Key, Trash2 } from 'lucide-preact';
+import { Copy, Check, Key, Trash2 } from 'lucide-preact';
+import { useCopyToClipboard } from '../hooks';
 
 interface JwtParts {
   header: string;
@@ -20,6 +21,8 @@ export function JwtDecoder() {
   const [input, setInput] = useState('');
   const [decoded, setDecoded] = useState<DecodedJwt | null>(null);
   const [error, setError] = useState('');
+  const copyHeader = useCopyToClipboard();
+  const copyPayload = useCopyToClipboard();
 
   const base64UrlDecode = (str: string): string => {
     // Convert base64url to base64
@@ -90,17 +93,6 @@ export function JwtDecoder() {
     }
   };
 
-  const handleCopyHeader = async () => {
-    if (decoded) {
-      await navigator.clipboard.writeText(JSON.stringify(decoded.header, null, 2));
-    }
-  };
-
-  const handleCopyPayload = async () => {
-    if (decoded) {
-      await navigator.clipboard.writeText(JSON.stringify(decoded.payload, null, 2));
-    }
-  };
 
   const handleClear = () => {
     setInput('');
@@ -160,9 +152,22 @@ export function JwtDecoder() {
               <div className="bg-muted p-4 rounded-md font-mono text-sm overflow-x-auto">
                 <pre>{JSON.stringify(decoded.header, null, 2)}</pre>
               </div>
-              <Button onClick={handleCopyHeader} size="sm">
-                <Copy className="h-4 w-4 mr-2" />
-                Copy Header
+              <Button
+                onClick={() => copyHeader.copyToClipboard(JSON.stringify(decoded.header, null, 2))}
+                size="sm"
+                variant={copyHeader.isCopied ? "default" : "outline"}
+              >
+                {copyHeader.isCopied ? (
+                  <>
+                    <Check className="h-4 w-4 mr-2" />
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-4 w-4 mr-2" />
+                    Copy Header
+                  </>
+                )}
               </Button>
             </CardContent>
           </Card>
@@ -205,9 +210,22 @@ export function JwtDecoder() {
                 </div>
               )}
 
-              <Button onClick={handleCopyPayload} size="sm">
-                <Copy className="h-4 w-4 mr-2" />
-                Copy Payload
+              <Button
+                onClick={() => copyPayload.copyToClipboard(JSON.stringify(decoded.payload, null, 2))}
+                size="sm"
+                variant={copyPayload.isCopied ? "default" : "outline"}
+              >
+                {copyPayload.isCopied ? (
+                  <>
+                    <Check className="h-4 w-4 mr-2" />
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-4 w-4 mr-2" />
+                    Copy Payload
+                  </>
+                )}
               </Button>
             </CardContent>
           </Card>
