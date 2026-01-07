@@ -2,6 +2,7 @@
 import Layout from '@/layouts/Layout.astro';
 import { TOOLS } from '@/lib/utils/tools-config';
 import { Button } from '@/components/preact/ui/button';
+import { FavoriteButton } from '@/components/preact/FavoriteButton';
 import { ArrowLeft } from 'lucide-preact';
 
 // Import Phase 2 tools
@@ -93,6 +94,7 @@ const implementedTools = [
           <p class="text-muted-foreground mt-1">{tool.description}</p>
         </div>
       </div>
+      <FavoriteButton toolId={tool.id} variant="icon" client:load />
     </div>
 
     <!-- Tool Implementation -->

@@ -6,6 +6,7 @@ import { getFavorites } from '@/lib/utils/storage';
 import type { Tool, ToolCategory, CategoryInfo } from '@/lib/types';
 import { Card, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Star } from 'lucide-preact';
+import { FavoriteButton } from './FavoriteButton';
 
 interface HomeContentProps {
   tools: Tool[];
@@ -18,9 +19,29 @@ export function HomeContent({ tools, categories }: HomeContentProps) {
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
 
-  // Load favorites on mount
+  // Load favorites on mount and listen for changes
   useEffect(() => {
     setFavorites(getFavorites());
+
+    // Listen for favorite toggle events from FavoriteButton (same tab)
+    const handleFavoriteToggle = () => {
+      setFavorites(getFavorites());
+    };
+
+    // Listen for storage changes from other tabs (cross-tab sync)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'dev-toolbox:favorites') {
+        setFavorites(getFavorites());
+      }
+    };
+
+    window.addEventListener('favoriteToggled', handleFavoriteToggle);
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('favoriteToggled', handleFavoriteToggle);
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   // Handle favorites toggle - clears category when favorites is selected
@@ -96,7 +117,7 @@ export function HomeContent({ tools, categories }: HomeContentProps) {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {favoriteTools.map((tool) => (
-              <ToolCardComponent key={tool.id} tool={tool} isFavorite={true} />
+              <ToolCardComponent key={tool.id} tool={tool} />
             ))}
           </div>
         </section>
@@ -120,7 +141,6 @@ export function HomeContent({ tools, categories }: HomeContentProps) {
                     <ToolCardComponent
                       key={tool.id}
                       tool={tool}
-                      isFavorite={favorites.includes(tool.id)}
                     />
                   ))}
                 </div>
@@ -136,7 +156,7 @@ export function HomeContent({ tools, categories }: HomeContentProps) {
           {filteredTools.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {filteredTools.map((tool) => (
-                <ToolCardComponent key={tool.id} tool={tool} isFavorite={true} />
+                <ToolCardComponent key={tool.id} tool={tool} />
               ))}
             </div>
           ) : (
@@ -161,7 +181,7 @@ export function HomeContent({ tools, categories }: HomeContentProps) {
 }
 
 // Tool card component (Preact version)
-function ToolCardComponent({ tool, isFavorite }: { tool: Tool; isFavorite: boolean }) {
+function ToolCardComponent({ tool }: { tool: Tool }) {
   return (
     <a href={`/tools/${tool.id}`} className="group block h-full">
       <Card className="h-full transition-all hover:shadow-lg hover:border-primary/50">
@@ -170,9 +190,7 @@ function ToolCardComponent({ tool, isFavorite }: { tool: Tool; isFavorite: boole
             <CardTitle className="text-lg group-hover:text-primary transition-colors">
               {tool.name}
             </CardTitle>
-            {isFavorite && (
-              <Star className="h-5 w-5 text-yellow-500 fill-yellow-500 flex-shrink-0" />
-            )}
+            <FavoriteButton toolId={tool.id} variant="card" />
           </div>
           <CardDescription>{tool.description}</CardDescription>
         </CardHeader>
