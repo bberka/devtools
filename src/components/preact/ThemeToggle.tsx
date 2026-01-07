@@ -16,6 +16,8 @@ export function ThemeToggle() {
       if (e.key === 'dev-toolbox:theme') {
         const newTheme = getTheme();
         setThemeState(newTheme);
+        // Apply the theme to DOM
+        setTheme(newTheme);
       }
     };
 
