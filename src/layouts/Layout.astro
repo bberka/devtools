@@ -1,6 +1,7 @@
 ---
 import '@/styles/global.css';
 import { ThemeToggle } from '@/components/preact/ThemeToggle';
+import { Toaster } from '@/components/preact/ui/toaster';
 
 interface Props {
   title: string;
@@ -56,6 +57,9 @@ const {
       <main class="container py-8">
         <slot />
       </main>
+
+      <!-- Toast notifications -->
+      <Toaster client:load />
 
       <!-- Footer -->
       <footer class="border-t py-6 mt-12">

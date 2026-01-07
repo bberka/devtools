@@ -46,6 +46,7 @@
     "markdown-it-texmath": "^1.0.0",
     "mermaid": "^11.12.2",
     "preact": "^10.28.1",
+    "sonner": "^2.0.7",
     "tailwind-merge": "^3.4.0",
     "xml-js": "^1.6.11"
   },
