@@ -44,6 +44,13 @@ export const CATEGORIES: Record<ToolCategory, CategoryInfo> = {
     description: 'General utilities',
     color: 'text-cyan-500',
   },
+  security: {
+    id: 'security',
+    name: 'Security',
+    icon: 'ShieldCheck',
+    description: 'Encryption, hashing, and key generation',
+    color: 'text-red-500',
+  },
 };
 
 // Tool definitions (Phase 1 - just metadata, no implementations)
@@ -254,6 +261,32 @@ export const TOOLS: Tool[] = [
     category: 'utilities',
     icon: 'Calendar',
     keywords: ['cron', 'schedule', 'parse', 'generate'],
+  },
+
+  // Security Tools (3)
+  {
+    id: 'rsa-key-generator',
+    name: 'RSA Key Pair Generator',
+    description: 'Generate RSA public/private key pairs (client-side)',
+    category: 'security',
+    icon: 'KeySquare',
+    keywords: ['rsa', 'key', 'pair', 'public', 'private', 'encryption', 'security'],
+  },
+  {
+    id: 'aes-encryption',
+    name: 'AES Encryption/Decryption',
+    description: 'Encrypt and decrypt text using AES-256-GCM',
+    category: 'security',
+    icon: 'Lock',
+    keywords: ['aes', 'encrypt', 'decrypt', 'security', 'cipher'],
+  },
+  {
+    id: 'bcrypt-hasher',
+    name: 'Bcrypt/Argon2 Hasher',
+    description: 'Hash and verify passwords with bcrypt or argon2',
+    category: 'security',
+    icon: 'ShieldCheck',
+    keywords: ['bcrypt', 'argon2', 'hash', 'password', 'verify', 'security'],
   },
 ];
 

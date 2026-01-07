@@ -10,9 +10,9 @@
 
 DevTools Collection is a web-based toolkit providing essential utilities for developers. All processing happens client-side in your browser - your data never leaves your machine.
 
-**Current Status**: ✅ **All Core Tools Implemented** (24/24 - 100%)
+**Current Status**: ✅ **All Core Tools + Security Tools Implemented** (27/27 - 100%)
 
-All planned core tools are now implemented and functional! The project is stable and ready for use. We're now focusing on UX enhancements and advanced features. Contributions and feedback are welcome!
+All planned core tools plus Phase 5 security tools are now implemented and functional! The project is stable and ready for use. We're now focusing on additional tool categories and UX enhancements. Contributions and feedback are welcome!
 
 ## Features
 
@@ -25,7 +25,7 @@ All planned core tools are now implemented and functional! The project is stable
 - **Mobile-Friendly**: Responsive design works perfectly on all devices
 - **No Installation**: Just open in your browser and start using
 
-## Available Tools (24/24 Implemented - 100%)
+## Available Tools (27/27 Implemented - 100%)
 
 ### Converters (10 tools)
 - ✅ **Base64 Encoder/Decoder** - Encode and decode Base64 strings with instant conversion
@@ -63,6 +63,11 @@ All planned core tools are now implemented and functional! The project is stable
 ### Utilities (1 tool)
 - ✅ **Cron Expression Parser** - Parse and explain cron expressions with human-readable output
 
+### Security (3 tools)
+- ✅ **RSA Key Pair Generator** - Generate RSA public/private key pairs (2048/3072/4096 bits, PEM/PKCS8/JWK formats)
+- ✅ **AES Encryption/Decryption** - Encrypt and decrypt text using AES-256-GCM with PBKDF2 key derivation
+- ✅ **Bcrypt Hasher** - Hash and verify passwords with bcrypt (configurable cost factor)
+
 ## Implemented Features
 
 ### UX Features
@@ -98,11 +103,6 @@ All planned core tools are now implemented and functional! The project is stable
 - [ ] Box Shadow Visualizer
 - [ ] Clamp() Calculator (responsive typography)
 - [ ] Advanced Color Picker with palettes
-
-### Security Tools (Phase 5)
-- [ ] RSA Key Pair Generator (Client-side)
-- [ ] AES Encryption/Decryption
-- [ ] Bcrypt/Argon2 Hasher
 
 ### Networking Tools (Phase 6)
 - [ ] IP Address Lookup (via public API)

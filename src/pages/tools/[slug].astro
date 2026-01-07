@@ -37,6 +37,11 @@ import { TextDiff } from '@/components/preact/tools/TextDiff';
 import { ImageConverter } from '@/components/preact/tools/ImageConverter';
 import { MarkdownConverter } from '@/components/preact/tools/MarkdownConverter';
 
+// Import Phase 6 tools (Security)
+import { RsaKeyGenerator } from '@/components/preact/tools/RsaKeyGenerator';
+import { AesEncryption } from '@/components/preact/tools/AesEncryption';
+import { BcryptHasher } from '@/components/preact/tools/BcryptHasher';
+
 export async function getStaticPaths() {
   return TOOLS.map((tool) => ({
     params: { slug: tool.id },
@@ -50,7 +55,7 @@ if (!tool) {
   return Astro.redirect('/404');
 }
 
-// List of implemented tool IDs (Phase 2, 3, 4 & 5)
+// List of implemented tool IDs (Phase 2, 3, 4, 5 & 6)
 const implementedTools = [
   'base64-converter',
   'url-encoder',
@@ -76,6 +81,9 @@ const implementedTools = [
   'text-diff',
   'image-converter',
   'markdown-to-pdf',
+  'rsa-key-generator',
+  'aes-encryption',
+  'bcrypt-hasher',
 ];
 ---
 
@@ -126,6 +134,9 @@ const implementedTools = [
     {tool.id === 'text-diff' && <TextDiff client:load />}
     {tool.id === 'image-converter' && <ImageConverter client:load />}
     {tool.id === 'markdown-to-pdf' && <MarkdownConverter client:load />}
+    {tool.id === 'rsa-key-generator' && <RsaKeyGenerator client:load />}
+    {tool.id === 'aes-encryption' && <AesEncryption client:load />}
+    {tool.id === 'bcrypt-hasher' && <BcryptHasher client:load />}
 
     <!-- Placeholder for unimplemented tools -->
     {

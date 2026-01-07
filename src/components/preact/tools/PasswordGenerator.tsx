@@ -80,7 +80,7 @@ export function PasswordGenerator() {
                 generatePassword();
               }}
               min={4}
-              max={64}
+              max={256}
               step={1}
             />
           </div>

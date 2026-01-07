@@ -75,6 +75,7 @@ export function HomeContent({ tools, categories }: HomeContentProps) {
       'formatters-validators': [],
       'text-tools': [],
       utilities: [],
+      security: [],
     };
 
     filteredTools.forEach((tool) => {
