@@ -23,7 +23,7 @@ export function CategoryFilter({
   const categories = Object.values(CATEGORIES);
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div className="flex flex-wrap justify-center gap-2">
       {/* Favorites filter */}
       <Button
         variant={'outline'}
