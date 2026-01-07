@@ -34,7 +34,7 @@ import { JsonYamlXmlConverter } from '@/components/preact/tools/JsonYamlXmlConve
 import { MarkdownPreviewer } from '@/components/preact/tools/MarkdownPreviewer';
 import { TextDiff } from '@/components/preact/tools/TextDiff';
 import { ImageConverter } from '@/components/preact/tools/ImageConverter';
-import { MarkdownToPdf } from '@/components/preact/tools/MarkdownToPdf';
+import { MarkdownConverter } from '@/components/preact/tools/MarkdownConverter';
 
 export async function getStaticPaths() {
   return TOOLS.map((tool) => ({
@@ -119,7 +119,7 @@ const implementedTools = [
     {tool.id === 'markdown-preview' && <MarkdownPreviewer client:load />}
     {tool.id === 'text-diff' && <TextDiff client:load />}
     {tool.id === 'image-converter' && <ImageConverter client:load />}
-    {tool.id === 'markdown-to-pdf' && <MarkdownToPdf client:load />}
+    {tool.id === 'markdown-to-pdf' && <MarkdownConverter client:load />}
 
     <!-- Placeholder for unimplemented tools -->
     {!implementedTools.includes(tool.id) && (

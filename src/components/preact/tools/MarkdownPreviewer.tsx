@@ -6,12 +6,16 @@ import { Eye, FileText, Copy, Trash2 } from 'lucide-preact';
 import MarkdownIt from 'markdown-it';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github-dark.css';
+import texmath from 'markdown-it-texmath';
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
 
 // Initialize markdown-it with plugins
 const md = new MarkdownIt({
   html: true,
   linkify: true,
   typographer: true,
+  breaks: true, // Enable line breaks
   highlight: function (str, lang) {
     if (lang && hljs.getLanguage(lang)) {
       try {
@@ -20,6 +24,10 @@ const md = new MarkdownIt({
     }
     return `<pre class="hljs"><code>${md.utils.escapeHtml(str)}</code></pre>`;
   }
+}).use(texmath, {
+  engine: katex,
+  delimiters: 'dollars',
+  katexOptions: { macros: { "\\RR": "\\mathbb{R}" } }
 });
 
 const defaultMarkdown = `# Markdown Previewer
@@ -96,12 +104,6 @@ export function MarkdownPreviewer() {
     }
   };
 
-  const handleCopyHtml = async () => {
-    if (output) {
-      await navigator.clipboard.writeText(output);
-    }
-  };
-
   const handleClear = () => {
     setInput('');
     setOutput('');
@@ -147,16 +149,11 @@ export function MarkdownPreviewer() {
           </CardTitle>
           <CardDescription>Live preview of your markdown</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent>
           <div
-            className="prose prose-sm dark:prose-invert max-w-none min-h-[480px] p-4 border rounded-md"
+            className="prose prose-sm dark:prose-invert max-w-none min-h-[480px] p-4 border rounded-md overflow-auto"
             dangerouslySetInnerHTML={{ __html: output }}
           />
-
-          <Button onClick={handleCopyHtml} disabled={!output} variant="outline" size="sm">
-            <Copy className="h-4 w-4 mr-2" />
-            Copy HTML
-          </Button>
         </CardContent>
       </Card>
     </div>

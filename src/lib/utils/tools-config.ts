@@ -51,11 +51,11 @@ export const TOOLS: Tool[] = [
   // Converters (9)
   {
     id: 'markdown-to-pdf',
-    name: 'Markdown to PDF',
-    description: 'Convert Markdown to PDF with multiple export options',
+    name: 'Markdown Converter',
+    description: 'Convert Markdown to PDF, HTML, TXT, PNG, or JPG',
     category: 'converters',
     icon: 'FileText',
-    keywords: ['markdown', 'pdf', 'convert', 'export'],
+    keywords: ['markdown', 'pdf', 'html', 'convert', 'export', 'txt', 'png', 'jpg'],
   },
   {
     id: 'image-converter',
