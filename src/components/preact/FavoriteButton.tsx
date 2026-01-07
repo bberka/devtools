@@ -66,7 +66,7 @@ export function FavoriteButton({ toolId, variant = 'icon', onToggle }: FavoriteB
         title={isFav ? 'Remove from favorites' : 'Add to favorites'}
       >
         <Star
-          className={`size-6 transition-all ${
+          className={`size-5 transition-all ${
             isFav
               ? 'text-yellow-500 fill-yellow-500'
               : 'text-muted-foreground group-hover/star:text-yellow-500'

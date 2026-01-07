@@ -10,6 +10,20 @@ export function ThemeToggle() {
     // Initialize theme from localStorage
     const savedTheme = getTheme();
     setThemeState(savedTheme);
+
+    // Listen for storage changes from other tabs (cross-tab sync)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'dev-toolbox:theme') {
+        const newTheme = getTheme();
+        setThemeState(newTheme);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   const toggleTheme = () => {
