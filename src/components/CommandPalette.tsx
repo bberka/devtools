@@ -11,18 +11,18 @@ import { useFavorites } from '@/lib/contexts/FavoritesContext';
 import { useRecentTools } from '@/lib/contexts/RecentToolsContext';
 import { getModifierKey, isModifierKey } from '@/lib/utils/keyboard';
 import { toast } from 'sonner';
-import { ScrollArea } from './ui/scroll-area';
 
 export function CommandPalette() {
   const router = useRouter();
   const { open, setOpen } = useCommandPalette();
-  const { favorites } = useFavorites();
+  const { favorites, toggleFavorite } = useFavorites();
   const { recentTools, addRecentTool, clearRecentTools } = useRecentTools();
 
   const [search, setSearch] = useState('');
   const [modKey, setModKey] = useState('Ctrl');
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
   // Detect OS on mount
   useEffect(() => {
@@ -47,11 +47,40 @@ export function CommandPalette() {
     }
   }, [open]);
 
+  useEffect(() => {
+    if (!open || !listRef.current) return;
+
+    const syncSelectedTool = () => {
+      const selectedItem = listRef.current?.querySelector<HTMLElement>(
+        '[cmdk-item][data-selected="true"]'
+      );
+
+      setSelectedTool(selectedItem?.getAttribute('data-value') ?? null);
+    };
+
+    const frame = window.requestAnimationFrame(syncSelectedTool);
+    const observer = new MutationObserver(syncSelectedTool);
+
+    observer.observe(listRef.current, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ['data-selected', 'hidden'],
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
+  }, [open, search, recentTools.length, favorites.length]);
+
   // Handle keyboard shortcuts within the palette
   useEffect(() => {
     if (!open) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      const key = e.key.toLowerCase();
+
       // Escape to close
       if (e.key === 'Escape') {
         e.preventDefault();
@@ -67,10 +96,10 @@ export function CommandPalette() {
         return;
       }
 
-      // Ctrl/Cmd+Shift+C to copy tool link
-      if (e.key === 'c' && e.shiftKey && isModifierKey(e) && selectedTool) {
+      // Ctrl/Cmd+Shift+F to toggle favorite on selected tool
+      if (key === 'f' && e.shiftKey && isModifierKey(e) && selectedTool) {
         e.preventDefault();
-        handleCopyToolLink(selectedTool);
+        handleToggleFavorite(selectedTool);
         return;
       }
 
@@ -86,7 +115,14 @@ export function CommandPalette() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [open, selectedTool, setOpen, clearRecentTools, addRecentTool]);
+  }, [
+    open,
+    selectedTool,
+    setOpen,
+    clearRecentTools,
+    addRecentTool,
+    favorites,
+  ]);
 
   // Get tool data for recent tools
   const recentToolsData = useMemo(() => {
@@ -146,11 +182,10 @@ export function CommandPalette() {
     setOpen(false);
   };
 
-  // Handle copy tool link
-  const handleCopyToolLink = (toolId: string) => {
-    const url = `${window.location.origin}/tools/${toolId}`;
-    navigator.clipboard.writeText(url);
-    toast.success('Tool link copied to clipboard');
+  const handleToggleFavorite = (toolId: string) => {
+    const wasFavorite = favorites.includes(toolId);
+    toggleFavorite(toolId);
+    toast.success(wasFavorite ? 'Removed from favorites' : 'Added to favorites');
   };
 
   // Don't render if not open
@@ -166,10 +201,7 @@ export function CommandPalette() {
         onClick={(e) => e.stopPropagation()}
       >
         <Command
-          className="rounded-lg border bg-popover text-popover-foreground shadow-lg overflow-hidden"
-          loop
-          value={selectedTool || undefined}
-          onValueChange={(value: string) => setSelectedTool(value)}
+          className="flex max-h-[min(80vh,36rem)] min-h-0 flex-col overflow-hidden rounded-lg border bg-popover text-popover-foreground shadow-lg"
         >
           {/* Search Input */}
           <div className="flex items-center border-b px-3">
@@ -184,8 +216,15 @@ export function CommandPalette() {
           </div>
 
           {/* Results */}
-          <ScrollArea className="max-h-[50vh] md:max-h-[400px]">
-            <Command.List className="p-2">
+          <Command.List
+            ref={listRef}
+            className="max-h-[50vh] min-h-0 overflow-y-auto p-2 scrollbar-thin md:max-h-[400px]"
+            style={{
+              height: 'var(--cmdk-list-height)',
+              scrollPaddingBlockStart: '0.5rem',
+              scrollPaddingBlockEnd: '0.5rem',
+            }}
+          >
               <Command.Empty>
                 <div className="py-6 text-center text-sm text-muted-foreground">
                   No tools found matching &quot;{search}&quot;
@@ -231,31 +270,31 @@ export function CommandPalette() {
               {/* All Tools Grouped by Category */}
               {(Object.entries(groupedTools) as Array<[ToolCategory, Tool[]]>).map(
                 ([categoryId, categoryTools]) => {
-                if (categoryTools.length === 0) return null;
+                  if (categoryTools.length === 0) return null;
 
-                const category = CATEGORIES[categoryId];
+                  const category = CATEGORIES[categoryId];
 
-                return (
-                  <Command.Group key={categoryId} heading={category.name}>
-                    {categoryTools.map((tool) => (
-                      <Command.Item
-                        key={tool.id}
-                        value={`${tool.id} ${tool.name} ${tool.description} ${(tool.keywords || []).join(' ')}`}
-                        onSelect={() => handleNavigate(tool.id)}
-                        className="relative flex cursor-pointer select-none items-center rounded-sm px-3 py-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground"
-                      >
-                        <span className="flex-1">{tool.name}</span>
-                        <span className="ml-2 text-xs text-muted-foreground">
-                          {category.name}
-                        </span>
-                      </Command.Item>
-                    ))}
-                  </Command.Group>
-                );
+                  return (
+                    <Command.Group key={categoryId} heading={category.name}>
+                      {categoryTools.map((tool) => (
+                        <Command.Item
+                          key={tool.id}
+                          value={tool.id}
+                          keywords={[tool.name, tool.description, ...(tool.keywords || [])]}
+                          onSelect={() => handleNavigate(tool.id)}
+                          className="relative flex cursor-pointer select-none items-center rounded-sm px-3 py-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground"
+                        >
+                          <span className="flex-1">{tool.name}</span>
+                          <span className="ml-2 text-xs text-muted-foreground">
+                            {category.name}
+                          </span>
+                        </Command.Item>
+                      ))}
+                    </Command.Group>
+                  );
                 }
               )}
-            </Command.List>
-          </ScrollArea>
+          </Command.List>
 
           {/* Footer with shortcuts */}
           <div className="border-t px-3 py-2 text-xs text-muted-foreground">
@@ -297,19 +336,18 @@ export function CommandPalette() {
                     clear
                   </button>
                 )}
-                {selectedTool && (
-                  <button
-                    type="button"
-                    onClick={() => handleCopyToolLink(selectedTool)}
-                    className="hover:text-foreground transition-colors"
-                    title="Copy tool link"
-                  >
-                    <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px]">
-                      {modKey}+⇧+C
-                    </kbd>{' '}
-                    copy link
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={() => selectedTool && handleToggleFavorite(selectedTool)}
+                  className="hover:text-foreground transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+                  title="Toggle favorite for focused tool"
+                  disabled={!selectedTool}
+                >
+                  <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px]">
+                    {modKey}+⇧+F
+                  </kbd>{' '}
+                  favorite
+                </button>
                 <span>
                   <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px]">
                     esc
