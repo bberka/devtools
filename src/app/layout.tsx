@@ -27,6 +27,10 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'bberka', url: 'https://github.com/bberka' }],
   creator: 'bberka',
+  icons: {
+    icon: [{ url: '/favicon.ico', type: 'image/png', sizes: '512x512' }],
+    shortcut: '/favicon.ico',
+  },
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || 'https://devtools.example.com'
   ),
