@@ -84,7 +84,7 @@ export const TOOLS: Tool[] = [
     description: 'Convert, resize, crop, and compress images',
     category: 'converters',
     icon: 'Image',
-    keywords: ['image', 'convert', 'resize', 'crop', 'compress'],
+    keywords: ['image', 'convert', 'resize', 'crop', 'compress', 'ico', 'favicon'],
   },
   {
     id: 'base64-converter',

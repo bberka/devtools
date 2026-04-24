@@ -8,7 +8,32 @@ import { Select } from '@/components/ui/select';
 import { Image as ImageIcon, Upload, Download, Trash2 } from 'lucide-react';
 import imageCompression from 'browser-image-compression';
 
-type OutputFormat = 'png' | 'jpeg' | 'webp';
+type OutputFormat = 'png' | 'jpeg' | 'webp' | 'ico';
+
+const createIcoBlob = async (pngBlob: Blob, width: number, height: number) => {
+  const pngBytes = new Uint8Array(await pngBlob.arrayBuffer());
+  const headerSize = 6;
+  const directorySize = 16;
+  const imageOffset = headerSize + directorySize;
+  const icoBytes = new Uint8Array(imageOffset + pngBytes.length);
+  const view = new DataView(icoBytes.buffer);
+
+  view.setUint16(0, 0, true);
+  view.setUint16(2, 1, true);
+  view.setUint16(4, 1, true);
+
+  icoBytes[6] = width >= 256 ? 0 : width;
+  icoBytes[7] = height >= 256 ? 0 : height;
+  icoBytes[8] = 0;
+  icoBytes[9] = 0;
+  view.setUint16(10, 1, true);
+  view.setUint16(12, 32, true);
+  view.setUint32(14, pngBytes.length, true);
+  view.setUint32(18, imageOffset, true);
+  icoBytes.set(pngBytes, imageOffset);
+
+  return new Blob([icoBytes], { type: 'image/x-icon' });
+};
 
 export function ImageConverter() {
   const [originalImage, setOriginalImage] = useState<string | null>(null);
@@ -69,6 +94,16 @@ export function ImageConverter() {
           }
         }
 
+        if (outputFormat === 'ico') {
+          const largestSide = Math.max(targetWidth as number, targetHeight as number);
+
+          if (largestSide > 256) {
+            const scale = 256 / largestSide;
+            targetWidth = Math.round((targetWidth as number) * scale);
+            targetHeight = Math.round((targetHeight as number) * scale);
+          }
+        }
+
         canvas.width = targetWidth as number;
         canvas.height = targetHeight as number;
 
@@ -86,22 +121,30 @@ export function ImageConverter() {
         ctx.drawImage(img, 0, 0, targetWidth as number, targetHeight as number);
 
         // Convert to desired format
-        const mimeType = `image/${outputFormat}`;
-        const qualityValue = outputFormat === 'png' ? 1 : quality / 100;
+        const mimeType = outputFormat === 'ico' ? 'image/png' : `image/${outputFormat}`;
+        const qualityValue = outputFormat === 'png' || outputFormat === 'ico' ? 1 : quality / 100;
 
         canvas.toBlob(
           async (blob) => {
             if (!blob) return;
 
-            // Compress if needed
-            const options = {
-              maxSizeMB: 10,
-              maxWidthOrHeight: Math.max(targetWidth as number, targetHeight as number),
-              useWebWorker: true,
-              quality: qualityValue,
-            };
-
             try {
+              if (outputFormat === 'ico') {
+                const icoBlob = await createIcoBlob(blob, canvas.width, canvas.height);
+                const url = URL.createObjectURL(icoBlob);
+                setProcessedImage(url);
+                setProcessing(false);
+                return;
+              }
+
+              // Compress if needed
+              const options = {
+                maxSizeMB: 10,
+                maxWidthOrHeight: Math.max(targetWidth as number, targetHeight as number),
+                useWebWorker: true,
+                quality: qualityValue,
+              };
+
               const compressedFile = await imageCompression(
                 new File([blob], file.name, { type: mimeType }),
                 options
@@ -109,6 +152,12 @@ export function ImageConverter() {
               const url = URL.createObjectURL(compressedFile);
               setProcessedImage(url);
             } catch (error) {
+              if (outputFormat === 'ico') {
+                console.error('Error creating ICO:', error);
+                setProcessing(false);
+                return;
+              }
+
               const url = URL.createObjectURL(blob);
               setProcessedImage(url);
             }
@@ -169,7 +218,7 @@ export function ImageConverter() {
             <Upload className="h-5 w-5" />
             Upload Image
           </CardTitle>
-          <CardDescription>Upload an image to convert (PNG, JPEG, WebP, GIF, BMP)</CardDescription>
+          <CardDescription>Upload an image to convert (PNG, JPEG, WebP, ICO, GIF, BMP)</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <input
@@ -205,10 +254,11 @@ export function ImageConverter() {
                     <option value="png">PNG</option>
                     <option value="jpeg">JPEG</option>
                     <option value="webp">WebP</option>
+                    <option value="ico">ICO</option>
                   </Select>
                 </div>
 
-                {outputFormat !== 'png' && (
+                {outputFormat !== 'png' && outputFormat !== 'ico' && (
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Quality: {quality}%</label>
                     <input
