@@ -3,6 +3,7 @@ import { Providers } from './providers';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { CommandPalette } from '@/components/CommandPalette';
+import { PWARegister } from '@/components/PWARegister';
 import '@/styles/globals.css';
 
 export const metadata: Metadata = {
@@ -27,9 +28,21 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'bberka', url: 'https://github.com/bberka' }],
   creator: 'bberka',
+  manifest: '/manifest.webmanifest',
   icons: {
-    icon: [{ url: '/favicon.ico', type: 'image/png', sizes: '512x512' }],
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/app-icon.svg', type: 'image/svg+xml' },
+      { url: '/icon-192.png', type: 'image/png', sizes: '192x192' },
+      { url: '/icon-512.png', type: 'image/png', sizes: '512x512' },
+    ],
     shortcut: '/favicon.ico',
+    apple: [{ url: '/icon-192.png', sizes: '192x192', type: 'image/png' }],
+  },
+  appleWebApp: {
+    capable: true,
+    title: 'Dev Tools',
+    statusBarStyle: 'black-translucent',
   },
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || 'https://devtools.example.com'
@@ -102,6 +115,7 @@ export default function RootLayout({
       </head>
       <body>
         <Providers>
+          <PWARegister />
           <div className="min-h-screen bg-background">
             <Header />
             <main className="container py-8">{children}</main>

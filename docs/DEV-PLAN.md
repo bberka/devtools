@@ -115,10 +115,10 @@
 
 ### 4. PWA
 
-- [ ] Add app manifest.
-- [ ] Add service worker.
-- [ ] Cache static shell and common tool routes.
-- [ ] Add offline fallback.
+- [x] Add app manifest.
+- [x] Add service worker.
+- [x] Cache static shell and common tool routes.
+- [x] Add offline fallback.
 - [ ] Verify install behavior on desktop and mobile.
 
 ### 5. SEO / Sharing
