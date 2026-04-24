@@ -14,8 +14,9 @@ Completed:
 - React context providers cover theme, settings, favorites, recent tools, and command palette state
 - shadcn-style UI components have been migrated to React
 - Tool components live in `src/components/tools`
+- Tool metadata and lazy component loaders share `src/lib/utils/tool-registry.ts`
 - Dynamic tool route uses `generateStaticParams()`
-- Per-tool metadata is generated from `src/lib/utils/tools-config.ts`
+- Per-tool metadata is derived from the typed tool registry through `src/lib/utils/tools-config.ts`
 - Static export is verified with `npm run build`
 - Legacy Astro pages, layouts, config, and Preact component tree are no longer in the active app flow
 
@@ -37,18 +38,19 @@ The app is a static export with interactive client-side tools layered on top. It
 - `src/app/tools/[slug]/page.tsx`
 - `src/components/ToolPageClient.tsx`
 - `src/components/ToolComponentRenderer.tsx`
+- `src/lib/utils/tool-registry.ts`
 - `src/lib/utils/tools-config.ts`
 - `src/lib/contexts/*`
 
 ## Tool Wiring
 
-Tools are defined in `src/lib/utils/tools-config.ts` and rendered through the map in `src/components/ToolComponentRenderer.tsx`.
+Tools are defined in `src/lib/utils/tool-registry.ts`. Each registry entry includes the slug, metadata, and typed lazy component loader.
 
-Current tradeoff:
+Current behavior:
 
-- The explicit map is simple and type-checks imports at build time
-- It is easy for metadata and renderer wiring to drift unless reviewed together
-- It imports every tool module into the renderer bundle, so a typed dynamic registry would be a useful next architecture cleanup
+- `src/lib/utils/tools-config.ts` derives `TOOLS` from the registry for static routes, search, sitemap, and metadata
+- `src/components/ToolComponentRenderer.tsx` resolves the same registry entry for the client component loader
+- `npm run typecheck` fails if a registry entry omits `component` or references a component export that does not exist
 
 ## SEO / Static Export Notes
 
@@ -83,7 +85,6 @@ Removed:
 
 ## Remaining Work
 
-- Replace the hardcoded `TOOL_COMPONENTS` map with a typed registry or dynamic loader
 - Add automated route/tool tests
 - Add PWA/offline support
 - Add generated Open Graph images

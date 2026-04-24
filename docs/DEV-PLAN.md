@@ -26,6 +26,7 @@
 - [x] Settings dialog
 - [x] Sitemap and robots routes
 - [x] Per-tool metadata
+- [x] Typed tool registry with lazy component loaders
 - [x] Cloudflare/Wrangler static asset config
 
 ## Implemented Tools
@@ -102,9 +103,9 @@
 
 ### 2. Tool Registry
 
-- [ ] Replace the hardcoded `TOOL_COMPONENTS` map with a typed registry or dynamic loader.
-- [ ] Make metadata and component wiring share one source of truth.
-- [ ] Fail build-time checks when a tool is missing a component.
+- [x] Replace the hardcoded `TOOL_COMPONENTS` map with a typed registry or dynamic loader.
+- [x] Make metadata and component wiring share one source of truth.
+- [x] Fail build-time checks when a tool is missing a component.
 
 ### 3. Performance
 

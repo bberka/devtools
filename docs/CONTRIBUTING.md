@@ -48,7 +48,8 @@ src/
   lib/
     contexts/           # theme, settings, favorites, recents, command palette
     utils/
-      tools-config.ts   # categories and tool metadata
+      tool-registry.ts  # tool metadata and lazy component loaders
+      tools-config.ts   # categories and derived tool metadata helpers
       storage.ts
       keyboard.ts
     types.ts
@@ -89,20 +90,25 @@ Commit prefixes used in this repo:
 
 ## Adding a New Tool
 
-### 1. Add Metadata
+### 1. Add Registry Entry
 
-Edit `src/lib/utils/tools-config.ts`:
+Edit `src/lib/utils/tool-registry.ts`:
 
 ```ts
-{
-  id: 'example-tool',
+'example-tool': {
   name: 'Example Tool',
   description: 'Do one useful developer task',
   category: 'utilities',
   icon: 'Wrench',
   keywords: ['example', 'utility'],
-}
+  component: () =>
+    import('@/components/tools/ExampleTool').then(
+      (module) => module.ExampleTool
+    ),
+},
 ```
+
+`TOOLS` is derived from this registry by `src/lib/utils/tools-config.ts`, so static routes, search, metadata, and renderer wiring all share the same source of truth.
 
 ### 2. Create the Component
 
@@ -131,23 +137,11 @@ export function ExampleTool() {
 }
 ```
 
-### 3. Wire the Renderer
-
-Edit `src/components/ToolComponentRenderer.tsx`:
-
-```tsx
-import { ExampleTool } from '@/components/tools/ExampleTool';
-
-const TOOL_COMPONENTS = {
-  // existing tools
-  'example-tool': ExampleTool,
-} as const;
-```
-
-### 4. Verify
+### 3. Verify
 
 - Visit `/tools/example-tool` in dev.
 - Confirm search, category filtering, favorites, recents, and command palette navigation work.
+- Run `npm run typecheck` to verify the registry entry has a component loader and the imported export exists.
 - Run `npm run build` and confirm the route appears in the static export.
 
 ## Tool UX Rules
@@ -180,7 +174,6 @@ Automated tests are not implemented yet. Until they are added, manually test:
 ## Current Contribution Priorities
 
 - Add automated tests for route coverage and core tool behavior
-- Replace `TOOL_COMPONENTS` with a typed registry or dynamic loader
 - Improve bundle splitting for heavy tool dependencies
 - Add PWA/offline support
 - Add generated Open Graph images

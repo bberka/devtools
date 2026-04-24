@@ -83,6 +83,7 @@ The active app is a Next.js App Router project with React client components. It 
 - Next.js App Router with static export
 - `generateStaticParams()` for all tool pages
 - Per-tool metadata generation
+- Typed tool registry with lazy component loaders
 - Sitemap and robots routes
 - Favorites
 - Recent tools tracking
@@ -99,12 +100,11 @@ The active app is a Next.js App Router project with React client components. It 
 - The default dev URL is `http://localhost:3000`, not `http://localhost:4321`.
 - There are 34 tool pages in the current config.
 - The password hashing tool currently supports bcrypt only, not Argon2.
-- Tool rendering currently uses a hardcoded React component map, not dynamic imports.
+- Tool metadata and component wiring share `src/lib/utils/tool-registry.ts`.
 
 ## Remaining Work
 
 - Add automated tests.
-- Replace the hardcoded renderer map with a typed registry or dynamic loader.
 - Add PWA/offline support and an app manifest.
 - Add generated Open Graph images.
 - Run Lighthouse and bundle analysis.
