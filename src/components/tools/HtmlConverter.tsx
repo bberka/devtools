@@ -33,7 +33,6 @@ import html2canvas from 'html2canvas';
 type ExportFormat = 'pdf' | 'md' | 'html' | 'txt';
 type PageSize = 'A4' | 'Letter' | 'Legal';
 type Orientation = 'portrait' | 'landscape';
-type PdfExportMode = 'print' | 'snapshot';
 
 const sampleHtml = `<article>
   <h1>Release Notes</h1>
@@ -328,7 +327,6 @@ export function HtmlConverter() {
   const [exportFormat, setExportFormat] = useState<ExportFormat>('pdf');
   const [pageSize, setPageSize] = useState<PageSize>('A4');
   const [orientation, setOrientation] = useState<Orientation>('portrait');
-  const [pdfExportMode, setPdfExportMode] = useState<PdfExportMode>('print');
   const [margin, setMargin] = useState(16);
   const [scale, setScale] = useState(2);
   const [backgroundColor, setBackgroundColor] = useState('#ffffff');
@@ -556,11 +554,7 @@ export function HtmlConverter() {
     try {
       switch (exportFormat) {
         case 'pdf':
-          if (pdfExportMode === 'print') {
-            exportPrintPdf();
-          } else {
-            await exportSnapshotPdf();
-          }
+          exportPrintPdf();
           break;
         case 'md':
           downloadText(`${safeFilename}.md`, markdownOutput, 'text/markdown');
@@ -704,24 +698,6 @@ export function HtmlConverter() {
             {exportFormat === 'pdf' ? (
               <div className="space-y-4 rounded-md border p-4">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div className="space-y-2 sm:col-span-2">
-                    <label className="text-sm font-medium">PDF mode</label>
-                    <Select
-                      value={pdfExportMode}
-                      onChange={(event) =>
-                        setPdfExportMode(event.currentTarget.value as PdfExportMode)
-                      }
-                      disabled={exporting}
-                    >
-                      <option value="print">Browser print PDF</option>
-                      <option value="snapshot">Snapshot PDF</option>
-                    </Select>
-                    <p className="text-xs text-muted-foreground">
-                      Browser print keeps text selectable and links clickable. Snapshot keeps the
-                      current image-based export.
-                    </p>
-                  </div>
-
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Page size</label>
                     <Select
@@ -804,6 +780,15 @@ export function HtmlConverter() {
                 )}
                 {exporting ? exportProgress || 'Exporting...' : 'Export'}
               </Button>
+              {exportFormat === 'pdf' ? (
+                <Button
+                  onClick={exportSnapshotPdf}
+                  variant="outline"
+                  disabled={exporting || !input.trim()}
+                >
+                  Snapshot PDF
+                </Button>
+              ) : null}
               {exportFormat !== 'pdf' ? (
                 <Button
                   onClick={copyCurrentOutput}
