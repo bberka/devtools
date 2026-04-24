@@ -21,8 +21,6 @@ import 'highlight.js/styles/github-dark.css';
 import texmath from 'markdown-it-texmath';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
 
 type ExportFormat = 'pdf' | 'html' | 'txt' | 'png' | 'jpg';
 type PageSize = 'A4' | 'Letter';
@@ -386,6 +384,7 @@ export function MarkdownConverter() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 100));
 
+      const { default: html2canvas } = await import('html2canvas');
       const canvas = await html2canvas(previewRef.current, {
         scale,
         useCORS: true,
@@ -427,6 +426,10 @@ export function MarkdownConverter() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 100));
 
+      const [{ jsPDF }, { default: html2canvas }] = await Promise.all([
+        import('jspdf'),
+        import('html2canvas'),
+      ]);
       const canvas = await html2canvas(previewRef.current, {
         scale,
         useCORS: true,

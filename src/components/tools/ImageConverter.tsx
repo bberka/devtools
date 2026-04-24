@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { Image as ImageIcon, Upload, Download, Trash2 } from 'lucide-react';
-import imageCompression from 'browser-image-compression';
 
 type OutputFormat = 'png' | 'jpeg' | 'webp' | 'ico';
 
@@ -137,7 +136,8 @@ export function ImageConverter() {
                 return;
               }
 
-              // Compress if needed
+              // Compress only after conversion begins so the image tool shell stays light.
+              const { default: imageCompression } = await import('browser-image-compression');
               const options = {
                 maxSizeMB: 10,
                 maxWidthOrHeight: Math.max(targetWidth as number, targetHeight as number),

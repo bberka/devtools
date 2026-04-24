@@ -27,8 +27,6 @@ import {
   Printer,
   Trash2,
 } from 'lucide-react';
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
 
 type ExportFormat = 'pdf' | 'md' | 'html' | 'txt';
 type PageSize = 'A4' | 'Letter' | 'Legal';
@@ -464,6 +462,10 @@ export function HtmlConverter() {
     setExportProgress('Capturing preview...');
     await new Promise((resolve) => setTimeout(resolve, 50));
 
+    const [{ jsPDF }, { default: html2canvas }] = await Promise.all([
+      import('jspdf'),
+      import('html2canvas'),
+    ]);
     const canvas = await html2canvas(previewRef.current, {
       scale,
       backgroundColor,

@@ -1,13 +1,32 @@
 'use client';
 
 import Link from 'next/link';
+import { type ReactNode, useEffect, useRef } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { FavoriteButton } from '@/components/FavoriteButton';
-import { ToolComponentRenderer } from '@/components/ToolComponentRenderer';
+import { useRecentTools } from '@/lib/contexts/RecentToolsContext';
 import type { Tool } from '@/lib/types';
 
-export function ToolPageClient({ tool }: { tool: Tool }) {
+export function ToolPageClient({
+  children,
+  tool,
+}: {
+  children: ReactNode;
+  tool: Tool;
+}) {
+  const { addRecentTool } = useRecentTools();
+  const lastTrackedToolIdRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (lastTrackedToolIdRef.current === tool.id) {
+      return;
+    }
+
+    lastTrackedToolIdRef.current = tool.id;
+    addRecentTool(tool.id);
+  }, [addRecentTool, tool.id]);
+
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       <div className="flex flex-col gap-4 border-b pb-6 sm:flex-row sm:items-center sm:justify-between">
@@ -31,7 +50,7 @@ export function ToolPageClient({ tool }: { tool: Tool }) {
         </div>
       </div>
 
-      <ToolComponentRenderer toolId={tool.id} />
+      {children}
     </div>
   );
 }

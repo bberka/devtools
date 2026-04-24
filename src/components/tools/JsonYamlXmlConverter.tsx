@@ -7,8 +7,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select } from '@/components/ui/select';
 import { Copy, Check, Code, Trash2, ArrowRight } from 'lucide-react';
 import { useCopyToClipboard } from '@/hooks';
-import * as yaml from 'js-yaml';
-import { json2xml, xml2json } from 'xml-js';
 
 type Format = 'json' | 'yaml' | 'xml';
 
@@ -20,7 +18,7 @@ export function JsonYamlXmlConverter() {
   const [outputFormat, setOutputFormat] = useState<Format>('yaml');
   const { copyToClipboard, isCopied } = useCopyToClipboard();
 
-  const convert = (text: string, fromFormat: Format, toFormat: Format) => {
+  const convert = async (text: string, fromFormat: Format, toFormat: Format) => {
     if (!text.trim()) {
       setOutput('');
       setError('');
@@ -34,6 +32,10 @@ export function JsonYamlXmlConverter() {
     }
 
     try {
+      const [yaml, xml] = await Promise.all([
+        fromFormat === 'yaml' || toFormat === 'yaml' ? import('js-yaml') : Promise.resolve(null),
+        fromFormat === 'xml' || toFormat === 'xml' ? import('xml-js') : Promise.resolve(null),
+      ]);
       let intermediate: unknown;
 
       // Parse input to intermediate object
@@ -42,12 +44,17 @@ export function JsonYamlXmlConverter() {
           intermediate = JSON.parse(text);
           break;
         case 'yaml':
-          intermediate = yaml.load(text);
+          intermediate = yaml?.load(text);
           break;
-        case 'xml':
-          const jsonStr = xml2json(text, { compact: true, spaces: 2 });
+        case 'xml': {
+          if (!xml) {
+            throw new Error('XML converter failed to load');
+          }
+
+          const jsonStr = xml.xml2json(text, { compact: true, spaces: 2 });
           intermediate = JSON.parse(jsonStr);
           break;
+        }
       }
 
       // Convert intermediate to output format
@@ -57,12 +64,17 @@ export function JsonYamlXmlConverter() {
           result = JSON.stringify(intermediate, null, 2);
           break;
         case 'yaml':
-          result = yaml.dump(intermediate, { indent: 2, lineWidth: -1 });
+          result = yaml?.dump(intermediate, { indent: 2, lineWidth: -1 }) ?? '';
           break;
-        case 'xml':
+        case 'xml': {
+          if (!xml) {
+            throw new Error('XML converter failed to load');
+          }
+
           const jsonForXml = JSON.stringify(intermediate);
-          result = json2xml(jsonForXml, { compact: true, spaces: 2 });
+          result = xml.json2xml(jsonForXml, { compact: true, spaces: 2 });
           break;
+        }
         default:
           result = '';
       }

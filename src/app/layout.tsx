@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     default: 'Dev Tools - Developer Utilities Collection',
   },
   description:
-    'A comprehensive collection of 34 developer tools for everyday tasks including converters, formatters, generators, and more.',
+    'A comprehensive collection of 35 developer tools for everyday tasks including converters, formatters, generators, and more.',
   keywords: [
     'developer tools',
     'base64 encoder',
@@ -53,14 +53,14 @@ export const metadata: Metadata = {
     url: '/',
     title: 'Dev Tools - Developer Utilities Collection',
     description:
-      'A comprehensive collection of 34 developer tools for everyday tasks',
+      'A comprehensive collection of 35 developer tools for everyday tasks',
     siteName: 'Dev Tools',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Dev Tools - Developer Utilities Collection',
     description:
-      'A comprehensive collection of 34 developer tools for everyday tasks',
+      'A comprehensive collection of 35 developer tools for everyday tasks',
     creator: '@bberka',
   },
   robots: {

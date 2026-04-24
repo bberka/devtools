@@ -42,7 +42,6 @@ src/
     ui/                 # shared shadcn-style React components
     CommandPalette.tsx
     HomeContent.tsx
-    ToolComponentRenderer.tsx
     ToolPageClient.tsx
   hooks/
   lib/
@@ -174,8 +173,8 @@ Automated tests are not implemented yet. Until they are added, manually test:
 ## Current Contribution Priorities
 
 - Add automated tests for route coverage and core tool behavior
-- Improve bundle splitting for heavy tool dependencies
-- Add PWA/offline support
+- Continue improving route-level bundle references after the first heavy dependency split
+- Verify PWA install behavior on desktop and mobile
 - Add generated Open Graph images
 - Decide whether the password hashing tool should add Argon2 support or stay bcrypt-only
 - Add CSS tools such as glassmorphism, box-shadow, clamp calculator, and color picker

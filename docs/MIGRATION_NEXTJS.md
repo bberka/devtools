@@ -37,7 +37,6 @@ The app is a static export with interactive client-side tools layered on top. It
 - `src/app/page.tsx`
 - `src/app/tools/[slug]/page.tsx`
 - `src/components/ToolPageClient.tsx`
-- `src/components/ToolComponentRenderer.tsx`
 - `src/lib/utils/tool-registry.ts`
 - `src/lib/utils/tools-config.ts`
 - `src/lib/contexts/*`
@@ -49,7 +48,7 @@ Tools are defined in `src/lib/utils/tool-registry.ts`. Each registry entry inclu
 Current behavior:
 
 - `src/lib/utils/tools-config.ts` derives `TOOLS` from the registry for static routes, search, sitemap, and metadata
-- `src/components/ToolComponentRenderer.tsx` resolves the same registry entry for the client component loader
+- `src/app/tools/[slug]/page.tsx` resolves the same registry entry and renders the selected client tool component inside `ToolPageClient`
 - `npm run typecheck` fails if a registry entry omits `component` or references a component export that does not exist
 
 ## SEO / Static Export Notes
@@ -86,10 +85,10 @@ Removed:
 ## Remaining Work
 
 - Add automated route/tool tests
-- Add PWA/offline support
 - Add generated Open Graph images
-- Audit performance and client bundle sizes
 - Decide whether password hashing should remain bcrypt-only or gain Argon2 support
+- Verify PWA install behavior on desktop and mobile
+- Continue reducing shared dynamic-route bundle references where practical
 
 ## Build / Deploy
 

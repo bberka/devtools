@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { TOOLS, getToolById, CATEGORIES } from '@/lib/utils/tools-config';
+import { getToolComponentLoader } from '@/lib/utils/tool-registry';
 import { ToolPageClient } from '@/components/ToolPageClient';
 
 interface ToolPageProps {
@@ -68,6 +69,17 @@ export default async function ToolPage({ params }: ToolPageProps) {
   }
 
   const resolvedTool = tool;
+  const loadToolComponent = getToolComponentLoader(resolvedTool.id);
 
-  return <ToolPageClient tool={resolvedTool} />;
+  if (!loadToolComponent) {
+    notFound();
+  }
+
+  const ToolComponent = await loadToolComponent();
+
+  return (
+    <ToolPageClient tool={resolvedTool}>
+      <ToolComponent />
+    </ToolPageClient>
+  );
 }

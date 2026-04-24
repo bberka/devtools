@@ -110,10 +110,18 @@
 
 ### 3. Performance
 
-- [ ] Audit production bundles.
-- [ ] Split heavy dependencies used by Markdown, image, crypto, and diagram tools.
-- [ ] Run Lighthouse on desktop and mobile.
-- [ ] Fix any obvious accessibility, SEO, or performance regressions.
+- [x] Audit production bundles.
+- [x] Split heavy dependencies used by Markdown, image, crypto, and data conversion tools.
+- [x] Run Lighthouse on desktop and mobile.
+- [x] Fix any obvious accessibility, SEO, or performance regressions.
+
+Latest review: April 24, 2026.
+
+- `npm run analyze` writes bundle reports to `.next/analyze/client.html`, `.next/analyze/nodejs.html`, and `.next/analyze/edge.html`.
+- Deferred action-only libraries: `jspdf`, `html2canvas`, `browser-image-compression`, `bcryptjs`, `blueimp-md5`, `js-yaml`, and `xml-js`.
+- Lighthouse on the static export home page: mobile 97/100/100/100 and desktop 100/100/100/100 for Performance, Accessibility, Best Practices, and SEO.
+- Fixed the command palette button accessible name reported by Lighthouse.
+- Residual follow-up: the shared dynamic tool route can still reference many possible tool chunks in its route payload. The heaviest tool libraries are split behind user actions, but a future route architecture pass could reduce cross-tool route references further.
 
 ### 4. PWA
 

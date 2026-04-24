@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Textarea } from '../ui/textarea';
 import { Copy, Check } from 'lucide-react';
 import { useCopyToClipboard } from '@/hooks';
-import md5 from 'blueimp-md5';
 
 type HashAlgorithm = 'MD5' | 'SHA-1' | 'SHA-256' | 'SHA-512';
 
@@ -23,6 +22,7 @@ export function HashGenerator() {
 
   const generateHash = async (algorithm: HashAlgorithm, text: string): Promise<string> => {
     if (algorithm === 'MD5') {
+      const { default: md5 } = await import('blueimp-md5');
       return md5(text);
     }
 

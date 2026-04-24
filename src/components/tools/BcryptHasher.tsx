@@ -6,17 +6,13 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui
 import { Textarea } from '../ui/textarea';
 import { Input } from '../ui/input';
 import { Slider } from '../ui/slider';
-import { Select } from '../ui/select';
 import { Copy, Check, Shield, Loader2, CheckCircle, XCircle } from 'lucide-react';
 import { useCopyToClipboard, useActionButton } from '@/hooks';
-import bcrypt from 'bcryptjs';
 
 type Mode = 'hash' | 'verify';
-type Algorithm = 'bcrypt';
 
 export function BcryptHasher() {
   const [mode, setMode] = useState<Mode>('hash');
-  const [algorithm] = useState<Algorithm>('bcrypt');
   const [input, setInput] = useState('');
   const [hash, setHash] = useState('');
   const [rounds, setRounds] = useState(10);
@@ -36,6 +32,7 @@ export function BcryptHasher() {
     }
 
     try {
+      const { default: bcrypt } = await import('bcryptjs');
       const salt = await bcrypt.genSalt(rounds);
       const hashedPassword = await bcrypt.hash(input, salt);
       setHash(hashedPassword);
@@ -60,6 +57,7 @@ export function BcryptHasher() {
     }
 
     try {
+      const { default: bcrypt } = await import('bcryptjs');
       const isValid = await bcrypt.compare(input, hash);
       setVerifyResult(isValid);
     } catch (err) {
