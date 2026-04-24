@@ -3,6 +3,7 @@
 import { useState, useRef, type ChangeEvent } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { Image as ImageIcon, Upload, Download, Trash2 } from 'lucide-react';
 import imageCompression from 'browser-image-compression';
@@ -176,7 +177,7 @@ export function ImageConverter() {
             type="file"
             accept="image/*"
             onChange={handleFileUpload}
-            className="block w-full text-sm text-slate-500
+            className="block w-full text-sm text-muted-foreground
               file:mr-4 file:py-2 file:px-4
               file:rounded-md file:border-0
               file:text-sm file:font-semibold
@@ -227,22 +228,20 @@ export function ImageConverter() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="text-xs text-muted-foreground">Width (px)</label>
-                    <input
+                    <Input
                       type="number"
                       value={width}
                       onChange={(e) => setWidth((e.target as HTMLInputElement).value ? parseInt((e.target as HTMLInputElement).value) : '')}
                       placeholder="Auto"
-                      className="w-full px-3 py-2 border rounded-md"
                     />
                   </div>
                   <div>
                     <label className="text-xs text-muted-foreground">Height (px)</label>
-                    <input
+                    <Input
                       type="number"
                       value={height}
                       onChange={(e) => setHeight((e.target as HTMLInputElement).value ? parseInt((e.target as HTMLInputElement).value) : '')}
                       placeholder="Auto"
-                      className="w-full px-3 py-2 border rounded-md"
                     />
                   </div>
                 </div>
@@ -251,6 +250,7 @@ export function ImageConverter() {
                     type="checkbox"
                     checked={maintainAspectRatio}
                     onChange={(e) => setMaintainAspectRatio((e.target as HTMLInputElement).checked)}
+                    className="accent-primary"
                   />
                   Maintain aspect ratio
                 </label>
@@ -264,6 +264,7 @@ export function ImageConverter() {
                       type="checkbox"
                       checked={grayscale}
                       onChange={(e) => setGrayscale((e.target as HTMLInputElement).checked)}
+                      className="accent-primary"
                     />
                     Grayscale
                   </label>
@@ -272,6 +273,7 @@ export function ImageConverter() {
                       type="checkbox"
                       checked={sepia}
                       onChange={(e) => setSepia((e.target as HTMLInputElement).checked)}
+                      className="accent-primary"
                     />
                     Sepia
                   </label>
