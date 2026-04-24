@@ -67,9 +67,9 @@ export const CATEGORIES: Record<ToolCategory, CategoryInfo> = {
   },
 };
 
-// Tool definitions (Phase 1 - just metadata, no implementations)
+// Tool definitions. Every tool listed here must also be wired in ToolComponentRenderer.
 export const TOOLS: Tool[] = [
-  // Converters (9)
+  // Converters (11)
   {
     id: 'markdown-to-pdf',
     name: 'Markdown Converter',
@@ -79,12 +79,30 @@ export const TOOLS: Tool[] = [
     keywords: ['markdown', 'pdf', 'html', 'convert', 'export', 'txt', 'png', 'jpg'],
   },
   {
+    id: 'html-converter',
+    name: 'HTML Converter',
+    description: 'Convert HTML to PDF, Markdown, HTML, or plain text with export options',
+    category: 'converters',
+    icon: 'FileCode',
+    keywords: [
+      'html',
+      'pdf',
+      'markdown',
+      'md',
+      'plain text',
+      'convert',
+      'export',
+      'print',
+      'css',
+    ],
+  },
+  {
     id: 'image-converter',
     name: 'Image Converter',
     description: 'Convert, resize, crop, and compress images',
     category: 'converters',
     icon: 'Image',
-    keywords: ['image', 'convert', 'resize', 'crop', 'compress'],
+    keywords: ['image', 'convert', 'resize', 'crop', 'compress', 'ico', 'favicon'],
   },
   {
     id: 'base64-converter',
@@ -296,11 +314,11 @@ export const TOOLS: Tool[] = [
   },
   {
     id: 'bcrypt-hasher',
-    name: 'Bcrypt/Argon2 Hasher',
-    description: 'Hash and verify passwords with bcrypt or argon2',
+    name: 'Bcrypt Hasher',
+    description: 'Hash and verify passwords with bcrypt',
     category: 'security',
     icon: 'ShieldCheck',
-    keywords: ['bcrypt', 'argon2', 'hash', 'password', 'verify', 'security'],
+    keywords: ['bcrypt', 'hash', 'password', 'verify', 'security'],
   },
 
   // Networking Tools (4)

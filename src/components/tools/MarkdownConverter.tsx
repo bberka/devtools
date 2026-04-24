@@ -1,0 +1,723 @@
+'use client';
+
+import { type CSSProperties, useRef, useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Select } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
+import { Textarea } from '@/components/ui/textarea';
+import { FileText, Download, Eye, Trash2, Loader2, Printer } from 'lucide-react';
+import MarkdownIt from 'markdown-it';
+import hljs from 'highlight.js/lib/core';
+import bash from 'highlight.js/lib/languages/bash';
+import css from 'highlight.js/lib/languages/css';
+import javascript from 'highlight.js/lib/languages/javascript';
+import json from 'highlight.js/lib/languages/json';
+import markdownLanguage from 'highlight.js/lib/languages/markdown';
+import typescript from 'highlight.js/lib/languages/typescript';
+import xml from 'highlight.js/lib/languages/xml';
+import 'highlight.js/styles/github-dark.css';
+import texmath from 'markdown-it-texmath';
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
+
+type ExportFormat = 'pdf' | 'html' | 'txt' | 'png' | 'jpg';
+type PageSize = 'A4' | 'Letter';
+type Orientation = 'portrait' | 'landscape';
+
+const escapeHtml = (value: string) =>
+  value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+hljs.registerLanguage('bash', bash);
+hljs.registerLanguage('css', css);
+hljs.registerLanguage('html', xml);
+hljs.registerLanguage('javascript', javascript);
+hljs.registerLanguage('json', json);
+hljs.registerLanguage('markdown', markdownLanguage);
+hljs.registerLanguage('typescript', typescript);
+hljs.registerLanguage('xml', xml);
+
+const markdown = new MarkdownIt({
+  html: true,
+  linkify: true,
+  typographer: true,
+  breaks: true,
+  highlight(str, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return `<pre class="hljs"><code>${hljs.highlight(str, { language: lang, ignoreIllegals: true }).value}</code></pre>`;
+      } catch (_) {}
+    }
+    return `<pre class="hljs"><code>${escapeHtml(str)}</code></pre>`;
+  },
+});
+
+const md = markdown.use(texmath, {
+  engine: katex,
+  delimiters: 'dollars',
+  katexOptions: { macros: { '\\RR': '\\mathbb{R}' } },
+});
+
+const previewCss = `
+.markdown-print-preview {
+  background: #ffffff;
+  color: #111827;
+  color-scheme: light;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 16px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+  box-sizing: border-box;
+}
+
+.markdown-print-preview * {
+  box-sizing: border-box;
+}
+
+.markdown-print-preview h1,
+.markdown-print-preview h2,
+.markdown-print-preview h3,
+.markdown-print-preview h4,
+.markdown-print-preview h5,
+.markdown-print-preview h6 {
+  color: #111827;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.2;
+  margin: 1.35em 0 0.6em;
+}
+
+.markdown-print-preview h1 {
+  font-size: 2rem;
+}
+
+.markdown-print-preview h2 {
+  font-size: 1.5rem;
+}
+
+.markdown-print-preview p,
+.markdown-print-preview ul,
+.markdown-print-preview ol,
+.markdown-print-preview blockquote,
+.markdown-print-preview table,
+.markdown-print-preview pre {
+  margin: 0 0 1rem;
+}
+
+.markdown-print-preview a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.markdown-print-preview blockquote {
+  border-left: 4px solid #d1d5db;
+  color: #4b5563;
+  margin-left: 0;
+  padding-left: 1rem;
+}
+
+.markdown-print-preview code,
+.markdown-print-preview pre {
+  border-radius: 0.375rem;
+}
+
+.markdown-print-preview :not(pre) > code {
+  background: #f3f4f6;
+  padding: 0.125rem 0.25rem;
+}
+
+.markdown-print-preview pre {
+  overflow-x: auto;
+  padding: 1rem;
+}
+
+.markdown-print-preview table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.markdown-print-preview th,
+.markdown-print-preview td {
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 0.65rem;
+  text-align: left;
+}
+
+.markdown-print-preview th {
+  background: #f9fafb;
+}
+`;
+
+const pageFormats: Record<PageSize, [number, number]> = {
+  A4: [210, 297],
+  Letter: [215.9, 279.4],
+};
+
+const pageLabels: Record<PageSize, string> = {
+  A4: 'A4',
+  Letter: 'Letter',
+};
+
+const defaultMarkdown = `# Document Title
+
+This is a sample document to convert.
+
+## Features
+
+- Markdown support
+- Code highlighting
+- Tables and lists
+
+## Code Example
+
+\`\`\`javascript
+function greet(name) {
+  console.log(\`Hello, \${name}!\`);
+}
+\`\`\`
+
+## Table
+
+| Column 1 | Column 2 |
+|----------|----------|
+| Data 1   | Data 2   |
+| Data 3   | Data 4   |
+`;
+
+export function MarkdownConverter() {
+  const [input, setInput] = useState(defaultMarkdown);
+  const [html, setHtml] = useState(() => md.render(defaultMarkdown));
+  const [exportFormat, setExportFormat] = useState<ExportFormat>('pdf');
+  const [pageSize, setPageSize] = useState<PageSize>('A4');
+  const [orientation, setOrientation] = useState<Orientation>('portrait');
+  const [margin, setMargin] = useState(20);
+  const [scale, setScale] = useState(2);
+  const [backgroundColor, setBackgroundColor] = useState('#ffffff');
+  const [includePageNumbers, setIncludePageNumbers] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const [exportProgress, setExportProgress] = useState('');
+  const previewRef = useRef<HTMLDivElement>(null);
+  const printFrameRef = useRef<HTMLIFrameElement | null>(null);
+
+  const renderMarkdown = (text: string) => {
+    if (!text.trim()) {
+      setHtml('');
+      return;
+    }
+
+    try {
+      setHtml(md.render(text));
+    } catch (_) {
+      setHtml('<div style="color:#dc2626">Error rendering markdown</div>');
+    }
+  };
+
+  const handleInputChange = (text: string) => {
+    setInput(text);
+    renderMarkdown(text);
+  };
+
+  const [basePageWidth, basePageHeight] = pageFormats[pageSize];
+  const pageWidth = orientation === 'portrait' ? basePageWidth : basePageHeight;
+  const pageHeight = orientation === 'portrait' ? basePageHeight : basePageWidth;
+  const previewWidthPx = Math.round(pageWidth * 3.78);
+  const previewPageStyle: CSSProperties = {
+    backgroundColor,
+    maxWidth: `${previewWidthPx}px`,
+    minHeight: `${Math.round((pageHeight / pageWidth) * previewWidthPx)}px`,
+  };
+
+  const exportPrintPdf = () => {
+    const pageRule = `${pageLabels[pageSize]} ${orientation}`;
+    const printDocument = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>markdown-export</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.27/dist/katex.min.css">
+  <style>
+    @page {
+      size: ${pageRule};
+      margin: ${margin}mm;
+    }
+
+    html,
+    body {
+      margin: 0;
+      background: ${backgroundColor};
+      min-height: 100%;
+    }
+
+    .markdown-print-preview {
+      min-height: auto;
+      padding: 0;
+    }
+
+    ${previewCss}
+
+    @media print {
+      html,
+      body {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="markdown-print-preview">
+    ${html}
+  </main>
+</body>
+</html>`;
+
+    const existingFrame = printFrameRef.current;
+    if (existingFrame) {
+      existingFrame.remove();
+    }
+
+    const iframe = document.createElement('iframe');
+    iframe.setAttribute('aria-hidden', 'true');
+    iframe.style.position = 'fixed';
+    iframe.style.right = '0';
+    iframe.style.bottom = '0';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
+    iframe.style.visibility = 'hidden';
+
+    iframe.onload = () => {
+      const frameWindow = iframe.contentWindow;
+      if (!frameWindow) {
+        return;
+      }
+
+      frameWindow.focus();
+      frameWindow.print();
+
+      const cleanup = () => {
+        setTimeout(() => {
+          iframe.remove();
+          if (printFrameRef.current === iframe) {
+            printFrameRef.current = null;
+          }
+        }, 500);
+      };
+
+      frameWindow.onafterprint = cleanup;
+      setTimeout(cleanup, 5000);
+    };
+
+    document.body.appendChild(iframe);
+    printFrameRef.current = iframe;
+
+    const frameDocument = iframe.contentDocument;
+    if (!frameDocument) {
+      return;
+    }
+
+    frameDocument.open();
+    frameDocument.write(printDocument);
+    frameDocument.close();
+  };
+
+  const exportHtml = () => {
+    const fullHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown Export</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.27/dist/katex.min.css">
+  <style>
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      line-height: 1.65;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+      color: #111827;
+    }
+
+    ${previewCss}
+  </style>
+</head>
+<body>
+  <main class="markdown-print-preview">
+    ${html}
+  </main>
+</body>
+</html>`;
+
+    const blob = new Blob([fullHtml], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'markdown-export.html';
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportText = () => {
+    const blob = new Blob([input], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'markdown-export.txt';
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportImage = async (format: 'png' | 'jpg') => {
+    if (!previewRef.current) return;
+
+    setExportProgress(`Generating ${format.toUpperCase()}...`);
+
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      const canvas = await html2canvas(previewRef.current, {
+        scale,
+        useCORS: true,
+        logging: false,
+        backgroundColor,
+        windowWidth: previewRef.current.scrollWidth,
+        windowHeight: previewRef.current.scrollHeight,
+      });
+
+      setExportProgress('Saving image...');
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) return;
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `markdown-export.${format}`;
+          link.click();
+          URL.revokeObjectURL(url);
+          setExportProgress('');
+        },
+        `image/${format === 'jpg' ? 'jpeg' : 'png'}`,
+        0.95
+      );
+    } catch (error) {
+      console.error(`Error exporting ${format.toUpperCase()}:`, error);
+      alert(`Error exporting ${format.toUpperCase()}. Please try again.`);
+      setExportProgress('');
+    }
+  };
+
+  const exportSnapshotPdf = async () => {
+    if (!previewRef.current) return;
+
+    setExportProgress('Capturing preview...');
+
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      const canvas = await html2canvas(previewRef.current, {
+        scale,
+        useCORS: true,
+        logging: false,
+        backgroundColor,
+        windowWidth: previewRef.current.scrollWidth,
+        windowHeight: previewRef.current.scrollHeight,
+      });
+
+      setExportProgress('Generating PDF...');
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      const pdf = new jsPDF({
+        orientation,
+        unit: 'mm',
+        format: pageFormats[pageSize],
+      });
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const usableWidth = pdfWidth - margin * 2;
+      const usableHeight = pdfHeight - margin * 2;
+      const imgWidth = usableWidth;
+      const pageHeightInImage = (usableHeight * canvas.width) / usableWidth;
+
+      let sourceY = 0;
+      let pageNumber = 0;
+
+      while (sourceY < canvas.height) {
+        if (pageNumber > 0) {
+          pdf.addPage();
+        }
+
+        const sliceHeight = Math.min(pageHeightInImage, canvas.height - sourceY);
+        const pageCanvas = document.createElement('canvas');
+        pageCanvas.width = canvas.width;
+        pageCanvas.height = sliceHeight;
+        const context = pageCanvas.getContext('2d');
+
+        if (context) {
+          context.fillStyle = backgroundColor;
+          context.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+          context.drawImage(
+            canvas,
+            0,
+            sourceY,
+            canvas.width,
+            sliceHeight,
+            0,
+            0,
+            canvas.width,
+            sliceHeight
+          );
+        }
+
+        const sliceData = pageCanvas.toDataURL('image/png');
+        const slicePdfHeight = (sliceHeight * imgWidth) / canvas.width;
+        pdf.addImage(sliceData, 'PNG', margin, margin, imgWidth, slicePdfHeight);
+
+        sourceY += sliceHeight;
+        pageNumber++;
+      }
+
+      if (includePageNumbers) {
+        const totalPages = pdf.getNumberOfPages();
+        for (let page = 1; page <= totalPages; page++) {
+          pdf.setPage(page);
+          pdf.setFontSize(9);
+          pdf.setTextColor(90);
+          pdf.text(`Page ${page} of ${totalPages}`, pdfWidth / 2, pdfHeight - 6, {
+            align: 'center',
+          });
+        }
+      }
+
+      setExportProgress('Saving file...');
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      pdf.save('markdown-export.pdf');
+    } catch (error) {
+      console.error('Error exporting PDF:', error);
+      alert('Error exporting PDF. Please try again.');
+    } finally {
+      setExportProgress('');
+    }
+  };
+
+  const handleExport = async () => {
+    if (!input.trim()) {
+      alert('Please enter markdown content first');
+      return;
+    }
+
+    setExporting(true);
+    setExportProgress('');
+
+    try {
+      switch (exportFormat) {
+        case 'pdf':
+          exportPrintPdf();
+          break;
+        case 'html':
+          exportHtml();
+          break;
+        case 'txt':
+          exportText();
+          break;
+        case 'png':
+          await exportImage('png');
+          break;
+        case 'jpg':
+          await exportImage('jpg');
+          break;
+      }
+    } finally {
+      setExporting(false);
+      setExportProgress('');
+    }
+  };
+
+  const handleClear = () => {
+    setInput('');
+    setHtml('');
+  };
+
+  const showPdfOptions = exportFormat === 'pdf';
+  const showImageOptions = exportFormat === 'png' || exportFormat === 'jpg';
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 items-stretch gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(360px,0.75fr)]">
+        <Card className="flex h-full flex-col">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5" />
+              Markdown Input
+            </CardTitle>
+            <CardDescription>Write your markdown content.</CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-1 flex-col space-y-4">
+            <Textarea
+              value={input}
+              onChange={(event) => handleInputChange(event.currentTarget.value)}
+              placeholder="# Enter your markdown here..."
+              rows={18}
+              className="min-h-[420px] flex-1 resize-y font-mono text-sm xl:min-h-0"
+            />
+
+            <div className="flex flex-wrap gap-2">
+              <Button onClick={handleClear} variant="outline" size="sm">
+                <Trash2 className="h-4 w-4" />
+                Clear
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="flex h-full flex-col">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Printer className="h-5 w-5" />
+              Export Settings
+            </CardTitle>
+            <CardDescription>PDF uses browser print so text stays selectable.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Export format</label>
+                <Select
+                  value={exportFormat}
+                  onChange={(event) => setExportFormat(event.currentTarget.value as ExportFormat)}
+                >
+                  <option value="pdf">PDF document</option>
+                  <option value="html">HTML file</option>
+                  <option value="txt">Plain text (Markdown)</option>
+                  <option value="png">PNG image</option>
+                  <option value="jpg">JPG image</option>
+                </Select>
+              </div>
+
+              {(showPdfOptions || showImageOptions) && (
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Page size</label>
+                  <Select
+                    value={pageSize}
+                    onChange={(event) => setPageSize(event.currentTarget.value as PageSize)}
+                    disabled={exporting}
+                  >
+                    <option value="A4">A4</option>
+                    <option value="Letter">Letter</option>
+                  </Select>
+                </div>
+              )}
+            </div>
+
+            {(showPdfOptions || showImageOptions) && (
+              <div className="space-y-4 rounded-md border p-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Orientation</label>
+                    <Select
+                      value={orientation}
+                      onChange={(event) => setOrientation(event.currentTarget.value as Orientation)}
+                      disabled={exporting}
+                    >
+                      <option value="portrait">Portrait</option>
+                      <option value="landscape">Landscape</option>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">
+                      {showPdfOptions ? 'Margins' : 'Render scale'}: {showPdfOptions ? `${margin} mm` : `${scale}x`}
+                    </label>
+                    {showPdfOptions ? (
+                      <Slider value={margin} onChange={setMargin} min={0} max={40} step={1} />
+                    ) : (
+                      <Slider value={scale} onChange={setScale} min={1} max={4} step={1} />
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Background</label>
+                  <input
+                    type="color"
+                    value={backgroundColor}
+                    onChange={(event) => setBackgroundColor(event.currentTarget.value)}
+                    disabled={exporting}
+                    className="h-10 w-full rounded-md border border-input bg-background p-1"
+                  />
+                </div>
+
+                {showPdfOptions && (
+                  <Checkbox
+                    checked={includePageNumbers}
+                    onCheckedChange={setIncludePageNumbers}
+                    label="Include page numbers in snapshot PDF mode"
+                  />
+                )}
+              </div>
+            )}
+
+            <div className="flex items-center gap-2">
+              <Button onClick={handleExport} disabled={exporting || !input.trim()}>
+                {exporting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    {exportProgress || 'Exporting...'}
+                  </>
+                ) : (
+                  <>
+                    <Download className="h-4 w-4" />
+                    Export as {exportFormat.toUpperCase()}
+                  </>
+                )}
+              </Button>
+              {showPdfOptions && (
+                <Button
+                  onClick={exportSnapshotPdf}
+                  variant="outline"
+                  disabled={exporting || !input.trim()}
+                >
+                  Snapshot PDF
+                </Button>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card className="flex h-full flex-col">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Eye className="h-5 w-5" />
+            Preview
+          </CardTitle>
+          <CardDescription>Rendered markdown used for export and print.</CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-1 flex-col">
+          <div className="flex-1 rounded-md border bg-muted/30 p-4">
+            <style>{previewCss}</style>
+            <div
+              ref={previewRef}
+              className="markdown-print-preview mx-auto w-full overflow-hidden bg-white p-8 shadow-sm"
+              style={previewPageStyle}
+              dangerouslySetInnerHTML={{ __html: html }}
+            />
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

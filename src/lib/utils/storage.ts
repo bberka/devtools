@@ -7,6 +7,7 @@ const KEYS = {
   THEME: `${STORAGE_PREFIX}:theme`,
   FAVORITES: `${STORAGE_PREFIX}:favorites`,
   RECENT: `${STORAGE_PREFIX}:recent`,
+  COMPACT_MODE: `${STORAGE_PREFIX}:compact-mode`,
   TOOL_SETTINGS: (toolId: string) => `${STORAGE_PREFIX}:tool:${toolId}`,
 } as const;
 
@@ -15,6 +16,7 @@ const DEFAULT_SETTINGS: GlobalSettings = {
   theme: 'dark',
   favorites: [],
   recentTools: [],
+  compactMode: false,
 };
 
 // Safe localStorage access (handles SSR)
@@ -83,6 +85,21 @@ export function toggleFavorite(toolId: string): void {
 
 export function isFavorite(toolId: string): boolean {
   return getFavorites().includes(toolId);
+}
+
+// Compact mode
+export function getCompactMode(): boolean {
+  const storage = getStorage();
+  if (!storage) return DEFAULT_SETTINGS.compactMode;
+
+  return storage.getItem(KEYS.COMPACT_MODE) === 'true';
+}
+
+export function setCompactMode(compactMode: boolean): void {
+  const storage = getStorage();
+  if (!storage) return;
+
+  storage.setItem(KEYS.COMPACT_MODE, String(compactMode));
 }
 
 // Recent tools
