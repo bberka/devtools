@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { ThemeToggle } from './ThemeToggle';
 import { CommandPaletteButton } from './CommandPaletteButton';
+import { SettingsDialog } from './SettingsDialog';
 
 export function Header() {
   return (
@@ -13,7 +13,7 @@ export function Header() {
         </Link>
         <div className="flex items-center gap-2">
           <CommandPaletteButton />
-          <ThemeToggle />
+          <SettingsDialog />
         </div>
       </div>
     </header>

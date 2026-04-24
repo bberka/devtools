@@ -4,6 +4,7 @@ import { ThemeProvider } from '@/lib/contexts/ThemeContext';
 import { FavoritesProvider } from '@/lib/contexts/FavoritesContext';
 import { RecentToolsProvider } from '@/lib/contexts/RecentToolsContext';
 import { CommandPaletteProvider } from '@/lib/contexts/CommandPaletteContext';
+import { SettingsProvider } from '@/lib/contexts/SettingsContext';
 import { Toaster } from 'sonner';
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -11,10 +12,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <ThemeProvider>
       <FavoritesProvider>
         <RecentToolsProvider>
-          <CommandPaletteProvider>
-            {children}
-            <Toaster />
-          </CommandPaletteProvider>
+          <SettingsProvider>
+            <CommandPaletteProvider>
+              {children}
+              <Toaster />
+            </CommandPaletteProvider>
+          </SettingsProvider>
         </RecentToolsProvider>
       </FavoritesProvider>
     </ThemeProvider>

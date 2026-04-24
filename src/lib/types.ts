@@ -31,6 +31,7 @@ export interface GlobalSettings {
   theme: 'light' | 'dark';
   favorites: string[]; // Tool IDs
   recentTools: string[]; // Last 5 accessed
+  compactMode: boolean;
 }
 
 export interface ToolSettings {

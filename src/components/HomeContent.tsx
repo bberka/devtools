@@ -10,10 +10,13 @@ import { SearchBar } from './SearchBar';
 import { Card, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { CATEGORIES, filterTools, TOOLS } from '@/lib/utils/tools-config';
 import { useFavorites } from '@/lib/contexts/FavoritesContext';
+import { useSettings } from '@/lib/contexts/SettingsContext';
+import { cn } from '@/lib/utils/cn';
 import type { Tool, ToolCategory } from '@/lib/types';
 
 export function HomeContent() {
   const { favorites } = useFavorites();
+  const { compactMode } = useSettings();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<ToolCategory | null>(null);
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
@@ -65,7 +68,7 @@ export function HomeContent() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className={cn(compactMode ? 'space-y-5' : 'space-y-8')}>
       <div className="flex justify-center">
         <SearchBar value={searchQuery} onSearch={setSearchQuery} />
       </div>
@@ -85,20 +88,25 @@ export function HomeContent() {
         !showFavoritesOnly &&
         !searchQuery && (
           <section>
-            <h2 className="mb-4 flex items-center gap-2 text-2xl font-bold">
+            <h2
+              className={cn(
+                'flex items-center gap-2 font-bold',
+                compactMode ? 'mb-3 text-xl' : 'mb-4 text-2xl'
+              )}
+            >
               <Star className="h-6 w-6 fill-yellow-500 text-yellow-500" />
               Favorites
             </h2>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <ToolGrid compactMode={compactMode}>
               {favoriteTools.map((tool) => (
-                <ToolCard key={tool.id} tool={tool} />
+                <ToolCard key={tool.id} tool={tool} compactMode={compactMode} />
               ))}
-            </div>
+            </ToolGrid>
           </section>
         )}
 
       {!showFavoritesOnly && (
-        <div className="space-y-8">
+        <div className={cn(compactMode ? 'space-y-5' : 'space-y-8')}>
           {(Object.entries(groupedTools) as Array<[ToolCategory, Tool[]]>).map(
             ([categoryId, categoryTools]) => {
             if (categoryTools.length === 0) return null;
@@ -107,14 +115,24 @@ export function HomeContent() {
 
             return (
               <section key={categoryId}>
-                <h2 className={`mb-4 text-2xl font-bold ${category.color}`}>
+                <h2
+                  className={cn(
+                    'font-bold',
+                    compactMode ? 'mb-3 text-xl' : 'mb-4 text-2xl',
+                    category.color
+                  )}
+                >
                   {category.name}
                 </h2>
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <ToolGrid compactMode={compactMode}>
                   {categoryTools.map((tool) => (
-                    <ToolCard key={tool.id} tool={tool} />
+                    <ToolCard
+                      key={tool.id}
+                      tool={tool}
+                      compactMode={compactMode}
+                    />
                   ))}
-                </div>
+                </ToolGrid>
               </section>
             );
             }
@@ -125,11 +143,11 @@ export function HomeContent() {
       {showFavoritesOnly && (
         <section>
           {filteredTools.length > 0 ? (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <ToolGrid compactMode={compactMode}>
               {filteredTools.map((tool) => (
-                <ToolCard key={tool.id} tool={tool} />
+                <ToolCard key={tool.id} tool={tool} compactMode={compactMode} />
               ))}
-            </div>
+            </ToolGrid>
           ) : (
             <EmptyState
               icon={<Star className="mx-auto mb-4 h-12 w-12 opacity-50" />}
@@ -150,18 +168,42 @@ export function HomeContent() {
   );
 }
 
-function ToolCard({ tool }: { tool: Tool }) {
+function ToolGrid({
+  compactMode,
+  children,
+}: {
+  compactMode: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <div
+      className={cn(
+        'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+        compactMode ? 'gap-2' : 'gap-4'
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+
+function ToolCard({ tool, compactMode }: { tool: Tool; compactMode: boolean }) {
   return (
     <Link href={`/tools/${tool.id}`} className="group block h-full">
       <Card className="h-full transition-all hover:border-primary/50 hover:shadow-lg">
-        <CardHeader>
+        <CardHeader className={cn(compactMode ? 'space-y-0 p-3' : undefined)}>
           <div className="flex items-start justify-between gap-2">
-            <CardTitle className="text-lg transition-colors group-hover:text-primary">
+            <CardTitle
+              className={cn(
+                'transition-colors group-hover:text-primary',
+                compactMode ? 'text-base leading-snug' : 'text-lg'
+              )}
+            >
               {tool.name}
             </CardTitle>
             <FavoriteButton toolId={tool.id} variant="card" />
           </div>
-          <CardDescription>{tool.description}</CardDescription>
+          {!compactMode && <CardDescription>{tool.description}</CardDescription>}
         </CardHeader>
       </Card>
     </Link>
