@@ -1,18 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Copy, Check, Palette, Trash2 } from 'lucide-react';
 import { useCopyToClipboard } from '@/hooks';
-
-interface ColorValues {
-  hex: string;
-  rgb: string;
-  hsl: string;
-  hsv: string;
-}
 
 export function ColorConverter() {
   const [hex, setHex] = useState('#3b82f6');
@@ -25,10 +18,6 @@ export function ColorConverter() {
   const copyRgb = useCopyToClipboard();
   const copyHsl = useCopyToClipboard();
   const copyHsv = useCopyToClipboard();
-
-  useEffect(() => {
-    updateFromHex(hex);
-  }, []);
 
   const hexToRgb = (hex: string): [number, number, number] | null => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -47,9 +36,9 @@ export function ColorConverter() {
     b /= 255;
     const max = Math.max(r, g, b);
     const min = Math.min(r, g, b);
-    let h = 0,
-      s = 0,
-      l = (max + min) / 2;
+    let h = 0;
+    let s = 0;
+    const l = (max + min) / 2;
 
     if (max !== min) {
       const d = max - min;

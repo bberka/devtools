@@ -38,23 +38,6 @@ export async function generateMetadata({
     'browser tool',
   ];
 
-  // JSON-LD structured data
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name: tool.name,
-    description: tool.description,
-    applicationCategory: 'DeveloperApplication',
-    operatingSystem: 'Web Browser',
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
-    },
-    browserRequirements: 'Requires JavaScript. Modern browser recommended.',
-    permissions: 'none',
-  };
-
   return {
     title: tool.name,
     description: tool.description,

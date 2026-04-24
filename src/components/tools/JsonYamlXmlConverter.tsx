@@ -34,7 +34,7 @@ export function JsonYamlXmlConverter() {
     }
 
     try {
-      let intermediate: any;
+      let intermediate: unknown;
 
       // Parse input to intermediate object
       switch (fromFormat) {

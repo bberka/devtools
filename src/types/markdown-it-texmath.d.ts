@@ -2,9 +2,9 @@ declare module 'markdown-it-texmath' {
   import MarkdownIt from 'markdown-it';
 
   interface TexmathOptions {
-    engine?: any;
+    engine?: unknown;
     delimiters?: string;
-    katexOptions?: any;
+    katexOptions?: Record<string, unknown>;
   }
 
   const texmath: (md: MarkdownIt, options?: TexmathOptions) => void;

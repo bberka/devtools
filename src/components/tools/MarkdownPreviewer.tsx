@@ -7,7 +7,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { Eye, FileText, Copy, Check, Trash2 } from 'lucide-react';
 import { useCopyToClipboard } from '@/hooks';
 import MarkdownIt from 'markdown-it';
-import hljs from 'highlight.js';
+import hljs from 'highlight.js/lib/core';
+import bash from 'highlight.js/lib/languages/bash';
+import css from 'highlight.js/lib/languages/css';
+import javascript from 'highlight.js/lib/languages/javascript';
+import json from 'highlight.js/lib/languages/json';
+import markdownLanguage from 'highlight.js/lib/languages/markdown';
+import typescript from 'highlight.js/lib/languages/typescript';
+import xml from 'highlight.js/lib/languages/xml';
 import 'highlight.js/styles/github-dark.css';
 import texmath from 'markdown-it-texmath';
 import katex from 'katex';
@@ -20,6 +27,15 @@ const escapeHtml = (value: string) =>
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+
+hljs.registerLanguage('bash', bash);
+hljs.registerLanguage('css', css);
+hljs.registerLanguage('html', xml);
+hljs.registerLanguage('javascript', javascript);
+hljs.registerLanguage('json', json);
+hljs.registerLanguage('markdown', markdownLanguage);
+hljs.registerLanguage('typescript', typescript);
+hljs.registerLanguage('xml', xml);
 
 // Initialize markdown-it with plugins
 const markdown = new MarkdownIt({

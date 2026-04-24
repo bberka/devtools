@@ -1,77 +1,166 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import dynamic from 'next/dynamic';
 import { useRecentTools } from '@/lib/contexts/RecentToolsContext';
-import { MarkdownConverter } from '@/components/tools/MarkdownConverter';
-import { ImageConverter } from '@/components/tools/ImageConverter';
-import { Base64Converter } from '@/components/tools/Base64Converter';
-import { NumberBaseConverter } from '@/components/tools/NumberBaseConverter';
-import { JsonYamlXmlConverter } from '@/components/tools/JsonYamlXmlConverter';
-import { TimestampConverter } from '@/components/tools/TimestampConverter';
-import { UrlEncoder } from '@/components/tools/UrlEncoder';
-import { HtmlEncoder } from '@/components/tools/HtmlEncoder';
-import { HtmlConverter } from '@/components/tools/HtmlConverter';
-import { ColorConverter } from '@/components/tools/ColorConverter';
-import { CaseConverter } from '@/components/tools/CaseConverter';
-import { JwtDecoder } from '@/components/tools/JwtDecoder';
-import { TextEscape } from '@/components/tools/TextEscape';
-import { HashGenerator } from '@/components/tools/HashGenerator';
-import { UuidGenerator } from '@/components/tools/UuidGenerator';
-import { PasswordGenerator } from '@/components/tools/PasswordGenerator';
-import { LoremIpsumGenerator } from '@/components/tools/LoremIpsumGenerator';
-import { SqlFormatter } from '@/components/tools/SqlFormatter';
-import { JsonFormatter } from '@/components/tools/JsonFormatter';
-import { XmlFormatter } from '@/components/tools/XmlFormatter';
-import { XmlValidator } from '@/components/tools/XmlValidator';
-import { MarkdownPreviewer } from '@/components/tools/MarkdownPreviewer';
-import { TextDiff } from '@/components/tools/TextDiff';
-import { RegexTester } from '@/components/tools/RegexTester';
-import { CronParser } from '@/components/tools/CronParser';
-import { RsaKeyGenerator } from '@/components/tools/RsaKeyGenerator';
-import { AesEncryption } from '@/components/tools/AesEncryption';
-import { BcryptHasher } from '@/components/tools/BcryptHasher';
-import { IpLookup } from '@/components/tools/IpLookup';
-import { DnsLookup } from '@/components/tools/DnsLookup';
-import { SubnetCalculator } from '@/components/tools/SubnetCalculator';
-import { PortChecker } from '@/components/tools/PortChecker';
-import { SvgPathEditor } from '@/components/tools/SvgPathEditor';
-import { ColorContrastChecker } from '@/components/tools/ColorContrastChecker';
 
 const TOOL_COMPONENTS = {
-  'markdown-to-pdf': MarkdownConverter,
-  'image-converter': ImageConverter,
-  'base64-converter': Base64Converter,
-  'number-base-converter': NumberBaseConverter,
-  'json-yaml-xml': JsonYamlXmlConverter,
-  'timestamp-converter': TimestampConverter,
-  'url-encoder': UrlEncoder,
-  'html-encoder': HtmlEncoder,
-  'html-converter': HtmlConverter,
-  'color-converter': ColorConverter,
-  'case-converter': CaseConverter,
-  'jwt-decoder': JwtDecoder,
-  'text-escape': TextEscape,
-  'hash-generator': HashGenerator,
-  'uuid-generator': UuidGenerator,
-  'password-generator': PasswordGenerator,
-  'lorem-ipsum': LoremIpsumGenerator,
-  'sql-formatter': SqlFormatter,
-  'json-formatter': JsonFormatter,
-  'xml-formatter': XmlFormatter,
-  'xml-validator': XmlValidator,
-  'markdown-preview': MarkdownPreviewer,
-  'text-diff': TextDiff,
-  'regex-tester': RegexTester,
-  'cron-parser': CronParser,
-  'rsa-key-generator': RsaKeyGenerator,
-  'aes-encryption': AesEncryption,
-  'bcrypt-hasher': BcryptHasher,
-  'ip-lookup': IpLookup,
-  'dns-lookup': DnsLookup,
-  'subnet-calculator': SubnetCalculator,
-  'port-checker': PortChecker,
-  'svg-path-editor': SvgPathEditor,
-  'color-contrast-checker': ColorContrastChecker,
+  'markdown-to-pdf': dynamic(() =>
+    import('@/components/tools/MarkdownConverter').then(
+      (module) => module.MarkdownConverter
+    )
+  ),
+  'image-converter': dynamic(() =>
+    import('@/components/tools/ImageConverter').then(
+      (module) => module.ImageConverter
+    )
+  ),
+  'base64-converter': dynamic(() =>
+    import('@/components/tools/Base64Converter').then(
+      (module) => module.Base64Converter
+    )
+  ),
+  'number-base-converter': dynamic(() =>
+    import('@/components/tools/NumberBaseConverter').then(
+      (module) => module.NumberBaseConverter
+    )
+  ),
+  'json-yaml-xml': dynamic(() =>
+    import('@/components/tools/JsonYamlXmlConverter').then(
+      (module) => module.JsonYamlXmlConverter
+    )
+  ),
+  'timestamp-converter': dynamic(() =>
+    import('@/components/tools/TimestampConverter').then(
+      (module) => module.TimestampConverter
+    )
+  ),
+  'url-encoder': dynamic(() =>
+    import('@/components/tools/UrlEncoder').then((module) => module.UrlEncoder)
+  ),
+  'html-encoder': dynamic(() =>
+    import('@/components/tools/HtmlEncoder').then(
+      (module) => module.HtmlEncoder
+    )
+  ),
+  'html-converter': dynamic(() =>
+    import('@/components/tools/HtmlConverter').then(
+      (module) => module.HtmlConverter
+    )
+  ),
+  'color-converter': dynamic(() =>
+    import('@/components/tools/ColorConverter').then(
+      (module) => module.ColorConverter
+    )
+  ),
+  'case-converter': dynamic(() =>
+    import('@/components/tools/CaseConverter').then(
+      (module) => module.CaseConverter
+    )
+  ),
+  'jwt-decoder': dynamic(() =>
+    import('@/components/tools/JwtDecoder').then((module) => module.JwtDecoder)
+  ),
+  'text-escape': dynamic(() =>
+    import('@/components/tools/TextEscape').then((module) => module.TextEscape)
+  ),
+  'hash-generator': dynamic(() =>
+    import('@/components/tools/HashGenerator').then(
+      (module) => module.HashGenerator
+    )
+  ),
+  'uuid-generator': dynamic(() =>
+    import('@/components/tools/UuidGenerator').then(
+      (module) => module.UuidGenerator
+    )
+  ),
+  'password-generator': dynamic(() =>
+    import('@/components/tools/PasswordGenerator').then(
+      (module) => module.PasswordGenerator
+    )
+  ),
+  'lorem-ipsum': dynamic(() =>
+    import('@/components/tools/LoremIpsumGenerator').then(
+      (module) => module.LoremIpsumGenerator
+    )
+  ),
+  'sql-formatter': dynamic(() =>
+    import('@/components/tools/SqlFormatter').then(
+      (module) => module.SqlFormatter
+    )
+  ),
+  'json-formatter': dynamic(() =>
+    import('@/components/tools/JsonFormatter').then(
+      (module) => module.JsonFormatter
+    )
+  ),
+  'xml-formatter': dynamic(() =>
+    import('@/components/tools/XmlFormatter').then(
+      (module) => module.XmlFormatter
+    )
+  ),
+  'xml-validator': dynamic(() =>
+    import('@/components/tools/XmlValidator').then(
+      (module) => module.XmlValidator
+    )
+  ),
+  'markdown-preview': dynamic(() =>
+    import('@/components/tools/MarkdownPreviewer').then(
+      (module) => module.MarkdownPreviewer
+    )
+  ),
+  'text-diff': dynamic(() =>
+    import('@/components/tools/TextDiff').then((module) => module.TextDiff)
+  ),
+  'regex-tester': dynamic(() =>
+    import('@/components/tools/RegexTester').then(
+      (module) => module.RegexTester
+    )
+  ),
+  'cron-parser': dynamic(() =>
+    import('@/components/tools/CronParser').then((module) => module.CronParser)
+  ),
+  'rsa-key-generator': dynamic(() =>
+    import('@/components/tools/RsaKeyGenerator').then(
+      (module) => module.RsaKeyGenerator
+    )
+  ),
+  'aes-encryption': dynamic(() =>
+    import('@/components/tools/AesEncryption').then(
+      (module) => module.AesEncryption
+    )
+  ),
+  'bcrypt-hasher': dynamic(() =>
+    import('@/components/tools/BcryptHasher').then(
+      (module) => module.BcryptHasher
+    )
+  ),
+  'ip-lookup': dynamic(() =>
+    import('@/components/tools/IpLookup').then((module) => module.IpLookup)
+  ),
+  'dns-lookup': dynamic(() =>
+    import('@/components/tools/DnsLookup').then((module) => module.DnsLookup)
+  ),
+  'subnet-calculator': dynamic(() =>
+    import('@/components/tools/SubnetCalculator').then(
+      (module) => module.SubnetCalculator
+    )
+  ),
+  'port-checker': dynamic(() =>
+    import('@/components/tools/PortChecker').then(
+      (module) => module.PortChecker
+    )
+  ),
+  'svg-path-editor': dynamic(() =>
+    import('@/components/tools/SvgPathEditor').then(
+      (module) => module.SvgPathEditor
+    )
+  ),
+  'color-contrast-checker': dynamic(() =>
+    import('@/components/tools/ColorContrastChecker').then(
+      (module) => module.ColorContrastChecker
+    )
+  ),
 } as const;
 
 export function ToolComponentRenderer({ toolId }: { toolId: string }) {

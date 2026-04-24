@@ -36,7 +36,7 @@ export interface GlobalSettings {
 
 export interface ToolSettings {
   autoProcess?: boolean;
-  [key: string]: any; // Tool-specific settings
+  [key: string]: unknown; // Tool-specific settings
 }
 
 export interface FilterState {

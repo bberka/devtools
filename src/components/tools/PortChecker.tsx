@@ -206,7 +206,7 @@ export function PortChecker() {
               <ul className="list-disc list-inside space-y-1 text-muted-foreground">
                 <li>This tool has limited capabilities due to browser security restrictions</li>
                 <li>Only HTTP/HTTPS ports can be reliably checked</li>
-                <li>Most ports will show as "filtered" rather than definitively open/closed</li>
+                <li>Most ports will show as &quot;filtered&quot; rather than definitively open/closed</li>
                 <li>For comprehensive port scanning, use dedicated tools like nmap</li>
                 <li>Only scan systems you own or have permission to test</li>
               </ul>

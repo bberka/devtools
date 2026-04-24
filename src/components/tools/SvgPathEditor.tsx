@@ -5,7 +5,7 @@ import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Textarea } from '../ui/textarea';
 import { Input } from '../ui/input';
-import { Copy, Check, Pen, Download, Maximize2, Minimize2 } from 'lucide-react';
+import { Copy, Check, Pen, Download, Maximize2 } from 'lucide-react';
 import { useCopyToClipboard } from '@/hooks';
 
 interface PathInfo {
@@ -48,7 +48,7 @@ export function SvgPathEditor() {
   };
 
   const optimizePath = (path: string): string => {
-    let optimized = path
+    const optimized = path
       // Remove unnecessary whitespace
       .replace(/\s+/g, ' ')
       .trim()
