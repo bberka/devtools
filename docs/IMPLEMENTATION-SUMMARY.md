@@ -9,7 +9,7 @@ The active app is a Next.js App Router project with React client components. It 
 
 ## Current Counts
 
-- Tool pages: 34
+- Tool pages: 35
 - Categories: 9
 - Static export output: `out/`
 - Build command: `npm run build`
@@ -73,10 +73,11 @@ The active app is a Next.js App Router project with React client components. It 
 - Subnet Calculator
 - Port Scanner / Port Checker
 
-### Design (2)
+### Design (3)
 
 - SVG Path Editor/Optimizer
 - Color Contrast Checker
+- Color Picker
 
 ## Implemented App Features
 

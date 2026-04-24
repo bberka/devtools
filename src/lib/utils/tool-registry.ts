@@ -384,6 +384,27 @@ export const TOOL_REGISTRY = {
         (module) => module.ColorContrastChecker
       ),
   },
+  'color-picker': {
+    name: 'Color Picker',
+    description: 'Pick colors, tune RGB/HSL channels, and copy CSS values',
+    category: 'design',
+    icon: 'Pipette',
+    keywords: [
+      'color',
+      'picker',
+      'eyedropper',
+      'palette',
+      'hex',
+      'rgb',
+      'hsl',
+      'css',
+      'swatch',
+    ],
+    component: () =>
+      import('@/components/tools/ColorPicker').then(
+        (module) => module.ColorPicker
+      ),
+  },
 } as const satisfies Record<string, ToolRegistryEntry>;
 
 export type ToolId = keyof typeof TOOL_REGISTRY;

@@ -17,7 +17,7 @@
 - [x] Static export configuration
 - [x] Home page with search and category filtering
 - [x] Tool routes generated from `TOOLS`
-- [x] 34 tool pages wired into the renderer
+- [x] 35 tool pages wired into the renderer
 - [x] Favorites
 - [x] Recent tools
 - [x] Dark mode
@@ -92,6 +92,7 @@
 
 - [x] SVG Path Editor/Optimizer
 - [x] Color Contrast Checker
+- [x] Color Picker
 
 ## Next Work
 
@@ -133,7 +134,6 @@
 - [ ] Glassmorphism Generator
 - [ ] Box Shadow Visualizer
 - [ ] Clamp Calculator
-- [ ] Color Picker
 - [ ] Argon2 hashing support, if the password hashing tool should advertise it
 
 ## Development Rules
