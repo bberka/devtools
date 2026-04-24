@@ -11,6 +11,7 @@ import { useFavorites } from '@/lib/contexts/FavoritesContext';
 import { useRecentTools } from '@/lib/contexts/RecentToolsContext';
 import { getModifierKey, isModifierKey } from '@/lib/utils/keyboard';
 import { toast } from 'sonner';
+import { Dialog, DialogContent } from './ui/dialog';
 
 export function CommandPalette() {
   const router = useRouter();
@@ -188,20 +189,14 @@ export function CommandPalette() {
     toast.success(wasFavorite ? 'Removed from favorites' : 'Added to favorites');
   };
 
-  // Don't render if not open
-  if (!open) return null;
-
   return (
-    <div
-      className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm animate-in fade-in-0 duration-200"
-      onClick={() => setOpen(false)}
-    >
-      <div
-        className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl p-4 animate-in fade-in-0 zoom-in-95 slide-in-from-top-[48%] duration-200"
-        onClick={(e) => e.stopPropagation()}
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent
+        hideClose
+        className="w-[calc(100%-2rem)] max-w-2xl gap-0 overflow-hidden border bg-popover p-0 text-popover-foreground"
       >
         <Command
-          className="flex max-h-[min(80vh,36rem)] min-h-0 flex-col overflow-hidden rounded-lg border bg-popover text-popover-foreground shadow-lg"
+          className="flex max-h-[min(80vh,36rem)] min-h-0 flex-col overflow-hidden"
         >
           {/* Search Input */}
           <div className="flex items-center border-b px-3">
@@ -358,7 +353,7 @@ export function CommandPalette() {
             </div>
           </div>
         </Command>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
