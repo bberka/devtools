@@ -67,9 +67,9 @@ export const CATEGORIES: Record<ToolCategory, CategoryInfo> = {
   },
 };
 
-// Tool definitions (Phase 1 - just metadata, no implementations)
+// Tool definitions. Every tool listed here must also be wired in ToolComponentRenderer.
 export const TOOLS: Tool[] = [
-  // Converters (9)
+  // Converters (10)
   {
     id: 'markdown-to-pdf',
     name: 'Markdown Converter',
@@ -296,11 +296,11 @@ export const TOOLS: Tool[] = [
   },
   {
     id: 'bcrypt-hasher',
-    name: 'Bcrypt/Argon2 Hasher',
-    description: 'Hash and verify passwords with bcrypt or argon2',
+    name: 'Bcrypt Hasher',
+    description: 'Hash and verify passwords with bcrypt',
     category: 'security',
     icon: 'ShieldCheck',
-    keywords: ['bcrypt', 'argon2', 'hash', 'password', 'verify', 'security'],
+    keywords: ['bcrypt', 'hash', 'password', 'verify', 'security'],
   },
 
   // Networking Tools (4)
