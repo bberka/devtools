@@ -10,6 +10,7 @@ import { JsonYamlXmlConverter } from '@/components/tools/JsonYamlXmlConverter';
 import { TimestampConverter } from '@/components/tools/TimestampConverter';
 import { UrlEncoder } from '@/components/tools/UrlEncoder';
 import { HtmlEncoder } from '@/components/tools/HtmlEncoder';
+import { HtmlConverter } from '@/components/tools/HtmlConverter';
 import { ColorConverter } from '@/components/tools/ColorConverter';
 import { CaseConverter } from '@/components/tools/CaseConverter';
 import { JwtDecoder } from '@/components/tools/JwtDecoder';
@@ -45,6 +46,7 @@ const TOOL_COMPONENTS = {
   'timestamp-converter': TimestampConverter,
   'url-encoder': UrlEncoder,
   'html-encoder': HtmlEncoder,
+  'html-converter': HtmlConverter,
   'color-converter': ColorConverter,
   'case-converter': CaseConverter,
   'jwt-decoder': JwtDecoder,

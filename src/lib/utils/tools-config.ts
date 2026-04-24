@@ -69,7 +69,7 @@ export const CATEGORIES: Record<ToolCategory, CategoryInfo> = {
 
 // Tool definitions. Every tool listed here must also be wired in ToolComponentRenderer.
 export const TOOLS: Tool[] = [
-  // Converters (10)
+  // Converters (11)
   {
     id: 'markdown-to-pdf',
     name: 'Markdown Converter',
@@ -77,6 +77,24 @@ export const TOOLS: Tool[] = [
     category: 'converters',
     icon: 'FileText',
     keywords: ['markdown', 'pdf', 'html', 'convert', 'export', 'txt', 'png', 'jpg'],
+  },
+  {
+    id: 'html-converter',
+    name: 'HTML Converter',
+    description: 'Convert HTML to PDF, Markdown, HTML, or plain text with export options',
+    category: 'converters',
+    icon: 'FileCode',
+    keywords: [
+      'html',
+      'pdf',
+      'markdown',
+      'md',
+      'plain text',
+      'convert',
+      'export',
+      'print',
+      'css',
+    ],
   },
   {
     id: 'image-converter',

@@ -9,7 +9,7 @@ The active app is a Next.js App Router project with React client components. It 
 
 ## Current Counts
 
-- Tool pages: 33
+- Tool pages: 34
 - Categories: 9
 - Static export output: `out/`
 - Build command: `npm run build`
@@ -17,9 +17,10 @@ The active app is a Next.js App Router project with React client components. It 
 
 ## Implemented Categories
 
-### Converters (10)
+### Converters (11)
 
 - Markdown Converter
+- HTML Converter
 - Image Converter
 - Base64 Encoder/Decoder
 - Number Base Converter
@@ -96,7 +97,7 @@ The active app is a Next.js App Router project with React client components. It 
 - The active app is not Astro and does not use Preact.
 - The build output is `out/`, not `dist/`.
 - The default dev URL is `http://localhost:3000`, not `http://localhost:4321`.
-- There are 33 tool pages in the current config.
+- There are 34 tool pages in the current config.
 - The password hashing tool currently supports bcrypt only, not Argon2.
 - Tool rendering currently uses a hardcoded React component map, not dynamic imports.
 

@@ -17,7 +17,7 @@
 - [x] Static export configuration
 - [x] Home page with search and category filtering
 - [x] Tool routes generated from `TOOLS`
-- [x] 33 tool pages wired into the renderer
+- [x] 34 tool pages wired into the renderer
 - [x] Favorites
 - [x] Recent tools
 - [x] Dark mode
@@ -33,6 +33,7 @@
 ### Converters
 
 - [x] Markdown Converter
+- [x] HTML Converter
 - [x] Image Converter
 - [x] Base64 Encoder/Decoder
 - [x] Number Base Converter
