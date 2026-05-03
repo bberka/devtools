@@ -53,6 +53,17 @@ export const TOOL_REGISTRY = {
         (module) => module.ImageConverter
       ),
   },
+  'exif-viewer-remover': {
+    name: 'EXIF Viewer & Remover',
+    description: 'Inspect local image metadata and export a cleaned copy',
+    category: 'converters',
+    icon: 'Shield',
+    keywords: ['exif', 'metadata', 'image', 'jpeg', 'gps', 'privacy', 'remove'],
+    component: () =>
+      import('@/components/tools/ExifViewerRemover').then(
+        (module) => module.ExifViewerRemover
+      ),
+  },
   'base64-converter': {
     name: 'Base64 Encoder/Decoder',
     description: 'Encode and decode Base64 strings',

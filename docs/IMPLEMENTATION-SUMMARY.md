@@ -9,7 +9,7 @@ The active app is a Next.js App Router project with React client components. It 
 
 ## Current Counts
 
-- Tool pages: 44
+- Tool pages: 45
 - Categories: 10
 - Static export output: `out/`
 - Build command: `npm run build`
@@ -24,11 +24,12 @@ The active app is a Next.js App Router project with React client components. It 
 
 ## Implemented Categories
 
-### Converters (11)
+### Converters (12)
 
 - Markdown Converter
 - HTML Converter
 - Image Converter
+- EXIF Viewer & Remover
 - Base64 Encoder/Decoder
 - Number Base Converter
 - JSON/YAML/XML Converter

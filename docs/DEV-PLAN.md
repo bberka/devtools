@@ -166,7 +166,7 @@ The lists below only show remaining roadmap work:
 - [ ] SVG to PNG, rasterize image
 - [ ] Expand Image Converter into dedicated Compress Image, Convert Image, Resize Image, and Image Crop routes
 - [ ] Image Rotate / Flip
-- [ ] EXIF Viewer & Remover
+- [x] EXIF Viewer & Remover
 - [ ] Color Palette Extractor
 
 #### Utilities
