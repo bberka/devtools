@@ -72,4 +72,4 @@ If deploying with Wrangler, the asset directory should point to `./out`.
 - Add automated route and tool coverage tests
 - Add generated Open Graph images
 - Continue reducing shared dynamic-route bundle references where practical
-- Expand the roadmap with the next PDF, image, utility, text, developer, and calculator tool families
+- Expand the roadmap with the next PDF, image, utility, text, developer, design, and calculator tool families, including browser-side compression, validation, and accessibility helpers

@@ -139,9 +139,9 @@ Latest review: April 24, 2026.
 
 Already covered in the current app and not repeated in the backlog below:
 
-- Utilities: JSON Formatter, Color Converter, Hash Generator, Base64 Encoder/Decoder
+- Utilities: JSON Formatter, Color Converter
 - Text: Case Converter, Lorem Ipsum Generator, Text Diff Visualizer
-- Developer: URL Encoder/Decoder, UUID Generator, JWT Decoder, Regex Tester, SQL Formatter
+- Developer: URL Encoder/Decoder, UUID Generator, JWT Decoder
 - Calculators: Unit Converter, Percentage Calculator
 
 The lists below only show remaining roadmap work:
@@ -170,6 +170,9 @@ The lists below only show remaining roadmap work:
 #### Utilities
 
 - [ ] QR Code Generator
+- [ ] Expand Base64 Encoder/Decoder with file upload and image-to-Base64 workflows
+- [ ] Expand Hash Generator into a broader Hash / Checksum Generator with text and file inputs
+- [ ] Dedicated browser-side GZip Compressor / Decompressor
 - [ ] Expand Image Converter with a dedicated Image to Icon route
 - [ ] Text to Speech
 - [ ] Speech to Text
@@ -183,8 +186,16 @@ The lists below only show remaining roadmap work:
 #### Developer
 
 - [ ] Expand Cron Expression Parser into a fuller Cron Expression Builder
+- [ ] Expand SQL Formatter with selectable SQL dialects / database types
+- [ ] Add Certificate Decoder / Inspector
+- [ ] Expand Regex Tester into a guided Regex Builder
 - [ ] Split out a dedicated YAML ↔ JSON Converter from the broader JSON/YAML/XML tool
+- [ ] Expand the current JSON/YAML/XML + JSON Formatter + XML Validator coverage into dedicated JSON / YAML / XML validation workflows
 - [ ] CSV ↔ JSON Converter
+
+#### Design
+
+- [ ] Add Color Blindness Simulator
 
 #### Calculators
 
@@ -200,6 +211,14 @@ The lists below only show remaining roadmap work:
 - [ ] Box Shadow Visualizer
 - [ ] Clamp Calculator
 - [ ] Decide whether the password hashing tool should stay bcrypt-only or add Argon2 support
+
+## Feature Request Review Notes
+
+The May 3, 2026 review of additional feature requests maps to the current app like this:
+
+- `Already implemented in some form`: Base64 Encoder/Decoder, Hash Generator, Number Base Converter, JSON Formatter, JSON ↔ YAML ↔ XML conversion, XML Validator, Regex Tester, SQL Formatter
+- `Better handled as expansions`: SQL dialect support, image/file Base64 workflows, file checksums, dedicated JSON/YAML/XML validation flows, and a regex builder layered on the existing tester
+- `Net-new backlog items`: Certificate Decoder, Color Blindness Simulator, and browser-side GZip compression
 
 ## Development Rules
 

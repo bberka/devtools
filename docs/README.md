@@ -45,12 +45,19 @@ The current platform work is mostly polish and coverage. The next large product 
 
 - PDF workspace: edit, merge, split, compress, convert, watermark, and document export flows
 - Image workspace: dedicated image conversion, compression, resizing, cropping, rotation, EXIF, palette extraction, and sketch effects
-- Utilities: QR, JSON, color conversion, hashing, Base64, icons, text-to-speech, and speech-to-text
+- Utilities: QR, JSON, color conversion, hashing/checksums, Base64/file encoding, browser-side gzip, icons, text-to-speech, and speech-to-text
 - Text: counting, case conversion, placeholder generation, find/replace, text diff, and Markdown editing
-- Developer: URL encoding, UUIDs, JWT inspection, regex, cron, SQL formatting, YAML/JSON conversion, and CSV/JSON conversion
+- Developer: URL encoding, UUIDs, JWT inspection, regex testing/building, cron, SQL formatting with dialect support, YAML/JSON/XML conversion and validation, certificate decoding, and CSV/JSON conversion
+- Design: accessibility helpers such as color blindness simulation alongside the current color tooling
 - Calculators: unit, percentage, BMI, age, date difference, timezone, and currency conversion
 
-Several items in that roadmap already exist in the current app in some form, including `Color Converter`, `Hash Generator`, `Base64 Encoder/Decoder`, `JSON Formatter`, `URL Encoder/Decoder`, `UUID Generator`, `JWT Decoder`, `Regex Tester`, `SQL Formatter`, `Case Converter`, `Lorem Ipsum Generator`, and `Text Diff Visualizer`. The roadmap work is therefore a mix of net-new tools and splitting broader existing tools into clearer, dedicated routes.
+Several items in that roadmap already exist in the current app in some form, including `Base64 Encoder/Decoder`, `Number Base Converter`, `Hash Generator`, `JSON Formatter`, `JSON ↔ YAML ↔ XML`, `XML Validator`, `URL Encoder/Decoder`, `UUID Generator`, `JWT Decoder`, `Regex Tester`, `SQL Formatter`, `Color Converter`, `Case Converter`, `Lorem Ipsum Generator`, and `Text Diff Visualizer`.
+
+That means the roadmap work is a mix of:
+
+- net-new tools such as `Certificate Decoder`, `Color Blindness Simulator`, and a dedicated browser-side `GZip Compressor`
+- expansions of current tools such as file/image input for `Base64 Encoder/Decoder`, file hashing and checksum workflows for `Hash Generator`, regex authoring help on top of `Regex Tester`, and SQL dialect-aware formatting on top of `SQL Formatter`
+- route splits or dedicated validators where broader tools already cover part of the need, especially around JSON/YAML/XML formatting and validation
 
 ## Tech Stack
 
