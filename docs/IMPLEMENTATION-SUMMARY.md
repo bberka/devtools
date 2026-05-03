@@ -9,7 +9,7 @@ The active app is a Next.js App Router project with React client components. It 
 
 ## Current Counts
 
-- Tool pages: 45
+- Tool pages: 46
 - Categories: 10
 - Static export output: `out/`
 - Build command: `npm run build`
@@ -67,9 +67,10 @@ The active app is a Next.js App Router project with React client components. It 
 - Find and Replace
 - CV / Resume ATS Analyzer
 
-### Utilities (1)
+### Utilities (2)
 
 - Cron Expression Parser
+- QR Code Generator
 
 ### Security (3)
 

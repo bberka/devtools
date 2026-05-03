@@ -333,6 +333,17 @@ export const TOOL_REGISTRY = {
     component: () =>
       import('@/components/tools/CronParser').then((module) => module.CronParser),
   },
+  'qr-code-generator': {
+    name: 'QR Code Generator',
+    description: 'Generate QR codes for text and URLs with PNG and SVG export',
+    category: 'utilities',
+    icon: 'QrCode',
+    keywords: ['qr', 'qrcode', 'barcode', 'url', 'text', 'png', 'svg'],
+    component: () =>
+      import('@/components/tools/QrCodeGenerator').then(
+        (module) => module.QrCodeGenerator
+      ),
+  },
   'rsa-key-generator': {
     name: 'RSA Key Pair Generator',
     description: 'Generate RSA public/private key pairs (client-side)',
