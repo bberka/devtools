@@ -16,7 +16,7 @@
 - [x] Static export configuration
 - [x] Home page with search and category filtering
 - [x] Tool routes generated from `TOOLS`
-- [x] 37 tool pages wired into the renderer
+- [x] 38 tool pages wired into the renderer
 - [x] Favorites
 - [x] Recent tools
 - [x] Dark mode
@@ -68,6 +68,7 @@
 - [x] Markdown Previewer
 - [x] Text Diff Visualizer
 - [x] Regex Tester
+- [x] Word Counter
 
 ### Utilities
 
@@ -179,7 +180,6 @@ The lists below only show remaining roadmap work:
 
 #### Text
 
-- [ ] Word Counter
 - [ ] Find and Replace
 - [ ] Expand Markdown Previewer into a fuller Markdown Editor
 - [ ] Add CV / Resume ATS Readability Score Analyzer with uploaded PDF parsing and scoring

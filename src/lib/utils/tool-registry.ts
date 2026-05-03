@@ -280,6 +280,17 @@ export const TOOL_REGISTRY = {
         (module) => module.RegexTester
       ),
   },
+  'word-counter': {
+    name: 'Word Counter',
+    description: 'Count words, characters, sentences, and reading time',
+    category: 'text-tools',
+    icon: 'WholeWord',
+    keywords: ['word', 'counter', 'characters', 'sentences', 'reading time', 'text'],
+    component: () =>
+      import('@/components/tools/WordCounter').then(
+        (module) => module.WordCounter
+      ),
+  },
   'cron-parser': {
     name: 'Cron Expression Parser',
     description: 'Parse and generate cron expressions',
