@@ -176,7 +176,6 @@ Automated tests are not implemented yet. Until they are added, manually test:
 
 - Add automated tests for route coverage and core tool behavior
 - Continue improving route-level bundle references after the first heavy dependency split
-- Verify PWA install behavior on desktop and mobile
 - Add generated Open Graph images
 - Confirm production site URL and canonical metadata
 - Expand the next tool families: PDF, image, utilities, text, developer, and calculators

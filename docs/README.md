@@ -22,6 +22,7 @@ DevTools Collection is a static web app for everyday browser-side workflows: con
 - Static export friendly with `next build`
 - Search, category filtering, favorites, recent tools, compact mode, and dark mode
 - Command palette with keyboard navigation
+- PWA install and offline support
 - shadcn-style component layer on Tailwind CSS
 - Responsive layout for desktop and mobile
 
@@ -139,7 +140,6 @@ For Wrangler-based static asset publishing, `wrangler.json` points to `./out`.
 
 - Add automated tests for route coverage, core tool behavior, and keyboard flows
 - Add generated Open Graph images
-- Verify PWA install behavior on desktop and mobile
 - Confirm production site URL and canonical metadata before deployment
 - Consider reducing cross-tool chunk references from the shared dynamic tool route
 - Start the next tool expansion across PDF, image, utilities, text, developer, and calculator workflows

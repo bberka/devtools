@@ -71,6 +71,5 @@ If deploying with Wrangler, the asset directory should point to `./out`.
 
 - Add automated route and tool coverage tests
 - Add generated Open Graph images
-- Verify PWA install behavior on desktop and mobile
 - Continue reducing shared dynamic-route bundle references where practical
 - Expand the roadmap with the next PDF, image, utility, text, developer, and calculator tool families

@@ -127,7 +127,7 @@ Latest review: April 24, 2026.
 - [x] Add service worker.
 - [x] Cache static shell and common tool routes.
 - [x] Add offline fallback.
-- [ ] Verify install behavior on desktop and mobile.
+- [x] Verify install behavior on desktop and mobile.
 
 ### 5. SEO / Sharing
 

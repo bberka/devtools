@@ -93,7 +93,7 @@ The active app is a Next.js App Router project with React client components. It 
 - Per-tool metadata generation
 - Typed tool registry with lazy component loaders
 - Sitemap and robots routes
-- PWA manifest, service worker, and offline fallback
+- PWA manifest, service worker, install support, and offline fallback
 - Favorites
 - Recent tools tracking
 - Theme toggle and initial no-flicker theme script
@@ -106,7 +106,6 @@ The active app is a Next.js App Router project with React client components. It 
 
 - Add automated tests.
 - Add generated Open Graph images.
-- Verify install behavior on desktop and mobile.
 - Confirm production site URL and canonical metadata.
 - Consider a route architecture pass to reduce cross-tool chunk references from the shared dynamic tool route.
 - Expand the product with planned PDF, image, utilities, text, developer, and calculator tool families.
