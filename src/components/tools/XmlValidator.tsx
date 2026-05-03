@@ -4,18 +4,19 @@ import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { CheckCircle, XCircle, FileCode, Trash2 } from 'lucide-react';
+import { CheckCircle, XCircle, FileCode, Copy, Trash2 } from 'lucide-react';
+import { useCopyToClipboard } from '@/hooks';
 
 interface ValidationResult {
   valid: boolean;
   message: string;
-  line?: number;
-  column?: number;
+  normalized?: string;
 }
 
 export function XmlValidator() {
   const [input, setInput] = useState('');
   const [result, setResult] = useState<ValidationResult | null>(null);
+  const copy = useCopyToClipboard();
 
   const validateXml = (text: string): ValidationResult => {
     if (!text.trim()) {
@@ -26,89 +27,24 @@ export function XmlValidator() {
     }
 
     try {
-      // Basic XML validation using regex patterns
-      const trimmed = text.trim();
+      const parser = new DOMParser();
+      const document = parser.parseFromString(text, 'application/xml');
+      const parserError = document.querySelector('parsererror');
 
-      // Check for XML declaration (optional)
-      const xmlDeclRegex = /^<\?xml\s+version="[^"]+"\s*(?:encoding="[^"]+")?\s*\?>/;
-      let content = trimmed;
-      if (xmlDeclRegex.test(trimmed)) {
-        content = trimmed.replace(xmlDeclRegex, '').trim();
-      }
-
-      // Check for root element
-      if (!content.startsWith('<')) {
+      if (parserError) {
         return {
           valid: false,
-          message: 'XML must start with a root element',
+          message: parserError.textContent?.trim() || 'Invalid XML',
         };
       }
 
-      // Check for balanced tags
-      const tagStack: string[] = [];
-      const tagRegex = /<\/?([a-zA-Z][\w:.-]*)/g;
-      let match;
-
-      while ((match = tagRegex.exec(content)) !== null) {
-        const tagName = match[1];
-        const fullTag = match[0];
-
-        // Self-closing tag
-        if (content[match.index + fullTag.length] === '/' || fullTag.startsWith('<?') || fullTag.startsWith('<!')) {
-          continue;
-        }
-
-        // Closing tag
-        if (fullTag.startsWith('</')) {
-          if (tagStack.length === 0) {
-            return {
-              valid: false,
-              message: `Unexpected closing tag: </${tagName}>`,
-            };
-          }
-          const expectedTag = tagStack.pop();
-          if (expectedTag !== tagName) {
-            return {
-              valid: false,
-              message: `Mismatched closing tag: expected </${expectedTag}>, found </${tagName}>`,
-            };
-          }
-        }
-        // Opening tag
-        else {
-          tagStack.push(tagName);
-        }
-      }
-
-      if (tagStack.length > 0) {
-        return {
-          valid: false,
-          message: `Unclosed tag: <${tagStack[tagStack.length - 1]}>`,
-        };
-      }
-
-      // Check for invalid characters in tag names
-      const invalidTagRegex = /<([^a-zA-Z!?])/;
-      const invalidMatch = content.match(invalidTagRegex);
-      if (invalidMatch) {
-        return {
-          valid: false,
-          message: `Invalid tag name starting with: ${invalidMatch[1]}`,
-        };
-      }
-
-      // Check for unclosed attributes
-      const unclosedAttrRegex = /<[^>]*\s+[a-zA-Z]+=["'][^"']*$/;
-      if (unclosedAttrRegex.test(content)) {
-        return {
-          valid: false,
-          message: 'Unclosed attribute value',
-        };
-      }
+      const serializer = new XMLSerializer();
+      const normalized = serializer.serializeToString(document);
 
       return {
         valid: true,
         message: 'XML is valid',
+        normalized,
       };
     } catch (e) {
       return {
@@ -158,6 +94,14 @@ export function XmlValidator() {
               <CheckCircle className="h-4 w-4 mr-2" />
               Validate
             </Button>
+            <Button
+              onClick={() => copy.copyToClipboard(result?.normalized ?? '')}
+              variant={copy.isCopied ? 'default' : 'outline'}
+              disabled={!result?.valid || !result.normalized}
+            >
+              <Copy className="h-4 w-4 mr-2" />
+              {copy.isCopied ? 'Copied' : 'Copy normalized XML'}
+            </Button>
 
             <Button onClick={handleClear} variant="outline">
               <Trash2 className="h-4 w-4 mr-2" />
@@ -194,12 +138,15 @@ export function XmlValidator() {
               }`}
             >
               <p className="font-medium">{result.message}</p>
-              {result.line && result.column && (
-                <p className="text-sm mt-1">
-                  Line {result.line}, Column {result.column}
-                </p>
-              )}
             </div>
+            {result.valid && result.normalized && (
+              <Textarea
+                value={result.normalized}
+                readOnly
+                rows={12}
+                className="mt-4 font-mono text-sm"
+              />
+            )}
           </CardContent>
         </Card>
       )}

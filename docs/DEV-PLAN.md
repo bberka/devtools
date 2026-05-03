@@ -189,9 +189,9 @@ The lists below only show remaining roadmap work:
 - [ ] Expand SQL Formatter with selectable SQL dialects / database types
 - [ ] Add Certificate Decoder / Inspector
 - [ ] Expand Regex Tester into a guided Regex Builder
-- [ ] Split out a dedicated YAML ↔ JSON Converter from the broader JSON/YAML/XML tool
-- [ ] Expand the current JSON/YAML/XML + JSON Formatter + XML Validator coverage into dedicated JSON / YAML / XML validation workflows
-- [ ] CSV ↔ JSON Converter
+- [x] Split out a dedicated YAML ↔ JSON Converter from the broader JSON/YAML/XML tool
+- [x] Expand the current JSON/YAML/XML + JSON Formatter + XML Validator coverage into dedicated JSON / YAML / XML validation workflows
+- [x] CSV ↔ JSON Converter
 
 #### Design
 

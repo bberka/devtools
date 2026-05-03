@@ -9,7 +9,7 @@ The active app is a Next.js App Router project with React client components. It 
 
 ## Current Counts
 
-- Tool pages: 47
+- Tool pages: 51
 - Categories: 10
 - Static export output: `out/`
 - Build command: `npm run build`
@@ -24,7 +24,7 @@ The active app is a Next.js App Router project with React client components. It 
 
 ## Implemented Categories
 
-### Converters (12)
+### Converters (14)
 
 - Markdown Converter
 - HTML Converter
@@ -33,6 +33,8 @@ The active app is a Next.js App Router project with React client components. It 
 - Base64 Encoder/Decoder
 - Number Base Converter
 - JSON/YAML/XML Converter
+- YAML ↔ JSON Converter
+- CSV ↔ JSON Converter
 - Unix Timestamp Converter
 - URL Encoder/Decoder
 - HTML Encoder/Decoder
@@ -51,10 +53,12 @@ The active app is a Next.js App Router project with React client components. It 
 - Password Generator
 - Lorem Ipsum Generator
 
-### Formatters & Validators (4)
+### Formatters & Validators (6)
 
 - SQL Formatter
 - JSON Formatter
+- JSON Validator
+- YAML Validator
 - XML Formatter
 - XML Validator
 

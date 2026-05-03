@@ -98,6 +98,28 @@ export const TOOL_REGISTRY = {
         (module) => module.JsonYamlXmlConverter
       ),
   },
+  'yaml-json-converter': {
+    name: 'YAML ↔ JSON Converter',
+    description: 'Convert between YAML and JSON with focused formatting controls',
+    category: 'converters',
+    icon: 'ArrowRightLeft',
+    keywords: ['yaml', 'json', 'converter', 'serialize', 'parse'],
+    component: () =>
+      import('@/components/tools/YamlJsonConverter').then(
+        (module) => module.YamlJsonConverter
+      ),
+  },
+  'csv-json-converter': {
+    name: 'CSV ↔ JSON Converter',
+    description: 'Convert CSV rows and JSON arrays with header-aware mapping',
+    category: 'converters',
+    icon: 'FileSpreadsheet',
+    keywords: ['csv', 'json', 'converter', 'spreadsheet', 'table', 'delimiter'],
+    component: () =>
+      import('@/components/tools/CsvJsonConverter').then(
+        (module) => module.CsvJsonConverter
+      ),
+  },
   'timestamp-converter': {
     name: 'Unix Timestamp Converter',
     description: 'Convert Unix timestamps to readable dates',
@@ -236,6 +258,28 @@ export const TOOL_REGISTRY = {
     component: () =>
       import('@/components/tools/JsonFormatter').then(
         (module) => module.JsonFormatter
+      ),
+  },
+  'json-validator': {
+    name: 'JSON Validator',
+    description: 'Validate JSON syntax and inspect normalized output',
+    category: 'formatters-validators',
+    icon: 'CheckCircle',
+    keywords: ['json', 'validate', 'validator', 'syntax', 'parse'],
+    component: () =>
+      import('@/components/tools/JsonValidator').then(
+        (module) => module.JsonValidator
+      ),
+  },
+  'yaml-validator': {
+    name: 'YAML Validator',
+    description: 'Validate YAML syntax and inspect normalized output',
+    category: 'formatters-validators',
+    icon: 'FileCode',
+    keywords: ['yaml', 'validate', 'validator', 'syntax', 'parse'],
+    component: () =>
+      import('@/components/tools/YamlValidator').then(
+        (module) => module.YamlValidator
       ),
   },
   'xml-formatter': {

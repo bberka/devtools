@@ -10,7 +10,7 @@ DevTools Collection is a static web app for everyday browser-side workflows: con
 
 ## Current Status
 
-- 47 tool pages are exported statically from `src/lib/utils/tool-registry.ts`
+- 51 tool pages are exported statically from `src/lib/utils/tool-registry.ts`
 - Tool routes use `generateStaticParams()` in the Next.js App Router
 - Home page, per-tool metadata, sitemap, robots, not-found page, favorites, recent tools, settings, dark mode, and command palette are implemented
 - `npm run build` succeeds and writes the static export to `out/`
@@ -28,10 +28,10 @@ DevTools Collection is a static web app for everyday browser-side workflows: con
 
 ## Tool Categories
 
-- Converters: 12 tools
+- Converters: 14 tools
 - Encoders & Decoders: 2 tools
 - Generators: 4 tools
-- Formatters & Validators: 4 tools
+- Formatters & Validators: 6 tools
 - Text Tools: 6 tools
 - Utilities: 2 tools
 - Security: 3 tools
