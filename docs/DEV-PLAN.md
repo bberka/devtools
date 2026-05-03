@@ -137,76 +137,62 @@ Latest review: April 24, 2026.
 
 ### 6. Tool Expansion Roadmap
 
-Status labels used below:
+Already covered in the current app and not repeated in the backlog below:
 
-- `Existing`: already shipped in the current app
-- `Expand`: partly covered today, but should become a clearer dedicated tool or a materially broader workflow
-- `Planned`: net-new route or feature set
+- Utilities: JSON Formatter, Color Converter, Hash Generator, Base64 Encoder/Decoder
+- Text: Case Converter, Lorem Ipsum Generator, Text Diff Visualizer
+- Developer: URL Encoder/Decoder, UUID Generator, JWT Decoder, Regex Tester, SQL Formatter
+- Calculators: Unit Converter, Percentage Calculator
+
+The lists below only show remaining roadmap work:
 
 #### PDF
 
-- [ ] `Planned` Edit PDF
-- [ ] `Planned` Merge PDF
-- [ ] `Planned` Split PDF
-- [ ] `Planned` Compress PDF
-- [ ] `Planned` PDF to Image
-- [ ] `Planned` Image to PDF
-- [ ] `Planned` PDF to Word
-- [ ] `Planned` Word to PDF
-- [ ] `Planned` PDF Watermark
+- [ ] Edit PDF
+- [ ] Merge PDF
+- [ ] Split PDF
+- [ ] Compress PDF
+- [ ] PDF to Image
+- [ ] Image to PDF
+- [ ] PDF to Word
+- [ ] Word to PDF
+- [ ] PDF Watermark
 
 #### Image
 
-- [ ] `Planned` SVG to PNG
-- [ ] `Expand` Compress Image
-- [ ] `Expand` Convert Image
-- [ ] `Expand` Resize Image
-- [ ] `Expand` Image Crop
-- [ ] `Planned` Image Rotate / Flip
-- [ ] `Planned` EXIF Viewer & Remover
-- [ ] `Planned` Color Palette Extractor
-- [ ] `Planned` Photo to Sketch
+- [ ] SVG to PNG
+- [ ] Expand Image Converter into dedicated Compress Image, Convert Image, Resize Image, and Image Crop routes
+- [ ] Image Rotate / Flip
+- [ ] EXIF Viewer & Remover
+- [ ] Color Palette Extractor
+- [ ] Photo to Sketch
 
 #### Utilities
 
-- [ ] `Planned` QR Code Generator
-- [x] `Existing` JSON Formatter
-- [x] `Existing` Color Converter
-- [x] `Existing` Hash Generator
-- [x] `Existing` Base64 Converter
-- [ ] `Expand` Image to Icon
-- [ ] `Planned` Text to Speech
-- [ ] `Planned` Speech to Text
+- [ ] QR Code Generator
+- [ ] Expand Image Converter with a dedicated Image to Icon route
+- [ ] Text to Speech
+- [ ] Speech to Text
 
 #### Text
 
-- [ ] `Planned` Word Counter
-- [x] `Existing` Case Converter
-- [x] `Existing` Lorem Ipsum Generator
-- [ ] `Planned` Find and Replace
-- [x] `Existing` Text Diff / Compare
-- [ ] `Expand` Markdown Editor
+- [ ] Word Counter
+- [ ] Find and Replace
+- [ ] Expand Markdown Previewer into a fuller Markdown Editor
 
 #### Developer
 
-- [x] `Existing` URL Encoder/Decoder
-- [x] `Existing` UUID Generator
-- [x] `Existing` JWT Decoder
-- [x] `Existing` Regex Tester
-- [ ] `Expand` Cron Expression Builder
-- [x] `Existing` SQL Formatter
-- [ ] `Expand` YAML ↔ JSON Converter
-- [ ] `Planned` CSV ↔ JSON Converter
+- [ ] Expand Cron Expression Parser into a fuller Cron Expression Builder
+- [ ] Split out a dedicated YAML ↔ JSON Converter from the broader JSON/YAML/XML tool
+- [ ] CSV ↔ JSON Converter
 
 #### Calculators
 
-- [x] `Existing` Unit Converter
-- [x] `Existing` Percentage Calculator
-- [ ] `Planned` BMI Calculator
-- [ ] `Planned` Age Calculator
-- [ ] `Planned` Date Difference Calculator
-- [ ] `Planned` Timezone Converter
-- [ ] `Planned` Currency Converter
+- [ ] BMI Calculator
+- [ ] Age Calculator
+- [ ] Date Difference Calculator
+- [ ] Timezone Converter
+- [ ] Currency Converter
 
 ### 7. Lower-Priority Ideas
 
