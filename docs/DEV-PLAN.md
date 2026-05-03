@@ -16,7 +16,7 @@
 - [x] Static export configuration
 - [x] Home page with search and category filtering
 - [x] Tool routes generated from `TOOLS`
-- [x] 38 tool pages wired into the renderer
+- [x] 39 tool pages wired into the renderer
 - [x] Favorites
 - [x] Recent tools
 - [x] Dark mode
@@ -69,6 +69,7 @@
 - [x] Text Diff Visualizer
 - [x] Regex Tester
 - [x] Word Counter
+- [x] Find and Replace
 
 ### Utilities
 
@@ -141,7 +142,7 @@ Latest review: April 24, 2026.
 Already covered in the current app and not repeated in the backlog below:
 
 - Utilities: JSON Formatter, Color Converter
-- Text: Case Converter, Lorem Ipsum Generator, Text Diff Visualizer
+- Text: Case Converter, Lorem Ipsum Generator, Text Diff Visualizer, Word Counter, Find and Replace
 - Developer: URL Encoder/Decoder, UUID Generator, JWT Decoder
 - Calculators: Unit Converter, Percentage Calculator
 
@@ -161,7 +162,7 @@ The lists below only show remaining roadmap work:
 
 #### Image
 
-- [ ] SVG to PNG
+- [ ] SVG to PNG, rasterize image
 - [ ] Expand Image Converter into dedicated Compress Image, Convert Image, Resize Image, and Image Crop routes
 - [ ] Image Rotate / Flip
 - [ ] EXIF Viewer & Remover
@@ -180,7 +181,6 @@ The lists below only show remaining roadmap work:
 
 #### Text
 
-- [ ] Find and Replace
 - [ ] Expand Markdown Previewer into a fuller Markdown Editor
 - [ ] Add CV / Resume ATS Readability Score Analyzer with uploaded PDF parsing and scoring
 

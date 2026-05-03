@@ -291,6 +291,17 @@ export const TOOL_REGISTRY = {
         (module) => module.WordCounter
       ),
   },
+  'find-replace': {
+    name: 'Find and Replace',
+    description: 'Search text and preview literal or regex replacements',
+    category: 'text-tools',
+    icon: 'Replace',
+    keywords: ['find', 'replace', 'search', 'regex', 'text'],
+    component: () =>
+      import('@/components/tools/FindAndReplace').then(
+        (module) => module.FindAndReplace
+      ),
+  },
   'cron-parser': {
     name: 'Cron Expression Parser',
     description: 'Parse and generate cron expressions',

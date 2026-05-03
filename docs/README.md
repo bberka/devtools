@@ -10,7 +10,7 @@ DevTools Collection is a static web app for everyday browser-side workflows: con
 
 ## Current Status
 
-- 38 tool pages are exported statically from `src/lib/utils/tool-registry.ts`
+- 39 tool pages are exported statically from `src/lib/utils/tool-registry.ts`
 - Tool routes use `generateStaticParams()` in the Next.js App Router
 - Home page, per-tool metadata, sitemap, robots, not-found page, favorites, recent tools, settings, dark mode, and command palette are implemented
 - `npm run build` succeeds and writes the static export to `out/`
@@ -32,7 +32,7 @@ DevTools Collection is a static web app for everyday browser-side workflows: con
 - Encoders & Decoders: 2 tools
 - Generators: 4 tools
 - Formatters & Validators: 4 tools
-- Text Tools: 4 tools
+- Text Tools: 5 tools
 - Utilities: 1 tool
 - Security: 3 tools
 - Networking: 4 tools
@@ -46,12 +46,12 @@ The current platform work is mostly polish and coverage. The next large product 
 - PDF workspace: edit, merge, split, compress, convert, watermark, and document export flows
 - Image workspace: dedicated image conversion, compression, resizing, cropping, rotation, EXIF, palette extraction, and sketch effects
 - Utilities: QR, JSON, color conversion, hashing/checksums, Base64/file encoding, browser-side gzip, icons, text-to-speech, and speech-to-text
-- Text: word counting, case conversion, placeholder generation, find/replace, text diff, Markdown editing, and resume/CV readability analysis
+- Text: word counting, find/replace, case conversion, placeholder generation, text diff, Markdown editing, and resume/CV readability analysis
 - Developer: URL encoding, UUIDs, JWT inspection, regex testing/building, cron, SQL formatting with dialect support, YAML/JSON/XML conversion and validation, certificate decoding, and CSV/JSON conversion
 - Design: accessibility helpers such as color blindness simulation alongside the current color tooling
 - Calculators: unit, percentage, BMI, age, date difference, timezone, and currency conversion
 
-Several items in that roadmap already exist in the current app in some form, including `Base64 Encoder/Decoder`, `Number Base Converter`, `Hash Generator`, `JSON Formatter`, `JSON ↔ YAML ↔ XML`, `XML Validator`, `URL Encoder/Decoder`, `UUID Generator`, `JWT Decoder`, `Regex Tester`, `SQL Formatter`, `Color Converter`, `Case Converter`, `Lorem Ipsum Generator`, and `Text Diff Visualizer`.
+Several items in that roadmap already exist in the current app in some form, including `Base64 Encoder/Decoder`, `Number Base Converter`, `Hash Generator`, `JSON Formatter`, `JSON ↔ YAML ↔ XML`, `XML Validator`, `URL Encoder/Decoder`, `UUID Generator`, `JWT Decoder`, `Regex Tester`, `SQL Formatter`, `Color Converter`, `Case Converter`, `Lorem Ipsum Generator`, `Text Diff Visualizer`, `Word Counter`, and `Find and Replace`.
 
 That means the roadmap work is a mix of:
 
