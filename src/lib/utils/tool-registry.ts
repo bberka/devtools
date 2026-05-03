@@ -501,6 +501,26 @@ export const TOOL_REGISTRY = {
         (module) => module.AgeCalculator
       ),
   },
+  'timezone-converter': {
+    name: 'Timezone Converter',
+    description: 'Convert date and time values between IANA time zones',
+    category: 'calculators',
+    icon: 'Clock3',
+    keywords: [
+      'timezone',
+      'time zone',
+      'convert',
+      'date time',
+      'utc',
+      'offset',
+      'iana',
+      'world clock',
+    ],
+    component: () =>
+      import('@/components/tools/TimezoneConverter').then(
+        (module) => module.TimezoneConverter
+      ),
+  },
 } as const satisfies Record<string, ToolRegistryEntry>;
 
 export type ToolId = keyof typeof TOOL_REGISTRY;

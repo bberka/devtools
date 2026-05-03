@@ -168,7 +168,6 @@ The lists below only show remaining roadmap work:
 - [ ] Image Rotate / Flip
 - [ ] EXIF Viewer & Remover
 - [ ] Color Palette Extractor
-- [ ] Photo to Sketch
 
 #### Utilities
 
@@ -203,7 +202,7 @@ The lists below only show remaining roadmap work:
 - [ ] BMI Calculator
 - [x] Age Calculator
 - [ ] Date Difference Calculator
-- [ ] Timezone Converter
+- [x] Timezone Converter
 - [ ] Currency Converter
 
 ### 7. Lower-Priority Ideas
