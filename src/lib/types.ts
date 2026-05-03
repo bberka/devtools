@@ -7,7 +7,8 @@ export type ToolCategory =
   | 'utilities'
   | 'security'
   | 'networking'
-  | 'design';
+  | 'design'
+  | 'calculators';
 
 export interface Tool {
   id: string; // slug-style: 'base64-encoder'

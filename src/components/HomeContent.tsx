@@ -38,6 +38,7 @@ export function HomeContent() {
       security: [],
       networking: [],
       design: [],
+      calculators: [],
     };
 
     filteredTools.forEach((tool) => {

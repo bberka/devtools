@@ -66,6 +66,13 @@ export const CATEGORIES: Record<ToolCategory, CategoryInfo> = {
     description: 'Design and accessibility tools',
     color: 'text-violet-500',
   },
+  calculators: {
+    id: 'calculators',
+    name: 'Calculators',
+    icon: 'Calculator',
+    description: 'Math, percentage, and conversion calculators',
+    color: 'text-emerald-500',
+  },
 };
 
 // Tool metadata is derived from the typed registry so metadata and component

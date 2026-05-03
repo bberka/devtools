@@ -9,8 +9,8 @@ The active app is a Next.js App Router project with React client components. It 
 
 ## Current Counts
 
-- Tool pages: 35
-- Categories: 9
+- Tool pages: 36
+- Categories: 10
 - Static export output: `out/`
 - Build command: `npm run build`
 - Latest verification in this workspace: build, typecheck, bundle analysis, and Lighthouse passed
@@ -86,6 +86,10 @@ The active app is a Next.js App Router project with React client components. It 
 - Color Contrast Checker
 - Color Picker
 
+### Calculators (1)
+
+- Percentage Calculator
+
 ## Implemented App Features
 
 - Next.js App Router with static export
@@ -114,7 +118,7 @@ The active app is a Next.js App Router project with React client components. It 
 
 Requested next-wave tools fall into three buckets:
 
-- `Existing already`: JSON Formatter, Color Converter, Hash Generator, Base64 Converter, Case Converter, Text Diff, URL Encoder/Decoder, UUID Generator, JWT Decoder, Regex Tester, SQL Formatter, and Lorem Ipsum Generator
+- `Existing already`: JSON Formatter, Color Converter, Hash Generator, Base64 Converter, Case Converter, Text Diff, URL Encoder/Decoder, UUID Generator, JWT Decoder, Regex Tester, SQL Formatter, Lorem Ipsum Generator, and Percentage Calculator
 - `Expand current tools`: Image conversion/compression/resize/crop flows, Image to Icon, Markdown Editor, Cron Expression Builder, and a focused YAML ↔ JSON route split from the broader structured-data converter
 - `Net-new`: PDF editing and conversion suite, QR, speech tools, EXIF, palette extraction, photo sketching, CSV ↔ JSON, and the calculator set
 

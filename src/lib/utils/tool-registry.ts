@@ -405,6 +405,26 @@ export const TOOL_REGISTRY = {
         (module) => module.ColorPicker
       ),
   },
+  'percentage-calculator': {
+    name: 'Percentage Calculator',
+    description: 'Calculate percentages, increases, decreases, and percentage change',
+    category: 'calculators',
+    icon: 'Percent',
+    keywords: [
+      'percentage',
+      'percent',
+      'calculator',
+      'ratio',
+      'increase',
+      'decrease',
+      'change',
+      'math',
+    ],
+    component: () =>
+      import('@/components/tools/PercentageCalculator').then(
+        (module) => module.PercentageCalculator
+      ),
+  },
 } as const satisfies Record<string, ToolRegistryEntry>;
 
 export type ToolId = keyof typeof TOOL_REGISTRY;
