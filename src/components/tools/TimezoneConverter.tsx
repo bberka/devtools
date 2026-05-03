@@ -262,7 +262,39 @@ export function TimezoneConverter() {
   const [sourceTimeZone, setSourceTimeZone] = useState(defaultSourceTimeZone);
   const [targetTimeZone, setTargetTimeZone] = useState('UTC');
   const [inputValue, setInputValue] = useState(getNowInputValue());
+  const [sourceSearch, setSourceSearch] = useState('');
+  const [targetSearch, setTargetSearch] = useState('');
+  const [sourceOpen, setSourceOpen] = useState(false);
+  const [targetOpen, setTargetOpen] = useState(false);
   const copyResult = useCopyToClipboard();
+
+  const filteredSourceOptions = useMemo(() => {
+    const query = sourceSearch.trim().toLowerCase();
+
+    if (!query) {
+      return timeZoneOptions;
+    }
+
+    return timeZoneOptions.filter(
+      (option) =>
+        option.label.toLowerCase().includes(query) ||
+        option.value.toLowerCase().includes(query)
+    );
+  }, [sourceSearch, timeZoneOptions]);
+
+  const filteredTargetOptions = useMemo(() => {
+    const query = targetSearch.trim().toLowerCase();
+
+    if (!query) {
+      return timeZoneOptions;
+    }
+
+    return timeZoneOptions.filter(
+      (option) =>
+        option.label.toLowerCase().includes(query) ||
+        option.value.toLowerCase().includes(query)
+    );
+  }, [targetSearch, timeZoneOptions]);
 
   const result = useMemo(() => {
     const inputParts = parseDateTimeInput(inputValue);
@@ -373,18 +405,45 @@ export function TimezoneConverter() {
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_auto_1fr] lg:items-end">
             <div>
               <label className="mb-2 block text-sm font-medium">From</label>
-              <Select value={sourceTimeZone} onValueChange={setSourceTimeZone}>
+              <Select
+                value={sourceTimeZone}
+                onValueChange={setSourceTimeZone}
+                open={sourceOpen}
+                onOpenChange={(open) => {
+                  setSourceOpen(open);
+                  if (!open) {
+                    setSourceSearch('');
+                  }
+                }}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select source time zone" />
                 </SelectTrigger>
                 <SelectContent>
+                  <div className="p-1">
+                    <Input
+                      value={sourceSearch}
+                      onChange={(event) =>
+                        setSourceSearch((event.target as HTMLInputElement).value)
+                      }
+                      onKeyDown={(event) => event.stopPropagation()}
+                      placeholder="Search time zones..."
+                      className="h-9"
+                      autoFocus
+                    />
+                  </div>
                   <SelectGroup>
-                    {timeZoneOptions.map((option) => (
+                    {filteredSourceOptions.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}
                       </SelectItem>
                     ))}
                   </SelectGroup>
+                  {filteredSourceOptions.length === 0 && (
+                    <div className="px-3 py-2 text-sm text-muted-foreground">
+                      No matching time zones
+                    </div>
+                  )}
                 </SelectContent>
               </Select>
             </div>
@@ -403,18 +462,45 @@ export function TimezoneConverter() {
 
             <div>
               <label className="mb-2 block text-sm font-medium">To</label>
-              <Select value={targetTimeZone} onValueChange={setTargetTimeZone}>
+              <Select
+                value={targetTimeZone}
+                onValueChange={setTargetTimeZone}
+                open={targetOpen}
+                onOpenChange={(open) => {
+                  setTargetOpen(open);
+                  if (!open) {
+                    setTargetSearch('');
+                  }
+                }}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select target time zone" />
                 </SelectTrigger>
                 <SelectContent>
+                  <div className="p-1">
+                    <Input
+                      value={targetSearch}
+                      onChange={(event) =>
+                        setTargetSearch((event.target as HTMLInputElement).value)
+                      }
+                      onKeyDown={(event) => event.stopPropagation()}
+                      placeholder="Search time zones..."
+                      className="h-9"
+                      autoFocus
+                    />
+                  </div>
                   <SelectGroup>
-                    {timeZoneOptions.map((option) => (
+                    {filteredTargetOptions.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}
                       </SelectItem>
                     ))}
                   </SelectGroup>
+                  {filteredTargetOptions.length === 0 && (
+                    <div className="px-3 py-2 text-sm text-muted-foreground">
+                      No matching time zones
+                    </div>
+                  )}
                 </SelectContent>
               </Select>
             </div>
