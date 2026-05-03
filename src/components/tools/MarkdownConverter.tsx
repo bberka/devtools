@@ -568,14 +568,14 @@ export function MarkdownConverter() {
     <div className="space-y-4">
       <div className="grid grid-cols-1 items-stretch gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(360px,0.75fr)]">
         <Card className="flex h-full flex-col">
-          <CardHeader>
+          <CardHeader className="p-4 sm:p-6">
             <CardTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5" />
               Markdown Input
             </CardTitle>
             <CardDescription>Write your markdown content.</CardDescription>
           </CardHeader>
-          <CardContent className="flex flex-1 flex-col space-y-4">
+          <CardContent className="flex flex-1 flex-col space-y-4 px-4 pb-4 pt-0 sm:px-6 sm:pb-6">
             <Textarea
               value={input}
               onChange={(event) => handleInputChange(event.currentTarget.value)}
@@ -594,14 +594,14 @@ export function MarkdownConverter() {
         </Card>
 
         <Card className="flex h-full flex-col">
-          <CardHeader>
+          <CardHeader className="p-4 sm:p-6">
             <CardTitle className="flex items-center gap-2">
               <Printer className="h-5 w-5" />
               Export Settings
             </CardTitle>
             <CardDescription>PDF uses browser print so text stays selectable.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 px-4 pb-4 pt-0 sm:px-6 sm:pb-6">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Export format</label>
@@ -647,7 +647,7 @@ export function MarkdownConverter() {
             </div>
 
             {(showPdfOptions || showImageOptions) && (
-              <div className="space-y-4 rounded-md border p-4">
+              <div className="space-y-4 rounded-md border p-3 sm:p-4">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Orientation</label>
@@ -701,7 +701,7 @@ export function MarkdownConverter() {
               </div>
             )}
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Button onClick={handleExport} disabled={exporting || !input.trim()}>
                 {exporting ? (
                   <>
@@ -730,19 +730,19 @@ export function MarkdownConverter() {
       </div>
 
       <Card className="flex h-full flex-col">
-        <CardHeader>
+        <CardHeader className="p-4 sm:p-6">
           <CardTitle className="flex items-center gap-2">
             <Eye className="h-5 w-5" />
             Preview
           </CardTitle>
           <CardDescription>Rendered markdown used for export and print.</CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-1 flex-col">
-          <div className="flex-1 rounded-md border bg-muted/30 p-4">
+        <CardContent className="flex flex-1 flex-col px-4 pb-4 pt-0 sm:px-6 sm:pb-6">
+          <div className="flex-1 rounded-md border bg-muted/30 p-3 sm:p-4">
             <style>{previewCss}</style>
             <div
               ref={previewRef}
-              className="markdown-print-preview mx-auto w-full overflow-hidden bg-white p-8 shadow-sm"
+              className="markdown-print-preview mx-auto w-full overflow-hidden bg-white p-4 shadow-sm sm:p-6 lg:p-8"
               style={previewPageStyle}
               dangerouslySetInnerHTML={{ __html: html }}
             />

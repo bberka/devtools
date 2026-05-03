@@ -25,12 +25,15 @@ export function CategoryFilter({
   const categories = Object.values(CATEGORIES);
 
   return (
-    <div className="flex flex-wrap justify-center gap-2">
+    <div className="flex w-full flex-wrap justify-center gap-2">
       <Button
         variant="outline"
         size="sm"
         onClick={onFavoritesToggle}
-        className={cn('gap-1.5', showFavoritesOnly && 'border-primary/30 bg-primary/10')}
+        className={cn(
+          'h-10 gap-1.5 px-3 sm:h-9',
+          showFavoritesOnly && 'border-primary/30 bg-primary/10'
+        )}
       >
         <Star className={cn('h-4 w-4', showFavoritesOnly && 'fill-current')} />
         Favorites
@@ -49,7 +52,10 @@ export function CategoryFilter({
             variant="outline"
             size="sm"
             onClick={() => onCategoryChange(isSelected ? null : category.id)}
-            className={cn('gap-1.5', isSelected && 'border-primary/30 bg-primary/10')}
+            className={cn(
+              'h-10 gap-1.5 px-3 sm:h-9',
+              isSelected && 'border-primary/30 bg-primary/10'
+            )}
           >
             <span className={category.color}>{category.name}</span>
             <Badge variant="secondary" className="ml-1">

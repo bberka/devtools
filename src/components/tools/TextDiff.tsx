@@ -34,7 +34,7 @@ export function TextDiff() {
     const diff = getDiff();
 
     return (
-      <div className="font-mono text-sm whitespace-pre-wrap border rounded-md p-4 min-h-[400px]">
+      <div className="min-h-[320px] whitespace-pre-wrap rounded-md border p-3 font-mono text-sm sm:min-h-[400px] sm:p-4">
         {diff.map((part, index) => {
           const bgColor = part.added
             ? 'bg-green-500/20'
@@ -96,7 +96,7 @@ export function TextDiff() {
     }
 
     return (
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         <div className="border rounded-md">
           <div className="bg-muted px-4 py-2 font-medium text-sm border-b">Original</div>
           <div className="font-mono text-sm min-h-[400px]">
@@ -142,11 +142,11 @@ export function TextDiff() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <label className="text-sm font-medium">Diff Mode:</label>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <Button
                 onClick={() => setDiffMode('lines')}
                 variant={diffMode === 'lines' ? 'default' : 'outline'}
@@ -164,9 +164,9 @@ export function TextDiff() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <label className="text-sm font-medium">View:</label>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <Button
                 onClick={() => setViewMode('side-by-side')}
                 variant={viewMode === 'side-by-side' ? 'default' : 'outline'}
@@ -185,7 +185,7 @@ export function TextDiff() {
           </div>
         </div>
 
-        <Button onClick={handleClear} variant="outline" size="sm">
+        <Button onClick={handleClear} variant="outline" size="sm" className="min-h-11 sm:min-h-9 lg:self-start">
           <Trash2 className="h-4 w-4 mr-2" />
           Clear
         </Button>

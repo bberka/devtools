@@ -1,15 +1,15 @@
 export function Footer() {
   return (
-    <footer className="border-t py-6 mt-12">
+    <footer className="mt-10 border-t py-6 sm:mt-12">
       <div className="container">
         <div className="flex flex-col items-center gap-4">
           {/* GitHub Links */}
-          <div className="flex flex-wrap items-center justify-center gap-4">
+          <div className="flex w-full flex-wrap items-stretch justify-center gap-3">
             <a
               href="https://github.com/bberka/devtools"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-border bg-background hover:bg-accent hover:text-accent-foreground transition-colors text-sm font-medium"
+              className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-border bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground sm:min-h-10 sm:w-auto"
             >
               <svg
                 className="w-5 h-5"
@@ -30,7 +30,7 @@ export function Footer() {
               href="https://github.com/bberka/devtools/issues"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-border bg-background hover:bg-accent hover:text-accent-foreground transition-colors text-sm font-medium"
+              className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-border bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground sm:min-h-10 sm:w-auto"
             >
               <svg
                 className="w-5 h-5"
@@ -53,7 +53,7 @@ export function Footer() {
               href="https://github.com/bberka/devtools/issues"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-border bg-background hover:bg-accent hover:text-accent-foreground transition-colors text-sm font-medium"
+              className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-border bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground sm:min-h-10 sm:w-auto"
             >
               <svg
                 className="w-5 h-5"
@@ -76,7 +76,7 @@ export function Footer() {
               href="https://github.com/bberka/devtools/blob/master/CONTRIBUTING.md"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-border bg-background hover:bg-accent hover:text-accent-foreground transition-colors text-sm font-medium"
+              className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-border bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground sm:min-h-10 sm:w-auto"
             >
               <svg
                 className="w-5 h-5"

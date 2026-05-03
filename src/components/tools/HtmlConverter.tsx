@@ -618,14 +618,14 @@ export function HtmlConverter() {
     <div className="space-y-4">
       <div className="grid grid-cols-1 items-stretch gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(360px,0.75fr)]">
         <Card className="flex h-full flex-col">
-          <CardHeader>
+          <CardHeader className="p-4 sm:p-6">
             <CardTitle className="flex items-center gap-2">
               <Code2 className="h-5 w-5" />
               HTML Input
             </CardTitle>
             <CardDescription>Paste a complete document or an HTML fragment.</CardDescription>
           </CardHeader>
-          <CardContent className="flex flex-1 flex-col space-y-4">
+          <CardContent className="flex flex-1 flex-col space-y-4 px-4 pb-4 pt-0 sm:px-6 sm:pb-6">
             <Textarea
               value={input}
               onChange={(event) => setInput(event.currentTarget.value)}
@@ -671,14 +671,14 @@ export function HtmlConverter() {
         </Card>
 
         <Card className="flex h-full flex-col">
-          <CardHeader>
+          <CardHeader className="p-4 sm:p-6">
             <CardTitle className="flex items-center gap-2">
               <Printer className="h-5 w-5" />
               Export Settings
             </CardTitle>
             <CardDescription>Configure output files and PDF rendering.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 px-4 pb-4 pt-0 sm:px-6 sm:pb-6">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Format</label>
@@ -712,7 +712,7 @@ export function HtmlConverter() {
             </div>
 
             {exportFormat === 'pdf' ? (
-              <div className="space-y-4 rounded-md border p-4">
+              <div className="space-y-4 rounded-md border p-3 sm:p-4">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Page size</label>
@@ -836,19 +836,19 @@ export function HtmlConverter() {
 
       <div className="grid grid-cols-1 items-stretch gap-4">
         <Card className="flex h-full flex-col">
-          <CardHeader>
+          <CardHeader className="p-4 sm:p-6">
             <CardTitle className="flex items-center gap-2">
               <Eye className="h-5 w-5" />
               Preview
             </CardTitle>
             <CardDescription>Rendered HTML used for PDF export.</CardDescription>
           </CardHeader>
-          <CardContent className="flex flex-1 flex-col">
-            <div className="flex-1 rounded-md border bg-muted/30 p-4">
+          <CardContent className="flex flex-1 flex-col px-4 pb-4 pt-0 sm:px-6 sm:pb-6">
+            <div className="flex-1 rounded-md border bg-muted/30 p-3 sm:p-4">
               <style>{styleTag}</style>
               <div
                 ref={previewRef}
-                className="html-converter-preview mx-auto w-full overflow-hidden bg-white p-8 shadow-sm"
+                className="html-converter-preview mx-auto w-full overflow-hidden bg-white p-4 shadow-sm sm:p-6 lg:p-8"
                 style={previewPageStyle}
                 dangerouslySetInnerHTML={{ __html: input }}
               />
@@ -857,14 +857,14 @@ export function HtmlConverter() {
         </Card>
 
         <Card className="flex h-full flex-col">
-          <CardHeader>
+          <CardHeader className="p-4 sm:p-6">
             <CardTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5" />
               Text Output
             </CardTitle>
             <CardDescription>Markdown or plain text output updates as you type.</CardDescription>
           </CardHeader>
-          <CardContent className="flex flex-1 flex-col">
+          <CardContent className="flex flex-1 flex-col px-4 pb-4 pt-0 sm:px-6 sm:pb-6">
             <Textarea
               value={exportFormat === 'txt' ? plainTextOutput : markdownOutput}
               readOnly

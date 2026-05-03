@@ -133,8 +133,8 @@ export function SqlFormatter() {
             className="font-mono text-sm"
           />
 
-          <div className="flex items-center gap-4 flex-wrap">
-            <div className="flex items-center gap-2">
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <label htmlFor="indentation" className="text-sm font-medium">
                 Indentation:
               </label>
@@ -147,7 +147,7 @@ export function SqlFormatter() {
                   }
                 }}
               >
-                <SelectTrigger id="indentation" className="w-[140px]">
+                <SelectTrigger id="indentation" className="w-full sm:w-[140px]">
                   <SelectValue placeholder="Indentation" />
                 </SelectTrigger>
                 <SelectContent>
@@ -180,11 +180,11 @@ export function SqlFormatter() {
               </label>
             </div>
 
-            <Button onClick={minifySql} variant="outline" size="sm">
+            <Button onClick={minifySql} variant="outline" size="sm" className="min-h-11 sm:min-h-9">
               Minify
             </Button>
 
-            <Button onClick={handleClear} variant="outline" size="sm">
+            <Button onClick={handleClear} variant="outline" size="sm" className="min-h-11 sm:min-h-9">
               <Trash2 className="h-4 w-4 mr-2" />
               Clear
             </Button>
@@ -213,6 +213,7 @@ export function SqlFormatter() {
             disabled={!output}
             size="sm"
             variant={isCopied ? "default" : "outline"}
+            className="min-h-11 w-full sm:min-h-9 sm:w-auto"
           >
             {isCopied ? (
               <>

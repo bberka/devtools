@@ -117,8 +117,8 @@ export function XmlFormatter() {
             className="font-mono text-sm"
           />
 
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <label htmlFor="indentation" className="text-sm font-medium">
                 Indentation:
               </label>
@@ -131,7 +131,7 @@ export function XmlFormatter() {
                   }
                 }}
               >
-                <SelectTrigger id="indentation" className="w-[140px]">
+                <SelectTrigger id="indentation" className="w-full sm:w-[140px]">
                   <SelectValue placeholder="Indentation" />
                 </SelectTrigger>
                 <SelectContent>
@@ -145,11 +145,11 @@ export function XmlFormatter() {
               </Select>
             </div>
 
-            <Button onClick={minifyXml} variant="outline" size="sm">
+            <Button onClick={minifyXml} variant="outline" size="sm" className="min-h-11 sm:min-h-9">
               Minify
             </Button>
 
-            <Button onClick={handleClear} variant="outline" size="sm">
+            <Button onClick={handleClear} variant="outline" size="sm" className="min-h-11 sm:min-h-9">
               <Trash2 className="h-4 w-4 mr-2" />
               Clear
             </Button>
@@ -184,6 +184,7 @@ export function XmlFormatter() {
             disabled={!output}
             size="sm"
             variant={isCopied ? "default" : "outline"}
+            className="min-h-11 w-full sm:min-h-9 sm:w-auto"
           >
             {isCopied ? (
               <>

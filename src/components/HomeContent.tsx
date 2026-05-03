@@ -69,7 +69,7 @@ export function HomeContent() {
   };
 
   return (
-    <div className={cn(compactMode ? 'space-y-5' : 'space-y-8')}>
+    <div className={cn(compactMode ? 'space-y-4 sm:space-y-5' : 'space-y-6 sm:space-y-8')}>
       <div className="flex justify-center">
         <SearchBar value={searchQuery} onSearch={setSearchQuery} />
       </div>
@@ -91,8 +91,8 @@ export function HomeContent() {
           <section>
             <h2
               className={cn(
-                'flex items-center gap-2 font-bold',
-                compactMode ? 'mb-3 text-xl' : 'mb-4 text-2xl'
+                'mb-3 flex items-center gap-2 font-bold sm:mb-4',
+                compactMode ? 'text-lg sm:text-xl' : 'text-xl sm:text-2xl'
               )}
             >
               <Star className="h-6 w-6 fill-yellow-500 text-yellow-500" />
@@ -107,7 +107,7 @@ export function HomeContent() {
         )}
 
       {!showFavoritesOnly && (
-        <div className={cn(compactMode ? 'space-y-5' : 'space-y-8')}>
+        <div className={cn(compactMode ? 'space-y-4 sm:space-y-5' : 'space-y-6 sm:space-y-8')}>
           {(Object.entries(groupedTools) as Array<[ToolCategory, Tool[]]>).map(
             ([categoryId, categoryTools]) => {
             if (categoryTools.length === 0) return null;
@@ -118,8 +118,8 @@ export function HomeContent() {
               <section key={categoryId}>
                 <h2
                   className={cn(
-                    'font-bold',
-                    compactMode ? 'mb-3 text-xl' : 'mb-4 text-2xl',
+                    'mb-3 font-bold sm:mb-4',
+                    compactMode ? 'text-lg sm:text-xl' : 'text-xl sm:text-2xl',
                     category.color
                   )}
                 >
@@ -192,7 +192,9 @@ function ToolCard({ tool, compactMode }: { tool: Tool; compactMode: boolean }) {
   return (
     <Link href={`/tools/${tool.id}`} className="group block h-full">
       <Card className="h-full transition-all hover:border-primary/50 hover:shadow-lg">
-        <CardHeader className={cn(compactMode ? 'space-y-0 p-3' : undefined)}>
+        <CardHeader
+          className={cn(compactMode ? 'space-y-0 p-3' : 'p-4 sm:p-6')}
+        >
           <div className="flex items-start justify-between gap-2">
             <CardTitle
               className={cn(

@@ -1,7 +1,6 @@
 'use client';
 
-import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ArrowRightLeft, Check, Copy, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -229,12 +228,6 @@ export function UnitConverter() {
     [category]
   );
 
-  useEffect(() => {
-    const [firstUnit, secondUnit] = category.units;
-    setFromUnitId(firstUnit.id);
-    setToUnitId((secondUnit ?? firstUnit).id);
-  }, [category]);
-
   const result = useMemo(() => {
     const numericValue = parseNumber(inputValue);
     const fromUnit = category.units.find((unit) => unit.id === fromUnitId);
@@ -264,6 +257,16 @@ export function UnitConverter() {
     setInputValue('');
   };
 
+  const handleCategoryChange = (value: CategoryId) => {
+    const nextCategory =
+      UNIT_CATEGORIES.find((item) => item.id === value) ?? UNIT_CATEGORIES[0];
+    const [firstUnit, secondUnit] = nextCategory.units;
+
+    setCategoryId(nextCategory.id);
+    setFromUnitId(firstUnit.id);
+    setToUnitId((secondUnit ?? firstUnit).id);
+  };
+
   return (
     <div className="space-y-6">
       <Card>
@@ -276,7 +279,7 @@ export function UnitConverter() {
         <CardContent className="space-y-4">
           <div>
             <label className="mb-2 block text-sm font-medium">Category</label>
-            <Select value={categoryId} onValueChange={(value) => setCategoryId(value as CategoryId)}>
+            <Select value={categoryId} onValueChange={(value) => handleCategoryChange(value as CategoryId)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
@@ -322,8 +325,14 @@ export function UnitConverter() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex justify-center">
-              <Button onClick={handleSwap} variant="outline" size="icon" aria-label="Swap units">
+            <div className="flex justify-center lg:pb-0.5">
+              <Button
+                onClick={handleSwap}
+                variant="outline"
+                size="icon"
+                aria-label="Swap units"
+                className="h-11 w-full sm:w-11 lg:h-10 lg:w-10"
+              >
                 <ArrowRightLeft className="h-4 w-4" />
               </Button>
             </div>
@@ -380,7 +389,7 @@ export function UnitConverter() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="rounded-md bg-muted p-4 font-mono text-3xl font-semibold tracking-tight">
+          <div className="rounded-md bg-muted p-4 font-mono text-2xl font-semibold tracking-tight sm:text-3xl">
             {result.value || '-'}
           </div>
           <p className="text-sm text-muted-foreground">{result.detail}</p>

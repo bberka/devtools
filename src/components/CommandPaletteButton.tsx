@@ -1,19 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
 import { Button } from './ui/button';
 import { useCommandPalette } from '@/lib/contexts/CommandPaletteContext';
+import { getModifierKey } from '@/lib/utils/keyboard';
 
 export function CommandPaletteButton() {
   const { toggle } = useCommandPalette();
-  const [modifierKey, setModifierKey] = useState('Ctrl');
-
-  useEffect(() => {
-    // Detect OS to show correct modifier key
-    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-    setModifierKey(isMac ? '⌘' : 'Ctrl');
-  }, []);
+  const modifierKey = getModifierKey();
 
   return (
     <Button

@@ -188,7 +188,7 @@ export function CronParser() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <div className="flex gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row">
               <Input
                 value={expression}
                 onChange={(e) => setExpression((e.target as HTMLInputElement).value)}
@@ -209,7 +209,7 @@ export function CronParser() {
               </Button>
             </div>
 
-            <div className="grid grid-cols-5 gap-2 text-xs text-muted-foreground text-center">
+            <div className="grid grid-cols-2 gap-2 text-center text-xs text-muted-foreground sm:grid-cols-3 lg:grid-cols-5">
               <div>Minute<br/>(0-59)</div>
               <div>Hour<br/>(0-23)</div>
               <div>Day<br/>(1-31)</div>

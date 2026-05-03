@@ -217,13 +217,13 @@ export function ColorConverter() {
           <CardDescription>Current color</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
             <div
-              className="w-32 h-32 rounded-lg border-2 border-border"
+              className="h-28 w-full rounded-lg border-2 border-border sm:h-32 sm:w-32"
               style={{ backgroundColor: hex }}
             />
             <div className="flex-1 space-y-2">
-              <div className="text-2xl font-mono font-bold">{hex}</div>
+              <div className="break-all text-xl font-mono font-bold sm:text-2xl">{hex}</div>
               <div className="text-sm text-muted-foreground">
                 Click on any format below to copy it
               </div>

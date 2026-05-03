@@ -136,18 +136,18 @@ export function RegexTester() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span className="text-2xl font-mono text-muted-foreground">/</span>
               <Input
                 value={pattern}
                 onChange={(e) => setPattern((e.target as HTMLInputElement).value)}
                 placeholder="Enter regex pattern..."
-                className={`font-mono flex-1 ${
+                className={`min-w-0 flex-1 font-mono ${
                   pattern && !isValid ? 'border-destructive' : pattern && isValid ? 'border-green-500' : ''
                 }`}
               />
               <span className="text-2xl font-mono text-muted-foreground">/</span>
-              <span className="font-mono text-sm text-muted-foreground min-w-[60px]">
+              <span className="w-full font-mono text-sm text-muted-foreground sm:w-auto sm:min-w-[60px]">
                 {flags.global ? 'g' : ''}
                 {flags.multiline ? 'm' : ''}
                 {flags.caseInsensitive ? 'i' : ''}
@@ -168,7 +168,7 @@ export function RegexTester() {
 
           <div className="space-y-3">
             <div className="text-sm font-medium">Flags:</div>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               <label className="flex items-center gap-2 cursor-pointer">
                 <Checkbox
                   checked={flags.global}
@@ -276,8 +276,8 @@ export function RegexTester() {
             {matches.length > 0 && (
               <div className="space-y-3">
                 {matches.map((match, idx) => (
-                  <div key={idx} className="border rounded-md p-3 space-y-2">
-                    <div className="flex items-center justify-between">
+                  <div key={idx} className="space-y-2 rounded-md border p-3">
+                    <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                       <span className="text-sm font-medium">Match {idx + 1}</span>
                       <span className="text-xs text-muted-foreground">Index: {match.index}</span>
                     </div>

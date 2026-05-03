@@ -116,9 +116,9 @@ export default function RootLayout({
       <body>
         <Providers>
           <PWARegister />
-          <div className="min-h-screen bg-background">
+          <div className="min-h-screen overflow-x-clip bg-background">
             <Header />
-            <main className="container py-8">{children}</main>
+            <main className="container py-4 sm:py-6 lg:py-8">{children}</main>
             <Footer />
             <CommandPalette />
           </div>

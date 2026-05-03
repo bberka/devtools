@@ -154,6 +154,19 @@ export function ExampleTool() {
 - Keep mobile layouts usable without horizontal overflow.
 - Preserve dark mode styling.
 
+## UI Layout Rules
+
+- Do not edit files inside `src/components/ui` just to solve page-level layout issues; fix spacing and responsiveness at the usage site or in shared non-UI app styles.
+- Treat mobile as the default layout. Add larger spacing or extra columns at `sm` and up, not the other way around.
+- Prefer compact card padding on tool pages. On mobile, target roughly `p-4` instead of the default shadcn `p-6` unless the screen genuinely benefits from more whitespace.
+- Avoid stacking multiple padded wrappers with the same inset. If a card contains another bordered panel, reduce the inner panel padding on mobile.
+- For `CardHeader` and `CardContent`, keep content density balanced: short forms and result cards should not waste horizontal space on phones.
+- Collapse multi-column grids early. If a layout feels cramped at phone widths, use one column until `sm` or `md`.
+- Action rows should wrap cleanly or stack on mobile. Buttons should remain easy to tap and should not force horizontal scrolling.
+- Preview canvases, code blocks, and export surfaces should reduce internal padding on mobile so the actual content stays readable.
+- Typography should step down slightly on small screens. Large result values, headings, and preview content should avoid oversized mobile scales unless they are the primary focus.
+- Nested cards should be rare. If a tool needs grouped sections inside a card, prefer lighter bordered panels before adding another full card.
+
 ## Static Export Rules
 
 - Keep route data static-safe.
@@ -168,6 +181,7 @@ Automated tests are not implemented yet. Until they are added, manually test:
 - The affected tool's main success and error paths
 - Light and dark mode
 - Mobile and desktop layouts
+- Dense card layouts and nested panels on mobile
 - Favorites and recent tools
 - Command palette navigation
 - `npm run build`

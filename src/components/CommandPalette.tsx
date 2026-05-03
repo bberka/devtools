@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Command } from 'cmdk';
 import { Search, Clock, Star, ArrowRight } from 'lucide-react';
@@ -20,15 +20,16 @@ export function CommandPalette() {
   const { recentTools, addRecentTool, clearRecentTools } = useRecentTools();
 
   const [search, setSearch] = useState('');
-  const [modKey, setModKey] = useState('Ctrl');
+  const modKey = getModifierKey();
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  // Detect OS on mount
-  useEffect(() => {
-    setModKey(getModifierKey());
-  }, []);
+  const handleToggleFavorite = useCallback((toolId: string) => {
+    const wasFavorite = favorites.includes(toolId);
+    toggleFavorite(toolId);
+    toast.success(wasFavorite ? 'Removed from favorites' : 'Added to favorites');
+  }, [favorites, toggleFavorite]);
 
   // Auto-focus search input when dialog opens
   useEffect(() => {
@@ -37,14 +38,6 @@ export function CommandPalette() {
       setTimeout(() => {
         inputRef.current?.focus();
       }, 50);
-    }
-  }, [open]);
-
-  // Clear search when palette closes
-  useEffect(() => {
-    if (!open) {
-      setSearch('');
-      setSelectedTool(null);
     }
   }, [open]);
 
@@ -122,7 +115,7 @@ export function CommandPalette() {
     setOpen,
     clearRecentTools,
     addRecentTool,
-    favorites,
+    handleToggleFavorite,
   ]);
 
   // Get tool data for recent tools
@@ -184,17 +177,21 @@ export function CommandPalette() {
     setOpen(false);
   };
 
-  const handleToggleFavorite = (toolId: string) => {
-    const wasFavorite = favorites.includes(toolId);
-    toggleFavorite(toolId);
-    toast.success(wasFavorite ? 'Removed from favorites' : 'Added to favorites');
-  };
-
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(nextOpen) => {
+        setOpen(nextOpen);
+
+        if (!nextOpen) {
+          setSearch('');
+          setSelectedTool(null);
+        }
+      }}
+    >
       <DialogContent
         hideClose
-        className="w-[calc(100%-2rem)] max-w-2xl gap-0 overflow-hidden border bg-popover p-0 text-popover-foreground"
+        className="w-[calc(100%-1rem)] max-w-2xl gap-0 overflow-hidden border bg-popover p-0 text-popover-foreground sm:w-[calc(100%-2rem)]"
       >
         <DialogTitle className="sr-only">Command Search</DialogTitle>
         <Command
@@ -295,8 +292,8 @@ export function CommandPalette() {
 
           {/* Footer with shortcuts */}
           <div className="border-t px-3 py-2 text-xs text-muted-foreground">
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex gap-3">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+              <div className="flex flex-wrap gap-3">
                 <span>
                   <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px]">
                     ↑↓
@@ -316,7 +313,7 @@ export function CommandPalette() {
                   new tab
                 </span>
               </div>
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-3">
                 {recentToolsData.length > 0 && !search && (
                   <button
                     type="button"

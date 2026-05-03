@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { Check, Copy, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -240,7 +239,7 @@ export function PercentageCalculator() {
           <CardTitle>Result</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="rounded-md bg-muted p-4 font-mono text-3xl font-semibold tracking-tight">
+          <div className="rounded-md bg-muted p-4 font-mono text-2xl font-semibold tracking-tight sm:text-3xl">
             {result.value || '-'}
           </div>
           <p className="text-sm text-muted-foreground">

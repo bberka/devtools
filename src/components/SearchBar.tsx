@@ -22,7 +22,7 @@ export function SearchBar({
         placeholder={placeholder}
         value={value}
         onChange={(e) => onSearch(e.target.value)}
-        className="pl-10"
+        className="h-11 pl-10 text-base sm:h-10 sm:text-sm"
       />
     </div>
   );

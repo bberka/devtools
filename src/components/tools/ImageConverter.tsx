@@ -289,7 +289,7 @@ export function ImageConverter() {
 
               <div className="space-y-2">
                 <label className="text-sm font-medium">Resize</label>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
                     <label className="text-xs text-muted-foreground">Width (px)</label>
                     <Input
@@ -322,7 +322,7 @@ export function ImageConverter() {
 
               <div className="space-y-2">
                 <label className="text-sm font-medium">Filters</label>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                   <label className="flex items-center gap-2 text-sm">
                     <input
                       type="checkbox"
@@ -392,8 +392,8 @@ export function ImageConverter() {
                 />
               </div>
 
-              <div className="flex gap-2">
-                <Button onClick={handleConvert} disabled={processing}>
+              <div className="flex flex-col gap-2 sm:flex-row">
+                <Button onClick={handleConvert} disabled={processing} className="min-h-11 sm:min-h-10">
                   {processing ? (
                     <>
                       <svg className="animate-spin h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -406,7 +406,7 @@ export function ImageConverter() {
                     'Convert'
                   )}
                 </Button>
-                <Button onClick={handleClear} variant="outline">
+                <Button onClick={handleClear} variant="outline" className="min-h-11 sm:min-h-10">
                   <Trash2 className="h-4 w-4 mr-2" />
                   Clear
                 </Button>
@@ -437,7 +437,7 @@ export function ImageConverter() {
               </div>
 
               {processedImage && !processing && (
-                <Button onClick={handleDownload} className="mt-4">
+                <Button onClick={handleDownload} className="mt-4 min-h-11 w-full sm:min-h-10 sm:w-auto">
                   <Download className="h-4 w-4 mr-2" />
                   Download Converted Image
                 </Button>

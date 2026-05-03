@@ -188,10 +188,10 @@ export function ColorContrastChecker() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="text-center">
-              <div className={`text-5xl font-bold ${getContrastLevelColor(contrastResult.ratio)}`}>
+              <div className={`text-4xl font-bold sm:text-5xl ${getContrastLevelColor(contrastResult.ratio)}`}>
                 {contrastResult.ratio.toFixed(2)}:1
               </div>
-              <div className={`text-lg font-medium mt-2 ${getContrastLevelColor(contrastResult.ratio)}`}>
+              <div className={`mt-2 text-base font-medium sm:text-lg ${getContrastLevelColor(contrastResult.ratio)}`}>
                 {getContrastLevel(contrastResult.ratio)}
               </div>
             </div>

@@ -395,7 +395,7 @@ export function ColorPicker() {
               style={{ backgroundColor: hex, color: textColor }}
             >
               <p className="text-sm font-medium opacity-80">Selected color</p>
-              <p className="mt-1 break-all font-mono text-4xl font-semibold tracking-tight">
+              <p className="mt-1 break-all font-mono text-3xl font-semibold tracking-tight sm:text-4xl">
                 {hex}
               </p>
             </div>
@@ -589,7 +589,7 @@ export function ColorPicker() {
                 Clear
               </Button>
             </div>
-            <div className="grid grid-cols-4 gap-3 sm:grid-cols-6 lg:grid-cols-12">
+            <div className="grid grid-cols-3 gap-3 sm:grid-cols-6 lg:grid-cols-12">
               {savedColors.map((color) => (
                 <button
                   key={color}
@@ -621,7 +621,7 @@ export function ColorPicker() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {theme.map((entry) => {
               const entryHex = rgbToHex(hslToRgb(entry.hsl));
               return (
@@ -858,4 +858,3 @@ function HueSlider({
     </div>
   );
 }
-

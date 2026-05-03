@@ -141,11 +141,11 @@ export function JsonYamlXmlConverter() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-center gap-4">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <label className="text-sm font-medium">From:</label>
           <Select value={inputFormat} onValueChange={(value) => handleInputFormatChange(value as Format)}>
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-full sm:w-[140px]">
               <SelectValue placeholder="From format" />
             </SelectTrigger>
             <SelectContent>
@@ -158,17 +158,17 @@ export function JsonYamlXmlConverter() {
           </Select>
         </div>
 
-        <Button onClick={swapFormats} variant="outline" size="sm">
+        <Button onClick={swapFormats} variant="outline" size="sm" className="min-h-11 self-stretch sm:min-h-9 sm:self-auto">
           <ArrowRight className="h-4 w-4" />
         </Button>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <label className="text-sm font-medium">To:</label>
           <Select
             value={outputFormat}
             onValueChange={(value) => handleOutputFormatChange(value as Format)}
           >
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-full sm:w-[140px]">
               <SelectValue placeholder="To format" />
             </SelectTrigger>
             <SelectContent>
@@ -199,8 +199,8 @@ export function JsonYamlXmlConverter() {
             className="font-mono text-sm"
           />
 
-          <div className="flex items-center gap-4">
-            <Button onClick={handleClear} variant="outline" size="sm">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <Button onClick={handleClear} variant="outline" size="sm" className="min-h-11 sm:min-h-9">
               <Trash2 className="h-4 w-4 mr-2" />
               Clear
             </Button>
@@ -235,6 +235,7 @@ export function JsonYamlXmlConverter() {
             disabled={!output}
             size="sm"
             variant={isCopied ? "default" : "outline"}
+            className="min-h-11 w-full sm:min-h-9 sm:w-auto"
           >
             {isCopied ? (
               <>

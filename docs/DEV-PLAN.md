@@ -207,4 +207,6 @@ The lists below only show remaining roadmap work:
 - Keep user data local unless a tool explicitly performs a browser-side public lookup.
 - Prefer real-time processing for lightweight transforms.
 - Use explicit action buttons for heavy work, uploads, cryptography, exports, and network calls.
+- Keep tool-page cards dense on mobile: prefer compact insets, avoid repeated nested padding, and collapse complex layouts to one column early.
+- Fix layout and responsiveness outside `src/components/ui`; shared UI primitives should stay generated and reusable.
 - Run `npm run build` before considering a change complete.

@@ -28,16 +28,16 @@ export function ToolPageClient({
   }, [addRecentTool, tool.id]);
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6">
-      <div className="flex flex-col gap-4 border-b pb-6 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-start gap-4">
+    <div className="tool-page mx-auto max-w-6xl space-y-5 sm:space-y-6">
+      <div className="flex flex-col gap-4 border-b pb-6 sm:flex-row sm:items-center sm:justify-between sm:pb-6">
+        <div className="flex items-start gap-3 sm:gap-4">
           <Link href="/" className="shrink-0">
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" className="h-11 w-11 sm:h-10 sm:w-10">
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
           <div className="min-w-0">
-            <h1 className="break-words text-2xl font-bold sm:text-3xl">
+            <h1 className="break-words text-xl font-bold sm:text-3xl">
               {tool.name}
             </h1>
             <p className="mt-1 text-sm text-muted-foreground sm:text-base">
@@ -45,7 +45,7 @@ export function ToolPageClient({
             </p>
           </div>
         </div>
-        <div className="flex shrink-0 justify-end sm:block">
+        <div className="flex shrink-0 justify-end pb-1 sm:pb-0">
           <FavoriteButton toolId={tool.id} variant="icon" />
         </div>
       </div>
