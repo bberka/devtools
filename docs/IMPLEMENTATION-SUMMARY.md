@@ -121,7 +121,7 @@ Requested next-wave tools fall into three buckets:
 
 - `Existing already`: JSON Formatter, Color Converter, Hash Generator, Base64 Converter, Number Base Converter, JSON ↔ YAML ↔ XML conversion, XML Validator, Case Converter, Text Diff, URL Encoder/Decoder, UUID Generator, JWT Decoder, Regex Tester, SQL Formatter, Lorem Ipsum Generator, Percentage Calculator, and Unit Converter
 - `Expand current tools`: image conversion/compression/resize/crop flows, Image to Icon, Markdown Editor, Cron Expression Builder, SQL dialect-aware formatting, file/image Base64 workflows, file hashing and checksum flows, regex builder guidance, dedicated JSON/YAML/XML validation paths, and a focused YAML ↔ JSON route split from the broader structured-data converter
-- `Net-new`: PDF editing and conversion suite, QR, browser-side GZip compression, certificate decoding, color blindness simulation, speech tools, EXIF, palette extraction, photo sketching, CSV ↔ JSON, and the calculator set
+- `Net-new`: PDF editing and conversion suite, QR, browser-side GZip compression, certificate decoding, color blindness simulation, CV / resume ATS readability scoring from uploaded PDFs, speech tools, EXIF, palette extraction, photo sketching, CSV ↔ JSON, and the calculator set
 
 ## Performance Review
 
