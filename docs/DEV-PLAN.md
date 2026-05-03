@@ -186,7 +186,7 @@ The lists below only show remaining roadmap work:
 #### Developer
 
 - [ ] Expand Cron Expression Parser into a fuller Cron Expression Builder
-- [ ] Expand SQL Formatter with selectable SQL dialects / database types
+- [x] Expand SQL Formatter with selectable SQL dialects / database types
 - [ ] Add Certificate Decoder / Inspector
 - [ ] Expand Regex Tester into a guided Regex Builder
 - [x] Split out a dedicated YAML ↔ JSON Converter from the broader JSON/YAML/XML tool
