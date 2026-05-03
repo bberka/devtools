@@ -3,7 +3,14 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
-import { Select } from '../ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
 import { Button } from '../ui/button';
 import { Trash2 } from 'lucide-react';
 
@@ -77,11 +84,20 @@ export function NumberBaseConverter() {
         <CardContent className="space-y-4">
           <div>
             <label className="text-sm font-medium mb-2 block">Base</label>
-            <Select
-              options={baseOptions}
-              value={inputBase}
-              onChange={(e) => setInputBase((e.target as HTMLSelectElement).value as Base)}
-            />
+            <Select value={inputBase} onValueChange={(value) => setInputBase(value as Base)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select base" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {baseOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
           <div>
             <label className="text-sm font-medium mb-2 block">Value</label>

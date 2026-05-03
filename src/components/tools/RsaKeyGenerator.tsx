@@ -3,6 +3,14 @@
 import { useState } from 'react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
 import { Copy, Check, KeyRound, Download, Loader2 } from 'lucide-react';
 import { useCopyToClipboard, useActionButton } from '@/hooks';
 
@@ -153,41 +161,49 @@ export function RsaKeyGenerator() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-sm font-medium">Key Size (bits)</label>
-              <select
-                className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              <Select
                 value={keySize.toString()}
-                onChange={(e) => {
-                  const value = (e.target as HTMLSelectElement).value;
+                onValueChange={(value) => {
                   const numValue = parseInt(value, 10);
                   if (!isNaN(numValue)) {
                     setKeySize(numValue as KeySize);
                   }
                 }}
-                aria-label="Key Size"
               >
-                <option value="2048">2048 bits (Fast)</option>
-                <option value="3072">3072 bits (Recommended)</option>
-                <option value="4096">4096 bits (Maximum Security)</option>
-              </select>
+                <SelectTrigger aria-label="Key Size">
+                  <SelectValue placeholder="Key size" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="2048">2048 bits (Fast)</SelectItem>
+                    <SelectItem value="3072">3072 bits (Recommended)</SelectItem>
+                    <SelectItem value="4096">4096 bits (Maximum Security)</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="space-y-2">
               <label className="text-sm font-medium">Key Format</label>
-              <select
-                className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              <Select
                 value={keyFormat}
-                onChange={(e) => {
-                  const value = (e.target as HTMLSelectElement).value;
+                onValueChange={(value) => {
                   if (value === 'PEM' || value === 'PKCS8' || value === 'JWK') {
                     setKeyFormat(value as KeyFormat);
                   }
                 }}
-                aria-label="Key Format"
               >
-                <option value="PEM">PEM (Standard)</option>
-                <option value="PKCS8">PKCS#8 (Base64)</option>
-                <option value="JWK">JWK (JSON)</option>
-              </select>
+                <SelectTrigger aria-label="Key Format">
+                  <SelectValue placeholder="Key format" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="PEM">PEM (Standard)</SelectItem>
+                    <SelectItem value="PKCS8">PKCS#8 (Base64)</SelectItem>
+                    <SelectItem value="JWK">JWK (JSON)</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 

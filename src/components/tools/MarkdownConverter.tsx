@@ -4,7 +4,14 @@ import { type CSSProperties, useRef, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Select } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
 import { FileText, Download, Eye, Trash2, Loader2, Printer } from 'lucide-react';
@@ -600,13 +607,20 @@ export function MarkdownConverter() {
                 <label className="text-sm font-medium">Export format</label>
                 <Select
                   value={exportFormat}
-                  onChange={(event) => setExportFormat(event.currentTarget.value as ExportFormat)}
+                  onValueChange={(value) => setExportFormat(value as ExportFormat)}
                 >
-                  <option value="pdf">PDF document</option>
-                  <option value="html">HTML file</option>
-                  <option value="txt">Plain text (Markdown)</option>
-                  <option value="png">PNG image</option>
-                  <option value="jpg">JPG image</option>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Export format" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="pdf">PDF document</SelectItem>
+                      <SelectItem value="html">HTML file</SelectItem>
+                      <SelectItem value="txt">Plain text (Markdown)</SelectItem>
+                      <SelectItem value="png">PNG image</SelectItem>
+                      <SelectItem value="jpg">JPG image</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
                 </Select>
               </div>
 
@@ -615,11 +629,18 @@ export function MarkdownConverter() {
                   <label className="text-sm font-medium">Page size</label>
                   <Select
                     value={pageSize}
-                    onChange={(event) => setPageSize(event.currentTarget.value as PageSize)}
+                    onValueChange={(value) => setPageSize(value as PageSize)}
                     disabled={exporting}
                   >
-                    <option value="A4">A4</option>
-                    <option value="Letter">Letter</option>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Page size" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="A4">A4</SelectItem>
+                        <SelectItem value="Letter">Letter</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
                   </Select>
                 </div>
               )}
@@ -632,11 +653,18 @@ export function MarkdownConverter() {
                     <label className="text-sm font-medium">Orientation</label>
                     <Select
                       value={orientation}
-                      onChange={(event) => setOrientation(event.currentTarget.value as Orientation)}
+                      onValueChange={(value) => setOrientation(value as Orientation)}
                       disabled={exporting}
                     >
-                      <option value="portrait">Portrait</option>
-                      <option value="landscape">Landscape</option>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Orientation" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="portrait">Portrait</SelectItem>
+                          <SelectItem value="landscape">Landscape</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
                     </Select>
                   </div>
 

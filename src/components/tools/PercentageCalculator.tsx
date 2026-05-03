@@ -6,7 +6,14 @@ import { Check, Copy, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useCopyToClipboard } from '@/hooks';
 
 type Mode = 'percent-of' | 'what-percent' | 'percent-change';
@@ -155,16 +162,20 @@ export function PercentageCalculator() {
         <CardContent className="space-y-4">
           <div>
             <label className="mb-2 block text-sm font-medium">Mode</label>
-            <Select
-              options={modeOptions.map((option) => ({
-                value: option.value,
-                label: option.label,
-              }))}
-              value={mode}
-              onChange={(event) =>
-                handleModeChange((event.target as HTMLSelectElement).value as Mode)
-              }
-            />
+            <Select value={mode} onValueChange={(value) => handleModeChange(value as Mode)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select mode" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {modeOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

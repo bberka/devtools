@@ -4,6 +4,14 @@ import { useState } from 'react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Input } from '../ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
 import { Copy, Check, Server, Loader2, Search } from 'lucide-react';
 import { useCopyToClipboard, useActionButton } from '@/hooks';
 
@@ -161,18 +169,20 @@ export function DnsLookup() {
                 }
               }}
             />
-            <select
-              className="flex h-10 w-full sm:w-32 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-              value={recordType}
-              onChange={(e) => setRecordType((e.target as HTMLSelectElement).value as RecordType)}
-              aria-label="Record Type"
-            >
-              {recordTypes.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
+            <Select value={recordType} onValueChange={(value) => setRecordType(value as RecordType)}>
+              <SelectTrigger className="w-full sm:w-32" aria-label="Record Type">
+                <SelectValue placeholder="Record type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {recordTypes.map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {type}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
         </CardContent>
       </Card>

@@ -4,7 +4,14 @@ import { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
-import { Select } from '../ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
 import { Trash2 } from 'lucide-react';
 
 type Mode = 'to-date' | 'to-timestamp';
@@ -118,21 +125,39 @@ export function TimestampConverter() {
         <CardContent className="space-y-4">
           <div>
             <label className="text-sm font-medium mb-2 block">Mode</label>
-            <Select
-              options={modeOptions}
-              value={mode}
-              onChange={(e) => setMode((e.target as HTMLSelectElement).value as Mode)}
-            />
+            <Select value={mode} onValueChange={(value) => setMode(value as Mode)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select mode" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {modeOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
 
           {mode === 'to-date' && (
             <div>
               <label className="text-sm font-medium mb-2 block">Unit</label>
-              <Select
-                options={unitOptions}
-                value={unit}
-                onChange={(e) => setUnit((e.target as HTMLSelectElement).value as Unit)}
-              />
+              <Select value={unit} onValueChange={(value) => setUnit(value as Unit)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select unit" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {unitOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
           )}
 

@@ -4,7 +4,14 @@ import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Select } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Copy, Check, FileCode, Trash2 } from 'lucide-react';
 import { useCopyToClipboard } from '@/hooks';
 
@@ -116,22 +123,26 @@ export function XmlFormatter() {
                 Indentation:
               </label>
               <Select
-                id="indentation"
                 value={indentation}
-                options={[
-                  { value: '2', label: '2 spaces' },
-                  { value: '4', label: '4 spaces' },
-                  { value: '8', label: '8 spaces' },
-                  { value: 'tab', label: 'Tab' },
-                ]}
-                onChange={(e) => {
-                  const newIndent = (e.target as HTMLSelectElement).value;
-                  setIndentation(newIndent);
+                onValueChange={(value) => {
+                  setIndentation(value);
                   if (input.trim()) {
                     formatXml(input);
                   }
                 }}
-              />
+              >
+                <SelectTrigger id="indentation" className="w-[140px]">
+                  <SelectValue placeholder="Indentation" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="2">2 spaces</SelectItem>
+                    <SelectItem value="4">4 spaces</SelectItem>
+                    <SelectItem value="8">8 spaces</SelectItem>
+                    <SelectItem value="tab">Tab</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
 
             <Button onClick={minifyXml} variant="outline" size="sm">

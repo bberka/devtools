@@ -4,7 +4,14 @@ import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Select } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Copy, Check, Code, Trash2, ArrowRight } from 'lucide-react';
 import { useCopyToClipboard } from '@/hooks';
 
@@ -137,13 +144,17 @@ export function JsonYamlXmlConverter() {
       <div className="flex items-center justify-center gap-4">
         <div className="flex items-center gap-2">
           <label className="text-sm font-medium">From:</label>
-          <Select
-            value={inputFormat}
-            onChange={(e) => handleInputFormatChange((e.target as HTMLSelectElement).value as Format)}
-          >
-            <option value="json">JSON</option>
-            <option value="yaml">YAML</option>
-            <option value="xml">XML</option>
+          <Select value={inputFormat} onValueChange={(value) => handleInputFormatChange(value as Format)}>
+            <SelectTrigger className="w-[140px]">
+              <SelectValue placeholder="From format" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="json">JSON</SelectItem>
+                <SelectItem value="yaml">YAML</SelectItem>
+                <SelectItem value="xml">XML</SelectItem>
+              </SelectGroup>
+            </SelectContent>
           </Select>
         </div>
 
@@ -155,11 +166,18 @@ export function JsonYamlXmlConverter() {
           <label className="text-sm font-medium">To:</label>
           <Select
             value={outputFormat}
-            onChange={(e) => handleOutputFormatChange((e.target as HTMLSelectElement).value as Format)}
+            onValueChange={(value) => handleOutputFormatChange(value as Format)}
           >
-            <option value="json">JSON</option>
-            <option value="yaml">YAML</option>
-            <option value="xml">XML</option>
+            <SelectTrigger className="w-[140px]">
+              <SelectValue placeholder="To format" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="json">JSON</SelectItem>
+                <SelectItem value="yaml">YAML</SelectItem>
+                <SelectItem value="xml">XML</SelectItem>
+              </SelectGroup>
+            </SelectContent>
           </Select>
         </div>
       </div>

@@ -4,7 +4,14 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Select } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Copy, Quote, Trash2, ArrowLeftRight, Check } from 'lucide-react';
 import { useCopyToClipboard } from '@/hooks';
 
@@ -200,22 +207,22 @@ export function TextEscape() {
             <label htmlFor="mode" className="text-sm font-medium">
               Escape Mode
             </label>
-            <Select
-              id="mode"
-              value={mode}
-              options={[
-                { value: 'javascript', label: 'JavaScript/TypeScript' },
-                { value: 'json', label: 'JSON' },
-                { value: 'html', label: 'HTML' },
-                { value: 'xml', label: 'XML' },
-                { value: 'csv', label: 'CSV' },
-                { value: 'sql', label: 'SQL' },
-                { value: 'regex', label: 'Regex' },
-              ]}
-              onChange={(e) => {
-                setMode((e.target as HTMLSelectElement).value as EscapeMode);
-              }}
-            />
+            <Select value={mode} onValueChange={(value) => setMode(value as EscapeMode)}>
+              <SelectTrigger id="mode">
+                <SelectValue placeholder="Select escape mode" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="javascript">JavaScript/TypeScript</SelectItem>
+                  <SelectItem value="json">JSON</SelectItem>
+                  <SelectItem value="html">HTML</SelectItem>
+                  <SelectItem value="xml">XML</SelectItem>
+                  <SelectItem value="csv">CSV</SelectItem>
+                  <SelectItem value="sql">SQL</SelectItem>
+                  <SelectItem value="regex">Regex</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
 
           <Textarea

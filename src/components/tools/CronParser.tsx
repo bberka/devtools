@@ -4,7 +4,14 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Select } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Calendar, Clock, AlertCircle, Copy, Check } from 'lucide-react';
 import { useCopyToClipboard } from '@/hooks';
 
@@ -222,15 +229,19 @@ export function CronParser() {
 
           <div className="space-y-2">
             <label className="text-sm font-medium">Quick Presets:</label>
-            <Select
-              value=""
-              options={presets}
-              onChange={(e) => {
-                const value = (e.target as HTMLSelectElement).value;
-                if (value) setExpression(value);
-              }}
-            >
-              <option value="">Select a preset...</option>
+            <Select onValueChange={(value) => value && setExpression(value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a preset..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {presets.map((preset) => (
+                    <SelectItem key={preset.value} value={preset.value}>
+                      {preset.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
             </Select>
           </div>
 

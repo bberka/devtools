@@ -3,7 +3,14 @@
 import { useState } from 'react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Select } from '../ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
 import { Copy, Check } from 'lucide-react';
 import { useCopyToClipboard } from '@/hooks';
 
@@ -83,19 +90,37 @@ export function UuidGenerator() {
         <CardContent className="space-y-4">
           <div>
             <label className="text-sm font-medium mb-2 block">Type</label>
-            <Select
-              options={typeOptions}
-              value={type}
-              onChange={(e) => setType((e.target as HTMLSelectElement).value as UuidType)}
-            />
+            <Select value={type} onValueChange={(value) => setType(value as UuidType)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select UUID type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {typeOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
           <div>
             <label className="text-sm font-medium mb-2 block">Count</label>
-            <Select
-              options={countOptions}
-              value={count}
-              onChange={(e) => setCount((e.target as HTMLSelectElement).value)}
-            />
+            <Select value={count} onValueChange={setCount}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select count" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {countOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
         </CardContent>
       </Card>

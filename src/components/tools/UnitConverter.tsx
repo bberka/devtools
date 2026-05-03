@@ -6,7 +6,14 @@ import { ArrowRightLeft, Check, Copy, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useCopyToClipboard } from '@/hooks';
 
 type CategoryId =
@@ -269,13 +276,20 @@ export function UnitConverter() {
         <CardContent className="space-y-4">
           <div>
             <label className="mb-2 block text-sm font-medium">Category</label>
-            <Select
-              options={categoryOptions}
-              value={categoryId}
-              onChange={(event) =>
-                setCategoryId((event.target as HTMLSelectElement).value as CategoryId)
-              }
-            />
+            <Select value={categoryId} onValueChange={(value) => setCategoryId(value as CategoryId)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {categoryOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
 
           <div>
@@ -293,11 +307,20 @@ export function UnitConverter() {
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_auto_1fr] lg:items-end">
             <div>
               <label className="mb-2 block text-sm font-medium">From</label>
-              <Select
-                options={unitOptions}
-                value={fromUnitId}
-                onChange={(event) => setFromUnitId((event.target as HTMLSelectElement).value)}
-              />
+              <Select value={fromUnitId} onValueChange={setFromUnitId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select source unit" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {unitOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
             <div className="flex justify-center">
               <Button onClick={handleSwap} variant="outline" size="icon" aria-label="Swap units">
@@ -306,11 +329,20 @@ export function UnitConverter() {
             </div>
             <div>
               <label className="mb-2 block text-sm font-medium">To</label>
-              <Select
-                options={unitOptions}
-                value={toUnitId}
-                onChange={(event) => setToUnitId((event.target as HTMLSelectElement).value)}
-              />
+              <Select value={toUnitId} onValueChange={setToUnitId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select target unit" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {unitOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 

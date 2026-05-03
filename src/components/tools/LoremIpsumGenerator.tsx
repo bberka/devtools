@@ -4,7 +4,14 @@ import { useState } from 'react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
-import { Select } from '../ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
 import { Checkbox } from '../ui/checkbox';
 import { Copy, Check } from 'lucide-react';
 import { useCopyToClipboard } from '@/hooks';
@@ -103,11 +110,20 @@ export function LoremIpsumGenerator() {
         <CardContent className="space-y-4">
           <div>
             <label className="text-sm font-medium mb-2 block">Type</label>
-            <Select
-              options={typeOptions}
-              value={type}
-              onChange={(e) => setType((e.target as HTMLSelectElement).value as GenerateType)}
-            />
+            <Select value={type} onValueChange={(value) => setType(value as GenerateType)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {typeOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
 
           <div>

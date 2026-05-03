@@ -4,7 +4,14 @@ import { useState, useRef, type ChangeEvent } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Image as ImageIcon, Upload, Download, Trash2 } from 'lucide-react';
 
 type OutputFormat = 'png' | 'jpeg' | 'webp' | 'ico';
@@ -249,12 +256,19 @@ export function ImageConverter() {
                   <label className="text-sm font-medium">Output Format</label>
                   <Select
                     value={outputFormat}
-                    onChange={(e) => setOutputFormat((e.target as HTMLSelectElement).value as OutputFormat)}
+                    onValueChange={(value) => setOutputFormat(value as OutputFormat)}
                   >
-                    <option value="png">PNG</option>
-                    <option value="jpeg">JPEG</option>
-                    <option value="webp">WebP</option>
-                    <option value="ico">ICO</option>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select output format" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="png">PNG</SelectItem>
+                        <SelectItem value="jpeg">JPEG</SelectItem>
+                        <SelectItem value="webp">WebP</SelectItem>
+                        <SelectItem value="ico">ICO</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
                   </Select>
                 </div>
 
