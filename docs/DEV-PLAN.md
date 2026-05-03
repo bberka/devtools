@@ -1,6 +1,6 @@
 # Development Plan
 
-**Last reviewed**: April 24, 2026
+**Last reviewed**: May 3, 2026
 
 ## Current App
 
@@ -13,7 +13,6 @@
 
 ## Implemented
 
-- [x] Next.js App Router migration
 - [x] Static export configuration
 - [x] Home page with search and category filtering
 - [x] Tool routes generated from `TOOLS`
@@ -79,7 +78,6 @@
 - [x] RSA Key Pair Generator
 - [x] AES Encryption/Decryption
 - [x] Bcrypt Hasher
-- [ ] Argon2 hashing support
 
 ### Networking
 
@@ -137,12 +135,85 @@ Latest review: April 24, 2026.
 - [ ] Add generated Open Graph images.
 - [ ] Confirm canonical URLs for the production domain.
 
-### 6. Planned Tools
+### 6. Tool Expansion Roadmap
+
+Status labels used below:
+
+- `Existing`: already shipped in the current app
+- `Expand`: partly covered today, but should become a clearer dedicated tool or a materially broader workflow
+- `Planned`: net-new route or feature set
+
+#### PDF
+
+- [ ] `Planned` Edit PDF
+- [ ] `Planned` Merge PDF
+- [ ] `Planned` Split PDF
+- [ ] `Planned` Compress PDF
+- [ ] `Planned` PDF to Image
+- [ ] `Planned` Image to PDF
+- [ ] `Planned` PDF to Word
+- [ ] `Planned` Word to PDF
+- [ ] `Planned` PDF Watermark
+
+#### Image
+
+- [ ] `Planned` SVG to PNG
+- [ ] `Expand` Compress Image
+- [ ] `Expand` Convert Image
+- [ ] `Expand` Resize Image
+- [ ] `Expand` Image Crop
+- [ ] `Planned` Image Rotate / Flip
+- [ ] `Planned` EXIF Viewer & Remover
+- [ ] `Planned` Color Palette Extractor
+- [ ] `Planned` Photo to Sketch
+
+#### Utilities
+
+- [ ] `Planned` QR Code Generator
+- [x] `Existing` JSON Formatter
+- [x] `Existing` Color Converter
+- [x] `Existing` Hash Generator
+- [x] `Existing` Base64 Converter
+- [ ] `Expand` Image to Icon
+- [ ] `Planned` Text to Speech
+- [ ] `Planned` Speech to Text
+
+#### Text
+
+- [ ] `Planned` Word Counter
+- [x] `Existing` Case Converter
+- [x] `Existing` Lorem Ipsum Generator
+- [ ] `Planned` Find and Replace
+- [x] `Existing` Text Diff / Compare
+- [ ] `Expand` Markdown Editor
+
+#### Developer
+
+- [x] `Existing` URL Encoder/Decoder
+- [x] `Existing` UUID Generator
+- [x] `Existing` JWT Decoder
+- [x] `Existing` Regex Tester
+- [ ] `Expand` Cron Expression Builder
+- [x] `Existing` SQL Formatter
+- [ ] `Expand` YAML ↔ JSON Converter
+- [ ] `Planned` CSV ↔ JSON Converter
+
+#### Calculators
+
+- [ ] `Planned` Unit Converter
+- [ ] `Planned` Percentage Calculator
+- [ ] `Planned` BMI Calculator
+- [ ] `Planned` Age Calculator
+- [ ] `Planned` Date Difference Calculator
+- [ ] `Planned` Timezone Converter
+- [ ] `Planned` Currency Converter
+
+### 7. Lower-Priority Ideas
 
 - [ ] Glassmorphism Generator
 - [ ] Box Shadow Visualizer
 - [ ] Clamp Calculator
-- [ ] Argon2 hashing support, if the password hashing tool should advertise it
+- [ ] Decide whether the password hashing tool should stay bcrypt-only or add Argon2 support
 
 ## Development Rules
 

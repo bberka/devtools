@@ -1,6 +1,6 @@
 # Implementation Summary
 
-**Last reviewed**: April 24, 2026  
+**Last reviewed**: May 3, 2026  
 **Status**: Next.js static export builds successfully; performance review completed
 
 ## Overview
@@ -14,6 +14,13 @@ The active app is a Next.js App Router project with React client components. It 
 - Static export output: `out/`
 - Build command: `npm run build`
 - Latest verification in this workspace: build, typecheck, bundle analysis, and Lighthouse passed
+
+## Platform Status
+
+- The Next.js App Router implementation is the only active application
+- Tool routes, search, sitemap, metadata, and renderer wiring all derive from the typed registry
+- Favorites, recents, settings, theme handling, and command palette are implemented
+- The current documentation should be read as a maintained product, not as an in-progress migration
 
 ## Implemented Categories
 
@@ -95,23 +102,22 @@ The active app is a Next.js App Router project with React client components. It 
 - Responsive Tailwind UI
 - Browser-side tool processing
 
-## Important Corrections From Older Docs
-
-- The active app is not Astro and does not use Preact.
-- The build output is `out/`, not `dist/`.
-- The default dev URL is `http://localhost:3000`, not `http://localhost:4321`.
-- There are 35 tool pages in the current config.
-- The password hashing tool currently supports bcrypt only, not Argon2.
-- Tool metadata and component wiring share `src/lib/utils/tool-registry.ts`.
-
 ## Remaining Work
 
 - Add automated tests.
 - Add generated Open Graph images.
-- Decide on Argon2 support.
-- Add planned CSS tools.
 - Verify install behavior on desktop and mobile.
+- Confirm production site URL and canonical metadata.
 - Consider a route architecture pass to reduce cross-tool chunk references from the shared dynamic tool route.
+- Expand the product with planned PDF, image, utilities, text, developer, and calculator tool families.
+
+## Expansion Backlog Snapshot
+
+Requested next-wave tools fall into three buckets:
+
+- `Existing already`: JSON Formatter, Color Converter, Hash Generator, Base64 Converter, Case Converter, Text Diff, URL Encoder/Decoder, UUID Generator, JWT Decoder, Regex Tester, SQL Formatter, and Lorem Ipsum Generator
+- `Expand current tools`: Image conversion/compression/resize/crop flows, Image to Icon, Markdown Editor, Cron Expression Builder, and a focused YAML ↔ JSON route split from the broader structured-data converter
+- `Net-new`: PDF editing and conversion suite, QR, speech tools, EXIF, palette extraction, photo sketching, CSV ↔ JSON, and the calculator set
 
 ## Performance Review
 
