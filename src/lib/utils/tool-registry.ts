@@ -421,6 +421,17 @@ export const TOOL_REGISTRY = {
         (module) => module.BcryptHasher
       ),
   },
+  'certificate-decoder': {
+    name: 'Certificate Decoder',
+    description: 'Inspect X.509 certificates: subject, issuer, SANs, key info, extensions, and fingerprints',
+    category: 'security',
+    icon: 'BadgeCheck',
+    keywords: ['certificate', 'x509', 'ssl', 'tls', 'pem', 'crt', 'der', 'openssl', 'inspect', 'decode'],
+    component: () =>
+      import('@/components/tools/CertificateDecoder').then(
+        (module) => module.CertificateDecoder
+      ),
+  },
   'ip-lookup': {
     name: 'IP Address Lookup',
     description: 'Get detailed information about an IP address',
