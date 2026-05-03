@@ -583,6 +583,26 @@ export const TOOL_REGISTRY = {
         (module) => module.BmiCalculator
       ),
   },
+  'date-difference-calculator': {
+    name: 'Date Difference Calculator',
+    description: 'Calculate the exact difference between two dates',
+    category: 'calculators',
+    icon: 'CalendarRange',
+    keywords: [
+      'date',
+      'difference',
+      'duration',
+      'days',
+      'weeks',
+      'months',
+      'years',
+      'calculator',
+    ],
+    component: () =>
+      import('@/components/tools/DateDifferenceCalculator').then(
+        (module) => module.DateDifferenceCalculator
+      ),
+  },
 } as const satisfies Record<string, ToolRegistryEntry>;
 
 export type ToolId = keyof typeof TOOL_REGISTRY;
