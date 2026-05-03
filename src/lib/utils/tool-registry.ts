@@ -388,6 +388,17 @@ export const TOOL_REGISTRY = {
         (module) => module.QrCodeGenerator
       ),
   },
+  'gzip-compressor': {
+    name: 'GZip Compressor / Decompressor',
+    description: 'Compress and decompress text using browser-native GZip (output as Base64)',
+    category: 'utilities',
+    icon: 'PackageOpen',
+    keywords: ['gzip', 'compress', 'decompress', 'deflate', 'base64', 'zip'],
+    component: () =>
+      import('@/components/tools/GzipCompressor').then(
+        (module) => module.GzipCompressor
+      ),
+  },
   'rsa-key-generator': {
     name: 'RSA Key Pair Generator',
     description: 'Generate RSA public/private key pairs (client-side)',

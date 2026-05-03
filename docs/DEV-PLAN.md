@@ -174,7 +174,7 @@ The lists below only show remaining roadmap work:
 - [x] QR Code Generator
 - [ ] Expand Base64 Encoder/Decoder with file upload and image-to-Base64 workflows
 - [ ] Expand Hash Generator into a broader Hash / Checksum Generator with text and file inputs
-- [ ] Dedicated browser-side GZip Compressor / Decompressor
+- [x] Dedicated browser-side GZip Compressor / Decompressor
 - [ ] Expand Image Converter with a dedicated Image to Icon route
 - [ ] Text to Speech
 - [ ] Speech to Text
@@ -187,7 +187,7 @@ The lists below only show remaining roadmap work:
 
 - [x] Expand Cron Expression Parser into a fuller Cron Expression Builder
 - [x] Expand SQL Formatter with selectable SQL dialects / database types
-- [ ] Add Certificate Decoder / Inspector
+- [x] Add Certificate Decoder / Inspector
 - [x] Expand Regex Tester into a guided Regex Builder
 - [x] Split out a dedicated YAML ↔ JSON Converter from the broader JSON/YAML/XML tool
 - [x] Expand the current JSON/YAML/XML + JSON Formatter + XML Validator coverage into dedicated JSON / YAML / XML validation workflows
