@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import {
   Check,
   Copy,
@@ -171,9 +171,44 @@ function mixColor(rgb: Rgb, target: 0 | 255, amount: number): Rgb {
   };
 }
 
-function getReadableTextColor({ r, g, b }: Rgb) {
-  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-  return luminance > 0.62 ? '#111827' : '#FFFFFF';
+function luminance({ r, g, b }: Rgb) {
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+}
+
+function getReadableTextColor(rgb: Rgb) {
+  return luminance(rgb) > 0.62 ? '#111827' : '#FFFFFF';
+}
+
+function getReadableHsl(hsl: Hsl): Hsl {
+  return luminance(hslToRgb(hsl)) > 0.62 ? { h: 0, s: 0, l: 5 } : { h: 0, s: 0, l: 98 };
+}
+
+type ThemeEntry = {
+  variable: string;
+  label: string;
+  hsl: Hsl;
+};
+
+function generateTheme(primary: Hsl): ThemeEntry[] {
+  const { h, s } = primary;
+  const sBg = Math.round(Math.min(s * 0.08, 8));
+  const secondary: Hsl = { h: (h + 180) % 360, s: Math.round(s * 0.5), l: 50 };
+  const accent: Hsl = { h: (h + 30) % 360, s: Math.round(s * 0.75), l: 55 };
+
+  return [
+    { variable: '--background',           label: 'Background',          hsl: { h, s: sBg, l: 98 } },
+    { variable: '--foreground',           label: 'Foreground',          hsl: { h, s: sBg, l: 5 } },
+    { variable: '--primary',              label: 'Primary',             hsl: primary },
+    { variable: '--primary-foreground',   label: 'Primary Foreground',  hsl: getReadableHsl(primary) },
+    { variable: '--secondary',            label: 'Secondary',           hsl: secondary },
+    { variable: '--secondary-foreground', label: 'Secondary Foreground', hsl: getReadableHsl(secondary) },
+    { variable: '--muted',                label: 'Muted',               hsl: { h, s: Math.round(s * 0.12), l: 93 } },
+    { variable: '--muted-foreground',     label: 'Muted Foreground',    hsl: { h, s: sBg, l: 45 } },
+    { variable: '--accent',               label: 'Accent',              hsl: accent },
+    { variable: '--accent-foreground',    label: 'Accent Foreground',   hsl: getReadableHsl(accent) },
+    { variable: '--border',               label: 'Border',              hsl: { h, s: Math.round(s * 0.1), l: 88 } },
+    { variable: '--destructive',          label: 'Destructive',         hsl: { h: 0, s: 72, l: 51 } },
+  ];
 }
 
 function ColorValue({
@@ -186,16 +221,17 @@ function ColorValue({
   const copy = useCopyToClipboard();
 
   return (
-    <div className="flex items-center gap-2 rounded-md border border-input p-2">
-      <div className="min-w-0 flex-1">
-        <p className="text-xs font-medium uppercase text-muted-foreground">
+    <div className="group flex items-center gap-3 rounded-2xl border border-border/70 bg-muted/30 px-3 py-3 transition-colors hover:border-border hover:bg-muted/50">
+      <div className="min-w-0 flex-1 space-y-1">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
           {label}
         </p>
-        <p className="truncate font-mono text-sm">{value}</p>
+        <p className="truncate font-mono text-sm text-foreground">{value}</p>
       </div>
       <Button
         size="icon"
         variant={copy.isCopied ? 'default' : 'outline'}
+        className="h-9 w-9 rounded-xl"
         onClick={() => copy.copyToClipboard(value)}
         aria-label={`Copy ${label}`}
         title={`Copy ${label}`}
@@ -210,20 +246,36 @@ function ColorValue({
   );
 }
 
+function useFeedback(duration = 2000) {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (!visible) return;
+    const id = window.setTimeout(() => setVisible(false), duration);
+    return () => window.clearTimeout(id);
+  }, [visible, duration]);
+
+  return [visible, () => setVisible(true)] as const;
+}
+
 export function ColorPicker() {
   const [rgb, setRgb] = useState<Rgb>(DEFAULT_COLOR);
   const [hexInput, setHexInput] = useState(rgbToHex(DEFAULT_COLOR));
   const [savedColors, setSavedColors] = useState<string[]>([]);
   const [error, setError] = useState('');
-  const [saveFeedbackVisible, setSaveFeedbackVisible] = useState(false);
-  const [pickFeedbackVisible, setPickFeedbackVisible] = useState(false);
-  const [resetFeedbackVisible, setResetFeedbackVisible] = useState(false);
+  const [saveFeedbackVisible, triggerSaveFeedback] = useFeedback();
+  const [pickFeedbackVisible, triggerPickFeedback] = useFeedback();
+  const [resetFeedbackVisible, triggerResetFeedback] = useFeedback();
+  const [eyeDropperSupported, setEyeDropperSupported] = useState(false);
+
+  useEffect(() => {
+    setEyeDropperSupported('EyeDropper' in window);
+  }, []);
 
   const hex = rgbToHex(rgb);
   const hsl = useMemo(() => rgbToHsl(rgb), [rgb]);
   const textColor = getReadableTextColor(rgb);
-  const eyeDropperSupported =
-    typeof window !== 'undefined' && 'EyeDropper' in window;
+  const theme = useMemo(() => generateTheme(hsl), [hsl]);
 
   const values = [
     { label: 'HEX', value: hex },
@@ -284,6 +336,20 @@ export function ColorPicker() {
     );
   };
 
+  const handleHslChangePair = (
+    saturation: number,
+    lightness: number,
+    hue: number = hsl.h
+  ) => {
+    setColor(
+      hslToRgb({
+        h: clamp(hue, 0, 360),
+        s: clamp(saturation, 0, 100),
+        l: clamp(lightness, 0, 100),
+      })
+    );
+  };
+
   const handleEyeDropper = async () => {
     if (!window.EyeDropper) {
       setError('This browser does not support the EyeDropper API.');
@@ -295,7 +361,7 @@ export function ColorPicker() {
       const nextRgb = hexToRgb(result.sRGBHex);
       if (nextRgb) {
         setColor(nextRgb);
-        setPickFeedbackVisible(true);
+        triggerPickFeedback();
       }
     } catch {
       setError('Color picking was canceled or blocked by the browser.');
@@ -307,44 +373,8 @@ export function ColorPicker() {
       const next = [hex, ...current.filter((color) => color !== hex)];
       return next.slice(0, 12);
     });
-    setSaveFeedbackVisible(true);
+    triggerSaveFeedback();
   };
-
-  useEffect(() => {
-    if (!saveFeedbackVisible) return;
-
-    const timeoutId = window.setTimeout(() => {
-      setSaveFeedbackVisible(false);
-    }, 2000);
-
-    return () => {
-      window.clearTimeout(timeoutId);
-    };
-  }, [saveFeedbackVisible]);
-
-  useEffect(() => {
-    if (!pickFeedbackVisible) return;
-
-    const timeoutId = window.setTimeout(() => {
-      setPickFeedbackVisible(false);
-    }, 2000);
-
-    return () => {
-      window.clearTimeout(timeoutId);
-    };
-  }, [pickFeedbackVisible]);
-
-  useEffect(() => {
-    if (!resetFeedbackVisible) return;
-
-    const timeoutId = window.setTimeout(() => {
-      setResetFeedbackVisible(false);
-    }, 2000);
-
-    return () => {
-      window.clearTimeout(timeoutId);
-    };
-  }, [resetFeedbackVisible]);
 
   return (
     <div className="space-y-6">
@@ -358,52 +388,87 @@ export function ColorPicker() {
             Pick a color, tune channels, and copy production-ready values.
           </CardDescription>
         </CardHeader>
-        <CardContent className="grid gap-4 lg:grid-cols-[minmax(220px,320px),1fr]">
-          <div
-            className="flex min-h-56 flex-col justify-between rounded-md border border-input p-5"
-            style={{ backgroundColor: hex, color: textColor }}
-          >
-            <div>
+        <CardContent className="grid gap-6 lg:grid-cols-[minmax(290px,380px),1fr]">
+          <div className="overflow-hidden rounded-[28px] border border-border/60 bg-card shadow-sm">
+            <div
+              className="flex min-h-48 flex-col justify-end px-6 py-5"
+              style={{ backgroundColor: hex, color: textColor }}
+            >
               <p className="text-sm font-medium opacity-80">Selected color</p>
-              <p className="mt-2 break-all font-mono text-3xl font-bold">
+              <p className="mt-1 break-all font-mono text-4xl font-semibold tracking-tight">
                 {hex}
               </p>
             </div>
-            <p className="text-sm opacity-80">
-              {rgb.r}, {rgb.g}, {rgb.b} / {hsl.h}, {hsl.s}%, {hsl.l}%
-            </p>
           </div>
 
-          <div className="space-y-4">
-            <div className="grid gap-3 sm:grid-cols-[80px,1fr]">
-              <Input
-                type="color"
-                value={hex}
-                onChange={(event) =>
-                  setColor(hexToRgb(event.currentTarget.value) ?? rgb)
+          <div className="space-y-5 lg:row-span-2">
+            <div className="space-y-4 rounded-[28px] border border-border/70 bg-muted/[0.18] p-4 shadow-sm">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                    Picker
+                  </p>
+                  <p className="text-sm font-medium">Drag in the field to choose saturation and lightness.</p>
+                </div>
+
+              </div>
+
+              <ColorField
+                hue={hsl.h}
+                saturation={hsl.s}
+                lightness={hsl.l}
+                onChange={(saturation, lightness) =>
+                  handleHslChangePair(saturation, lightness, hsl.h)
                 }
-                className="h-12 w-20 p-1"
-                aria-label="Native color picker"
               />
-              <Input
-                value={hexInput}
-                onChange={(event) => handleHexChange(event.currentTarget.value)}
-                placeholder="#3B82F6"
-                className="h-12 font-mono uppercase"
-                maxLength={7}
-              />
+
+              <HueSlider value={hsl.h} onChange={(value) => handleHslChange('h', value)} />
+
+              <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-background px-3">
+                <span
+                  className="h-10 w-10 shrink-0 rounded-xl border border-black/10 shadow-sm"
+                  style={{ backgroundColor: hex }}
+                />
+                <Input
+                  value={hexInput}
+                  onChange={(event) => handleHexChange(event.currentTarget.value)}
+                  placeholder="#3B82F6"
+                  className="h-14 border-0 bg-transparent px-0 font-mono text-base uppercase shadow-none focus-visible:ring-0"
+                  maxLength={7}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  Quick Picks
+                </p>
+                <div className="grid grid-cols-6 gap-2 sm:grid-cols-8 lg:grid-cols-12">
+                  {PRESETS.map((color) => (
+                    <button
+                      key={`picker-${color}`}
+                      type="button"
+                      className="h-9 rounded-xl border border-border/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      style={{ backgroundColor: color }}
+                      onClick={() => setColor(hexToRgb(color) ?? rgb)}
+                      aria-label={`Use preset ${color}`}
+                      title={color}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
 
             {error && (
-              <div className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
+              <div className="rounded-2xl border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
                 {error}
               </div>
             )}
 
-            <div className="flex flex-wrap gap-2">
+            <div className="grid gap-2 sm:grid-cols-3">
               <Button
                 onClick={handleEyeDropper}
                 variant={pickFeedbackVisible ? 'default' : 'outline'}
+                className="h-12 w-full rounded-xl"
                 disabled={!eyeDropperSupported}
                 title={
                   eyeDropperSupported
@@ -421,6 +486,7 @@ export function ColorPicker() {
               <Button
                 onClick={saveCurrentColor}
                 variant={saveFeedbackVisible ? 'default' : 'outline'}
+                className="h-12 w-full rounded-xl"
               >
                 {saveFeedbackVisible ? (
                   <Check className="h-4 w-4" />
@@ -432,9 +498,10 @@ export function ColorPicker() {
               <Button
                 onClick={() => {
                   setColor(DEFAULT_COLOR);
-                  setResetFeedbackVisible(true);
+                  triggerResetFeedback();
                 }}
                 variant={resetFeedbackVisible ? 'default' : 'outline'}
+                className="h-12 w-full rounded-xl"
               >
                 {resetFeedbackVisible ? (
                   <Check className="h-4 w-4" />
@@ -444,17 +511,11 @@ export function ColorPicker() {
                 {resetFeedbackVisible ? 'Reset Done' : 'Reset'}
               </Button>
             </div>
-          </div>
-        </CardContent>
-      </Card>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>RGB Channels</CardTitle>
-            <CardDescription>Adjust red, green, and blue values.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-5">
+          </div>
+
+          <div className="space-y-3 rounded-[28px] border border-border/70 bg-muted/[0.18] p-4 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">RGB Channels</p>
             <ChannelSlider
               label="Red"
               value={rgb.r}
@@ -473,38 +534,10 @@ export function ColorPicker() {
               max={255}
               onChange={(value) => setColor({ ...rgb, b: value })}
             />
-          </CardContent>
-        </Card>
+          </div>
+        </CardContent>
+      </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>HSL Channels</CardTitle>
-            <CardDescription>Fine tune hue, saturation, and lightness.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-5">
-            <ChannelSlider
-              label="Hue"
-              value={hsl.h}
-              max={360}
-              onChange={(value) => handleHslChange('h', value)}
-            />
-            <ChannelSlider
-              label="Saturation"
-              value={hsl.s}
-              max={100}
-              suffix="%"
-              onChange={(value) => handleHslChange('s', value)}
-            />
-            <ChannelSlider
-              label="Lightness"
-              value={hsl.l}
-              max={100}
-              suffix="%"
-              onChange={(value) => handleHslChange('l', value)}
-            />
-          </CardContent>
-        </Card>
-      </div>
 
       <Card>
         <CardHeader>
@@ -537,56 +570,133 @@ export function ColorPicker() {
         </CardContent>
       </Card>
 
+      {savedColors.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Saved Swatches</CardTitle>
+            <CardDescription>Keep a short list of colors you want to reuse.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between gap-3">
+              <h3 className="font-medium">Saved colors</h3>
+              <Button
+                size="sm"
+                variant="outline"
+                className="rounded-xl"
+                onClick={() => setSavedColors([])}
+              >
+                <Trash2 className="h-4 w-4" />
+                Clear
+              </Button>
+            </div>
+            <div className="grid grid-cols-4 gap-3 sm:grid-cols-6 lg:grid-cols-12">
+              {savedColors.map((color) => (
+                <button
+                  key={color}
+                  type="button"
+                  className="group relative h-12 overflow-hidden rounded-2xl border border-border/70 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  style={{ backgroundColor: color }}
+                  onClick={() => setColor(hexToRgb(color) ?? rgb)}
+                  aria-label={`Use saved swatch ${color}`}
+                  title={color}
+                >
+                  <span className="absolute inset-x-1.5 bottom-1.5 rounded-full bg-black/20 px-2 py-1 text-center font-mono text-[10px] text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+                    {color}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <Card>
         <CardHeader>
-          <CardTitle>Preset Palette</CardTitle>
-          <CardDescription>Start from common interface colors.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-4 gap-3 sm:grid-cols-6 lg:grid-cols-12">
-            {PRESETS.map((color) => (
-              <button
-                key={color}
-                type="button"
-                className="h-12 rounded-md border border-input transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                style={{ backgroundColor: color }}
-                onClick={() => setColor(hexToRgb(color) ?? rgb)}
-                aria-label={`Use preset ${color}`}
-                title={color}
-              />
-            ))}
-          </div>
-
-          {savedColors.length > 0 && (
-            <div className="space-y-3 border-t pt-4">
-              <div className="flex items-center justify-between gap-3">
-                <h3 className="font-medium">Saved Swatches</h3>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => setSavedColors([])}
-                >
-                  <Trash2 className="h-4 w-4" />
-                  Clear
-                </Button>
-              </div>
-              <div className="grid grid-cols-4 gap-3 sm:grid-cols-6 lg:grid-cols-12">
-                {savedColors.map((color) => (
-                  <button
-                    key={color}
-                    type="button"
-                    className="h-12 rounded-md border border-input transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    style={{ backgroundColor: color }}
-                    onClick={() => setColor(hexToRgb(color) ?? rgb)}
-                    aria-label={`Use saved swatch ${color}`}
-                    title={color}
-                  />
-                ))}
-              </div>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <CardTitle>Theme Palette</CardTitle>
+              <CardDescription>CSS variables for a full UI theme based on your primary color.</CardDescription>
             </div>
-          )}
+            <CopyThemeButton theme={theme} />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {theme.map((entry) => {
+              const entryHex = rgbToHex(hslToRgb(entry.hsl));
+              return (
+                <ThemeSwatchButton
+                  key={entry.variable}
+                  entry={entry}
+                  hex={entryHex}
+                  onClick={() => setColor(hexToRgb(entryHex) ?? rgb)}
+                />
+              );
+            })}
+          </div>
         </CardContent>
       </Card>
+    </div>
+  );
+}
+
+function CopyThemeButton({ theme }: { theme: ThemeEntry[] }) {
+  const copy = useCopyToClipboard();
+
+  const handleCopy = () => {
+    const vars = theme
+      .map((e) => `  ${e.variable}: ${e.hsl.h} ${e.hsl.s}% ${e.hsl.l}%;`)
+      .join('\n');
+    copy.copyToClipboard(`:root {\n${vars}\n}`);
+  };
+
+  return (
+    <Button
+      size="sm"
+      variant={copy.isCopied ? 'default' : 'outline'}
+      className="shrink-0 rounded-xl"
+      onClick={handleCopy}
+    >
+      {copy.isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+      {copy.isCopied ? 'Copied' : 'Copy CSS'}
+    </Button>
+  );
+}
+
+function ThemeSwatchButton({ entry, hex, onClick }: { entry: ThemeEntry; hex: string; onClick: () => void }) {
+  const copy = useCopyToClipboard();
+  const textColor = getReadableTextColor(hslToRgb(entry.hsl));
+
+  return (
+    <div className="overflow-hidden rounded-[22px] border border-border/70 bg-card shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
+      <button
+        type="button"
+        className="flex h-16 w-full flex-col justify-end px-3 py-2"
+        style={{ backgroundColor: hex, color: textColor }}
+        onClick={onClick}
+        aria-label={`Use ${entry.label}`}
+        title={`Use ${entry.label}`}
+      >
+        <span className="truncate font-mono text-[10px] font-medium opacity-70">{entry.variable}</span>
+      </button>
+      <div className="flex items-center gap-2 p-3">
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+            {entry.label}
+          </p>
+          <p className="truncate font-mono text-sm text-foreground">{hex}</p>
+        </div>
+        <Button
+          size="icon"
+          variant="ghost"
+          className="h-9 w-9 rounded-xl"
+          onClick={() => copy.copyToClipboard(`${entry.variable}: ${entry.hsl.h} ${entry.hsl.s}% ${entry.hsl.l}%;`)}
+          aria-label={`Copy ${entry.variable}`}
+          title={`Copy ${entry.variable}`}
+        >
+          {copy.isCopied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+        </Button>
+      </div>
     </div>
   );
 }
@@ -605,7 +715,7 @@ function ChannelSlider({
   onChange: (value: number) => void;
 }) {
   return (
-    <div className="space-y-2">
+    <div className="space-y-3 rounded-[22px] border border-border/60 bg-muted/[0.18] px-4 py-4">
       <div className="flex items-center justify-between gap-4">
         <label className="text-sm font-medium">{label}</label>
         <span className="font-mono text-sm text-muted-foreground">
@@ -630,26 +740,28 @@ function SwatchButton({
   const copy = useCopyToClipboard();
 
   return (
-    <div className="overflow-hidden rounded-md border border-input">
+    <div className="overflow-hidden rounded-[22px] border border-border/70 bg-card shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
       <button
         type="button"
-        className="h-16 w-full"
+        className="h-20 w-full"
         style={{ backgroundColor: color }}
         onClick={onClick}
         aria-label={`Use ${label} ${color}`}
         title={`Use ${color}`}
       />
-      <div className="flex items-center gap-1 p-2">
+      <div className="flex items-center gap-2 p-3">
         <div className="min-w-0 flex-1">
-          <p className="truncate text-xs font-medium">{label}</p>
-          <p className="truncate font-mono text-xs text-muted-foreground">
+          <p className="truncate text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+            {label}
+          </p>
+          <p className="truncate font-mono text-sm text-foreground">
             {color}
           </p>
         </div>
         <Button
           size="icon"
           variant="ghost"
-          className="h-8 w-8"
+          className="h-9 w-9 rounded-xl"
           onClick={() => copy.copyToClipboard(color)}
           aria-label={`Copy ${color}`}
           title={`Copy ${color}`}
@@ -664,3 +776,86 @@ function SwatchButton({
     </div>
   );
 }
+
+
+function ColorField({
+  hue,
+  saturation,
+  lightness,
+  onChange,
+}: {
+  hue: number;
+  saturation: number;
+  lightness: number;
+  onChange: (saturation: number, lightness: number) => void;
+}) {
+  const updateFromPointer = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = clamp(((event.clientX - rect.left) / rect.width) * 100, 0, 100);
+    const y = clamp(((event.clientY - rect.top) / rect.height) * 100, 0, 100);
+
+    onChange(x, 100 - y);
+  };
+
+  return (
+    <div
+      className="relative h-64 cursor-crosshair overflow-hidden rounded-[24px] border border-border/70 touch-none"
+      style={{
+        backgroundColor: `hsl(${hue} 100% 50%)`,
+        backgroundImage:
+          'linear-gradient(to top, hsl(0 0% 0% / 1), hsl(0 0% 0% / 0)), linear-gradient(to right, hsl(0 0% 100% / 1), hsl(0 0% 100% / 0))',
+      }}
+      onPointerDown={(event) => {
+        event.currentTarget.setPointerCapture(event.pointerId);
+        updateFromPointer(event);
+      }}
+      onPointerMove={(event) => {
+        if (event.buttons !== 1) return;
+        updateFromPointer(event);
+      }}
+    >
+      <div
+        className="absolute h-5 w-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-[0_0_0_1px_rgba(15,23,42,0.45)]"
+        style={{
+          left: `${saturation}%`,
+          top: `${100 - lightness}%`,
+          backgroundColor: `hsl(${hue} ${saturation}% ${lightness}%)`,
+        }}
+      />
+    </div>
+  );
+}
+
+function HueSlider({
+  value,
+  onChange,
+}: {
+  value: number;
+  onChange: (value: number) => void;
+}) {
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between gap-4">
+        <label className="text-sm font-medium">Hue</label>
+        <span className="font-mono text-sm text-muted-foreground">{value}deg</span>
+      </div>
+      <div className="relative h-4 overflow-hidden rounded-full">
+        <div className="absolute inset-0 rounded-full bg-[linear-gradient(90deg,#ff0000_0%,#ffff00_17%,#00ff00_33%,#00ffff_50%,#0000ff_67%,#ff00ff_83%,#ff0000_100%)]" />
+        <input
+          type="range"
+          min={0}
+          max={360}
+          value={value}
+          onChange={(event) => onChange(Number(event.currentTarget.value))}
+          className="absolute inset-0 h-full w-full cursor-pointer appearance-none bg-transparent opacity-0"
+          aria-label="Hue"
+        />
+        <div
+          className="pointer-events-none absolute top-1/2 h-5 w-5 -translate-y-1/2 -translate-x-1/2 rounded-full border-2 border-white bg-transparent shadow-[0_0_0_1px_rgba(15,23,42,0.45)]"
+          style={{ left: `${(value / 360) * 100}%` }}
+        />
+      </div>
+    </div>
+  );
+}
+
