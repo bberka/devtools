@@ -481,6 +481,26 @@ export const TOOL_REGISTRY = {
         (module) => module.UnitConverter
       ),
   },
+  'age-calculator': {
+    name: 'Age Calculator',
+    description: 'Calculate exact age between dates, plus total days and next birthday',
+    category: 'calculators',
+    icon: 'Cake',
+    keywords: [
+      'age',
+      'birthday',
+      'date of birth',
+      'years',
+      'months',
+      'days',
+      'next birthday',
+      'calculator',
+    ],
+    component: () =>
+      import('@/components/tools/AgeCalculator').then(
+        (module) => module.AgeCalculator
+      ),
+  },
 } as const satisfies Record<string, ToolRegistryEntry>;
 
 export type ToolId = keyof typeof TOOL_REGISTRY;

@@ -201,7 +201,7 @@ The lists below only show remaining roadmap work:
 #### Calculators
 
 - [ ] BMI Calculator
-- [ ] Age Calculator
+- [x] Age Calculator
 - [ ] Date Difference Calculator
 - [ ] Timezone Converter
 - [ ] Currency Converter
