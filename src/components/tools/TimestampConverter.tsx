@@ -12,7 +12,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { Trash2 } from 'lucide-react';
+import { Calendar } from '../ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { CalendarIcon, Trash2 } from 'lucide-react';
 
 type Mode = 'to-date' | 'to-timestamp';
 type Unit = 'seconds' | 'milliseconds';
@@ -31,6 +33,7 @@ export function TimestampConverter() {
   const [mode, setMode] = useState<Mode>('to-date');
   const [unit, setUnit] = useState<Unit>('seconds');
   const [input, setInput] = useState('');
+  const [calendarOpen, setCalendarOpen] = useState(false);
   const [results, setResults] = useState({
     iso: '',
     local: '',
@@ -166,6 +169,35 @@ export function TimestampConverter() {
               {mode === 'to-date' ? 'Timestamp' : 'Date/Time'}
             </label>
             <div className="flex gap-2">
+              {mode === 'to-timestamp' && (
+                <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" size="icon" className="shrink-0">
+                      <CalendarIcon className="h-4 w-4" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={(() => {
+                        if (!input) return undefined;
+                        const d = new Date(input);
+                        return isNaN(d.getTime()) ? undefined : d;
+                      })()}
+                      onSelect={(date) => {
+                        if (!date) return;
+                        const y = date.getFullYear();
+                        const m = String(date.getMonth() + 1).padStart(2, '0');
+                        const d = String(date.getDate()).padStart(2, '0');
+                        const timeMatch = /T(\d{2}:\d{2}(:\d{2})?)/.exec(input);
+                        const time = timeMatch ? timeMatch[1] : '00:00:00';
+                        setInput(`${y}-${m}-${d}T${time}`);
+                        setCalendarOpen(false);
+                      }}
+                    />
+                  </PopoverContent>
+                </Popover>
+              )}
               <Input
                 type="text"
                 value={input}

@@ -1,10 +1,12 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { ArrowRightLeft, Check, Clock3, Copy, Trash2 } from 'lucide-react';
+import { ArrowRightLeft, CalendarIcon, Check, Clock3, Copy, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   Select,
   SelectContent,
@@ -266,6 +268,7 @@ export function TimezoneConverter() {
   const [targetSearch, setTargetSearch] = useState('');
   const [sourceOpen, setSourceOpen] = useState(false);
   const [targetOpen, setTargetOpen] = useState(false);
+  const [calendarOpen, setCalendarOpen] = useState(false);
   const copyResult = useCopyToClipboard();
 
   const filteredSourceOptions = useMemo(() => {
@@ -391,15 +394,91 @@ export function TimezoneConverter() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <label htmlFor="timezone-input" className="mb-2 block text-sm font-medium">
-              Date and time
-            </label>
-            <Input
-              id="timezone-input"
-              type="datetime-local"
-              value={inputValue}
-              onChange={(event) => setInputValue((event.target as HTMLInputElement).value)}
-            />
+            <label className="mb-2 block text-sm font-medium">Date and time</label>
+            <div className="flex gap-2">
+              <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="flex-1 justify-start text-left font-normal"
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4 shrink-0" />
+                    {inputValue
+                      ? new Intl.DateTimeFormat('en-US', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                        }).format(
+                          (() => {
+                            const [y, m, d] = inputValue.slice(0, 10).split('-').map(Number);
+                            return new Date(y, m - 1, d);
+                          })()
+                        )
+                      : 'Pick a date'}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={(() => {
+                      if (!inputValue) return undefined;
+                      const [y, m, d] = inputValue.slice(0, 10).split('-').map(Number);
+                      return new Date(y, m - 1, d);
+                    })()}
+                    onSelect={(date) => {
+                      if (!date) return;
+                      const y = date.getFullYear();
+                      const m = String(date.getMonth() + 1).padStart(2, '0');
+                      const d = String(date.getDate()).padStart(2, '0');
+                      const time = inputValue.length >= 16 ? inputValue.slice(11, 16) : '00:00';
+                      setInputValue(`${y}-${m}-${d}T${time}`);
+                      setCalendarOpen(false);
+                    }}
+                  />
+                </PopoverContent>
+              </Popover>
+              <div className="flex items-center gap-1">
+                <Select
+                  value={inputValue.length >= 16 ? inputValue.slice(11, 13) : '00'}
+                  onValueChange={(hour) => {
+                    const date = inputValue.slice(0, 10) || new Date().toISOString().slice(0, 10);
+                    const minute = inputValue.length >= 16 ? inputValue.slice(14, 16) : '00';
+                    setInputValue(`${date}T${hour}:${minute}`);
+                  }}
+                >
+                  <SelectTrigger className="w-18">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-60">
+                    <SelectGroup>
+                      {Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0')).map((h) => (
+                        <SelectItem key={h} value={h}>{h}</SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                <span className="font-medium text-muted-foreground">:</span>
+                <Select
+                  value={inputValue.length >= 16 ? inputValue.slice(14, 16) : '00'}
+                  onValueChange={(minute) => {
+                    const date = inputValue.slice(0, 10) || new Date().toISOString().slice(0, 10);
+                    const hour = inputValue.length >= 16 ? inputValue.slice(11, 13) : '00';
+                    setInputValue(`${date}T${hour}:${minute}`);
+                  }}
+                >
+                  <SelectTrigger className="w-18">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-60">
+                    <SelectGroup>
+                      {Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0')).map((m) => (
+                        <SelectItem key={m} value={m}>{m}</SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_auto_1fr] lg:items-end">
@@ -559,7 +638,7 @@ export function TimezoneConverter() {
                   Source time
                 </div>
                 <div className="mt-1 font-semibold">{sourceFormatted}</div>
-                <div className="mt-1 text-sm text-muted-foreground">
+                <div className="mt-1 text-sm text-muted-foreground" suppressHydrationWarning>
                   {formatOffset(result.utcDate, sourceTimeZone)}
                 </div>
               </div>
@@ -568,7 +647,7 @@ export function TimezoneConverter() {
                   Target input format
                 </div>
                 <div className="mt-1 font-mono text-base font-semibold">{targetInputValue}</div>
-                <div className="mt-1 text-sm text-muted-foreground">
+                <div className="mt-1 text-sm text-muted-foreground" suppressHydrationWarning>
                   {formatOffset(result.utcDate, targetTimeZone)}
                 </div>
               </div>

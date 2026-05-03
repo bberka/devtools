@@ -225,22 +225,23 @@ export function DateDifferenceCalculator() {
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
-                    selected={parseDateInput(startDate) ?? undefined}
+                    selected={startDate ? (() => { const [y, m, d] = startDate.split('-').map(Number); return new Date(y, m - 1, d); })() : undefined}
                     onSelect={(date) => {
                       if (!date) {
                         return;
                       }
 
-                      const nextValue = `${date.getUTCFullYear()}-${String(
-                        date.getUTCMonth() + 1
-                      ).padStart(2, '0')}-${String(date.getUTCDate()).padStart(2, '0')}`;
+                      const nextValue = `${date.getFullYear()}-${String(
+                        date.getMonth() + 1
+                      ).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
                       setStartDate(nextValue);
                       setStartOpen(false);
                     }}
-                    disabled={(date) =>
-                      endDate ? date > (parseDateInput(endDate) ?? date) : false
-                    }
-                    initialFocus
+                    disabled={(date) => {
+                      if (!endDate) return false;
+                      const [y, m, d] = endDate.split('-').map(Number);
+                      return date > new Date(y, m - 1, d);
+                    }}
                   />
                 </PopoverContent>
               </Popover>
@@ -265,22 +266,23 @@ export function DateDifferenceCalculator() {
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
-                    selected={parseDateInput(endDate) ?? undefined}
+                    selected={endDate ? (() => { const [y, m, d] = endDate.split('-').map(Number); return new Date(y, m - 1, d); })() : undefined}
                     onSelect={(date) => {
                       if (!date) {
                         return;
                       }
 
-                      const nextValue = `${date.getUTCFullYear()}-${String(
-                        date.getUTCMonth() + 1
-                      ).padStart(2, '0')}-${String(date.getUTCDate()).padStart(2, '0')}`;
+                      const nextValue = `${date.getFullYear()}-${String(
+                        date.getMonth() + 1
+                      ).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
                       setEndDate(nextValue);
                       setEndOpen(false);
                     }}
-                    disabled={(date) =>
-                      startDate ? date < (parseDateInput(startDate) ?? date) : false
-                    }
-                    initialFocus
+                    disabled={(date) => {
+                      if (!startDate) return false;
+                      const [y, m, d] = startDate.split('-').map(Number);
+                      return date < new Date(y, m - 1, d);
+                    }}
                   />
                 </PopoverContent>
               </Popover>
