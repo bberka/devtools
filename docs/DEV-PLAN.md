@@ -16,7 +16,7 @@
 - [x] Static export configuration
 - [x] Home page with search and category filtering
 - [x] Tool routes generated from `TOOLS`
-- [x] 36 tool pages wired into the renderer
+- [x] 37 tool pages wired into the renderer
 - [x] Favorites
 - [x] Recent tools
 - [x] Dark mode
@@ -200,7 +200,7 @@ Status labels used below:
 
 #### Calculators
 
-- [ ] `Planned` Unit Converter
+- [x] `Existing` Unit Converter
 - [x] `Existing` Percentage Calculator
 - [ ] `Planned` BMI Calculator
 - [ ] `Planned` Age Calculator

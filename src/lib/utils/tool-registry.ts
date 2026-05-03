@@ -425,6 +425,29 @@ export const TOOL_REGISTRY = {
         (module) => module.PercentageCalculator
       ),
   },
+  'unit-converter': {
+    name: 'Unit Converter',
+    description: 'Convert between length, weight, temperature, time, speed, area, volume, and data units',
+    category: 'calculators',
+    icon: 'Scale',
+    keywords: [
+      'unit',
+      'converter',
+      'measurement',
+      'length',
+      'weight',
+      'temperature',
+      'speed',
+      'time',
+      'data',
+      'area',
+      'volume',
+    ],
+    component: () =>
+      import('@/components/tools/UnitConverter').then(
+        (module) => module.UnitConverter
+      ),
+  },
 } as const satisfies Record<string, ToolRegistryEntry>;
 
 export type ToolId = keyof typeof TOOL_REGISTRY;
