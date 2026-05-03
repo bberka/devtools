@@ -13,7 +13,7 @@ export function HomeIntro() {
       </h1>
       {!compactMode && (
         <p className="mx-auto max-w-3xl text-base text-muted-foreground sm:text-lg lg:text-xl">
-          A comprehensive collection of {TOOLS.length}+ developer utilities for
+          A comprehensive collection of developer utilities for
           everyday tasks. All tools run entirely in your browser - no data ever
           leaves your device.
         </p>
