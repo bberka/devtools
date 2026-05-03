@@ -11,7 +11,7 @@ import { useFavorites } from '@/lib/contexts/FavoritesContext';
 import { useRecentTools } from '@/lib/contexts/RecentToolsContext';
 import { getModifierKey, isModifierKey } from '@/lib/utils/keyboard';
 import { toast } from 'sonner';
-import { Dialog, DialogContent } from './ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from './ui/dialog';
 
 export function CommandPalette() {
   const router = useRouter();
@@ -196,6 +196,7 @@ export function CommandPalette() {
         hideClose
         className="w-[calc(100%-2rem)] max-w-2xl gap-0 overflow-hidden border bg-popover p-0 text-popover-foreground"
       >
+        <DialogTitle className="sr-only">Command Search</DialogTitle>
         <Command
           className="flex max-h-[min(80vh,36rem)] min-h-0 flex-col overflow-hidden"
         >
