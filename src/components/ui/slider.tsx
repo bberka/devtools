@@ -1,36 +1,30 @@
 'use client';
 
+import * as React from 'react';
 import { cn } from '@/lib/utils/cn';
 
-interface SliderProps {
+export interface SliderProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'value' | 'onChange'> {
   value: number;
-  onChange: (value: number) => void;
-  min: number;
-  max: number;
-  step?: number;
-  className?: string;
+  onChange?: (value: number) => void;
 }
 
-export function Slider({
-  value,
-  onChange,
-  min,
-  max,
-  step = 1,
-  className,
-}: SliderProps) {
-  return (
-    <div className={cn('flex items-center gap-4', className)}>
-      <input
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        onChange={(e) => onChange(parseInt(e.currentTarget.value, 10))}
-        className="h-2 flex-1 cursor-pointer appearance-none rounded-lg bg-secondary accent-primary"
-      />
-      <span className="w-12 text-right text-sm font-medium">{value}</span>
-    </div>
-  );
-}
+const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
+  ({ className, value, onChange, min = 0, max = 100, step = 1, ...props }, ref) => (
+    <input
+      ref={ref}
+      type="range"
+      value={value}
+      min={min}
+      max={max}
+      step={step}
+      className={cn('h-2 w-full cursor-pointer accent-primary', className)}
+      onChange={(event) => onChange?.(Number(event.target.value))}
+      {...props}
+    />
+  )
+);
+
+Slider.displayName = 'Slider';
+
+export { Slider };
