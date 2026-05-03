@@ -16,7 +16,7 @@
 - [x] Static export configuration
 - [x] Home page with search and category filtering
 - [x] Tool routes generated from `TOOLS`
-- [x] 39 tool pages wired into the renderer
+- [x] 40 tool pages wired into the renderer
 - [x] Favorites
 - [x] Recent tools
 - [x] Dark mode
@@ -70,6 +70,7 @@
 - [x] Regex Tester
 - [x] Word Counter
 - [x] Find and Replace
+- [x] CV / Resume ATS Analyzer
 
 ### Utilities
 
@@ -142,7 +143,7 @@ Latest review: April 24, 2026.
 Already covered in the current app and not repeated in the backlog below:
 
 - Utilities: JSON Formatter, Color Converter
-- Text: Case Converter, Lorem Ipsum Generator, Text Diff Visualizer, Word Counter, Find and Replace
+- Text: Case Converter, Lorem Ipsum Generator, Text Diff Visualizer, Word Counter, Find and Replace, CV / Resume ATS Analyzer
 - Developer: URL Encoder/Decoder, UUID Generator, JWT Decoder
 - Calculators: Unit Converter, Percentage Calculator
 
@@ -182,7 +183,6 @@ The lists below only show remaining roadmap work:
 #### Text
 
 - [ ] Expand Markdown Previewer into a fuller Markdown Editor
-- [ ] Add CV / Resume ATS Readability Score Analyzer with uploaded PDF parsing and scoring
 
 #### Developer
 

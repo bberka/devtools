@@ -302,6 +302,17 @@ export const TOOL_REGISTRY = {
         (module) => module.FindAndReplace
       ),
   },
+  'resume-ats-analyzer': {
+    name: 'CV / Resume ATS Analyzer',
+    description: 'Parse PDF resumes in the browser and score ATS readability',
+    category: 'text-tools',
+    icon: 'FileSearch',
+    keywords: ['resume', 'cv', 'ats', 'pdf', 'readability', 'keywords', 'job description'],
+    component: () =>
+      import('@/components/tools/ResumeAtsAnalyzer').then(
+        (module) => module.ResumeAtsAnalyzer
+      ),
+  },
   'cron-parser': {
     name: 'Cron Expression Parser',
     description: 'Parse and generate cron expressions',
