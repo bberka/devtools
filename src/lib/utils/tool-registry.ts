@@ -521,6 +521,46 @@ export const TOOL_REGISTRY = {
         (module) => module.TimezoneConverter
       ),
   },
+  'currency-converter': {
+    name: 'Currency Converter',
+    description: 'Convert currencies using live reference exchange rates',
+    category: 'calculators',
+    icon: 'BadgeDollarSign',
+    keywords: [
+      'currency',
+      'exchange rate',
+      'forex',
+      'money',
+      'usd',
+      'eur',
+      'convert',
+      'live rates',
+    ],
+    component: () =>
+      import('@/components/tools/CurrencyConverter').then(
+        (module) => module.CurrencyConverter
+      ),
+  },
+  'bmi-calculator': {
+    name: 'BMI Calculator',
+    description: 'Calculate adult BMI with metric or US customary units',
+    category: 'calculators',
+    icon: 'Scale',
+    keywords: [
+      'bmi',
+      'body mass index',
+      'weight',
+      'height',
+      'health',
+      'metric',
+      'pounds',
+      'kilograms',
+    ],
+    component: () =>
+      import('@/components/tools/BmiCalculator').then(
+        (module) => module.BmiCalculator
+      ),
+  },
 } as const satisfies Record<string, ToolRegistryEntry>;
 
 export type ToolId = keyof typeof TOOL_REGISTRY;

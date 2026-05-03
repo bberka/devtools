@@ -199,11 +199,11 @@ The lists below only show remaining roadmap work:
 
 #### Calculators
 
-- [ ] BMI Calculator
+- [x] BMI Calculator
 - [x] Age Calculator
 - [ ] Date Difference Calculator
 - [x] Timezone Converter
-- [ ] Currency Converter
+- [x] Currency Converter
 
 ### 7. Lower-Priority Ideas
 

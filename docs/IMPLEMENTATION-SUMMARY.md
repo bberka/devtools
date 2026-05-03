@@ -9,7 +9,7 @@ The active app is a Next.js App Router project with React client components. It 
 
 ## Current Counts
 
-- Tool pages: 42
+- Tool pages: 44
 - Categories: 10
 - Static export output: `out/`
 - Build command: `npm run build`
@@ -89,12 +89,14 @@ The active app is a Next.js App Router project with React client components. It 
 - Color Contrast Checker
 - Color Picker
 
-### Calculators (4)
+### Calculators (6)
 
 - Percentage Calculator
 - Unit Converter
 - Age Calculator
 - Timezone Converter
+- Currency Converter
+- BMI Calculator
 
 ## Implemented App Features
 
