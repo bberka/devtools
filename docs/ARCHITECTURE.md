@@ -66,10 +66,3 @@ out/
 ```
 
 If deploying with Wrangler, the asset directory should point to `./out`.
-
-## Current Priorities
-
-- Add automated route and tool coverage tests
-- Add generated Open Graph images
-- Continue reducing shared dynamic-route bundle references where practical
-- Expand the roadmap with the next PDF, image, utility, text, developer, design, and calculator tool families, including browser-side compression, PDF text analysis, validation, and accessibility helpers

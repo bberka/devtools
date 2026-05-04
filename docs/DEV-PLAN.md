@@ -134,9 +134,7 @@ Latest review: April 24, 2026.
 
 ### 5. SEO / Sharing
 
-- [ ] Replace placeholder `NEXT_PUBLIC_SITE_URL` fallback before production.
 - [ ] Add generated Open Graph images.
-- [ ] Confirm canonical URLs for the production domain.
 
 ### 6. Tool Expansion Roadmap
 
@@ -211,14 +209,6 @@ The lists below only show remaining roadmap work:
 - [ ] Box Shadow Visualizer
 - [ ] Clamp Calculator
 - [ ] Decide whether the password hashing tool should stay bcrypt-only or add Argon2 support
-
-## Feature Request Review Notes
-
-The May 3, 2026 review of additional feature requests maps to the current app like this:
-
-- `Already implemented in some form`: Base64 Encoder/Decoder, Hash Generator, Number Base Converter, JSON Formatter, JSON ↔ YAML ↔ XML conversion, XML Validator, Regex Tester, SQL Formatter
-- `Better handled as expansions`: SQL dialect support, image/file Base64 workflows, file checksums, dedicated JSON/YAML/XML validation flows, and a regex builder layered on the existing tester
-- `Net-new backlog items`: Certificate Decoder, Color Blindness Simulator, browser-side GZip compression, and a CV / Resume ATS Readability Score Analyzer for uploaded PDFs
 
 ## Development Rules
 

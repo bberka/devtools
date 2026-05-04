@@ -4,26 +4,19 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
+Live at: **[tools.berkaybayar.com](https://tools.berkaybayar.com/)**
+
 ## About
 
-DevTools Collection is a static web app for everyday browser-side workflows: converting files, formatting code and data, generating values, previewing content, inspecting inputs, and handling lightweight utilities without sending user content to a server by default. Tool interactions run in the browser and the site itself is generated at build time.
-
-## Current Status
-
-- 51 tool pages are exported statically from `src/lib/utils/tool-registry.ts`
-- Tool routes use `generateStaticParams()` in the Next.js App Router
-- Home page, per-tool metadata, sitemap, robots, not-found page, favorites, recent tools, settings, dark mode, and command palette are implemented
-- `npm run build` succeeds and writes the static export to `out/`
-- Production bundle analysis and Lighthouse desktop/mobile audits were completed on April 24, 2026
+Static web app for everyday browser-side workflows: converting files, formatting code and data, generating values, previewing content, inspecting inputs, and handling lightweight utilities — without sending user content to a server. Tool interactions run in the browser; the site is generated at build time.
 
 ## Features
 
-- Client-side tool execution for user interactions
-- Static export friendly with `next build`
-- Search, category filtering, favorites, recent tools, compact mode, and dark mode
+- Client-side tool execution
+- Static export with `next build`
+- Search, category filtering, favorites, recent tools, compact mode, dark mode
 - Command palette with keyboard navigation
 - PWA install and offline support
-- shadcn-style component layer on Tailwind CSS
 - Responsive layout for desktop and mobile
 
 ## Tool Categories
@@ -39,25 +32,7 @@ DevTools Collection is a static web app for everyday browser-side workflows: con
 - Design: 3 tools
 - Calculators: 7 tools
 
-## Roadmap Snapshot
-
-The current platform work is mostly polish and coverage. The next large product expansion is planned around six tool families:
-
-- PDF workspace: edit, merge, split, compress, convert, watermark, and document export flows
-- Image workspace: dedicated image conversion, compression, resizing, cropping, rotation, EXIF, palette extraction, and sketch effects
-- Utilities: QR, JSON, color conversion, hashing/checksums, Base64/file encoding, browser-side gzip, icons, text-to-speech, and speech-to-text
-- Text: word counting, find/replace, resume/CV readability analysis, case conversion, placeholder generation, text diff, and Markdown editing
-- Developer: URL encoding, UUIDs, JWT inspection, regex testing/building, cron, SQL formatting with dialect support, YAML/JSON/XML conversion and validation, certificate decoding, and CSV/JSON conversion
-- Design: accessibility helpers such as color blindness simulation alongside the current color tooling
-- Calculators: unit, percentage, BMI, age, date difference, timezone, and currency conversion
-
-Several items in that roadmap already exist in the current app in some form, including `Base64 Encoder/Decoder`, `Number Base Converter`, `Hash Generator`, `JSON Formatter`, `JSON ↔ YAML ↔ XML`, `XML Validator`, `URL Encoder/Decoder`, `UUID Generator`, `JWT Decoder`, `Regex Tester`, `SQL Formatter`, `Color Converter`, `Case Converter`, `Lorem Ipsum Generator`, `Text Diff Visualizer`, `Word Counter`, `Find and Replace`, and `CV / Resume ATS Analyzer`.
-
-That means the roadmap work is a mix of:
-
-- net-new tools such as `Certificate Decoder`, `Color Blindness Simulator`, a dedicated browser-side `GZip Compressor`, and a `CV ATS Readability Score Analyzer`
-- expansions of current tools such as file/image input for `Base64 Encoder/Decoder`, file hashing and checksum workflows for `Hash Generator`, regex authoring help on top of `Regex Tester`, and SQL dialect-aware formatting on top of `SQL Formatter`
-- route splits or dedicated validators where broader tools already cover part of the need, especially around JSON/YAML/XML formatting and validation
+See [DEV-PLAN.md](./DEV-PLAN.md) for the full tool list, roadmap, and remaining work.
 
 ## Tech Stack
 
@@ -66,7 +41,7 @@ That means the roadmap work is a mix of:
 - Styling: [Tailwind CSS](https://tailwindcss.com/)
 - Component patterns: [shadcn/ui](https://ui.shadcn.com/)
 - Icons: [Lucide React](https://lucide.dev/)
-- Static hosting target: Cloudflare Pages / static hosting via `out/`
+- Static hosting: Cloudflare Pages via `out/`
 
 ## Getting Started
 
@@ -78,8 +53,8 @@ That means the roadmap work is a mix of:
 ### Install
 
 ```bash
-git clone https://github.com/bberka/devtools.git
-cd devtools
+git clone https://github.com/bberka/tools.berkaybayar.com.git
+cd tools.berkaybayar.com
 npm install
 ```
 
@@ -89,7 +64,7 @@ npm install
 npm run dev
 ```
 
-The app will be available at `http://localhost:3000`.
+App available at `http://localhost:3000`.
 
 ### Production Build
 
@@ -97,7 +72,7 @@ The app will be available at `http://localhost:3000`.
 npm run build
 ```
 
-The static export is generated in the `out/` directory.
+Static export written to `out/`.
 
 ## Project Structure
 
@@ -124,33 +99,11 @@ public/
 out/                 # generated by next build
 ```
 
-## Development Notes
-
-- Routes are exported statically with `output: 'export'`
-- Tool pages are known at build time from the typed registry in `src/lib/utils/tool-registry.ts`
-- Tool UIs remain interactive client components after hydration
-- Tool metadata and component loaders share the registry; `src/lib/utils/tools-config.ts` derives metadata helpers from it
-- Heavy export, image, crypto, and data conversion dependencies are loaded on demand inside the tools that need them
-- Local browser data uses the `dev-toolbox:*` localStorage namespace
-
-Architecture details are documented in [ARCHITECTURE.md](./ARCHITECTURE.md).
-
 ## Deployment
-
-For static hosting:
 
 - Build command: `npm run build`
 - Output directory: `out`
-
-For Wrangler-based static asset publishing, `wrangler.json` points to `./out`.
-
-## Remaining Work
-
-- Add automated tests for route coverage, core tool behavior, and keyboard flows
-- Add generated Open Graph images
-- Confirm production site URL and canonical metadata before deployment
-- Consider reducing cross-tool chunk references from the shared dynamic tool route
-- Start the next tool expansion across PDF, image, utilities, text, developer, and calculator workflows
+- `wrangler.json` points to `./out` for Wrangler-based static asset publishing
 
 ## License
 

@@ -191,7 +191,6 @@ Automated tests are not implemented yet. Until they are added, manually test:
 - Add automated tests for route coverage and core tool behavior
 - Continue improving route-level bundle references after the first heavy dependency split
 - Add generated Open Graph images
-- Confirm production site URL and canonical metadata
 - Expand the next tool families: PDF, image, utilities, text, developer, and calculators
 - Split broader current tools into dedicated routes where that improves discovery and SEO
 - Decide whether the password hashing tool should add Argon2 support or stay bcrypt-only
