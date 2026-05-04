@@ -56,7 +56,7 @@ export const TOOL_REGISTRY = {
   'exif-viewer-remover': {
     name: 'EXIF Viewer & Remover',
     description: 'Inspect local image metadata and export a cleaned copy',
-    category: 'converters',
+    category: 'utilities',
     icon: 'Shield',
     keywords: ['exif', 'metadata', 'image', 'jpeg', 'gps', 'privacy', 'remove'],
     component: () =>
@@ -67,7 +67,7 @@ export const TOOL_REGISTRY = {
   'base64-converter': {
     name: 'Base64 Encoder/Decoder',
     description: 'Encode and decode Base64 strings',
-    category: 'converters',
+    category: 'encoders-decoders',
     icon: 'Binary',
     keywords: ['base64', 'encode', 'decode'],
     featured: true,
@@ -134,7 +134,7 @@ export const TOOL_REGISTRY = {
   'url-encoder': {
     name: 'URL Encoder/Decoder',
     description: 'Encode and decode URL strings',
-    category: 'converters',
+    category: 'encoders-decoders',
     icon: 'Link',
     keywords: ['url', 'encode', 'decode', 'uri'],
     component: () =>
@@ -143,7 +143,7 @@ export const TOOL_REGISTRY = {
   'html-encoder': {
     name: 'HTML Encoder/Decoder',
     description: 'Encode and decode HTML entities',
-    category: 'converters',
+    category: 'encoders-decoders',
     icon: 'Code2',
     keywords: ['html', 'encode', 'decode', 'entities'],
     component: () =>
@@ -154,7 +154,7 @@ export const TOOL_REGISTRY = {
   'color-converter': {
     name: 'Color Converter',
     description: 'Convert between HEX, RGB, HSL color formats',
-    category: 'converters',
+    category: 'design',
     icon: 'Palette',
     keywords: ['color', 'hex', 'rgb', 'hsl', 'convert'],
     component: () =>
@@ -165,7 +165,7 @@ export const TOOL_REGISTRY = {
   'case-converter': {
     name: 'Case Converter',
     description: 'Transform text case (camelCase, snake_case, etc.)',
-    category: 'converters',
+    category: 'text-tools',
     icon: 'CaseSensitive',
     keywords: ['case', 'camel', 'snake', 'pascal', 'kebab', 'convert'],
     component: () =>
@@ -194,7 +194,7 @@ export const TOOL_REGISTRY = {
   'hash-generator': {
     name: 'Hash Generator',
     description: 'Generate MD5, SHA-1, SHA-256, SHA-512 hashes',
-    category: 'generators',
+    category: 'security',
     icon: 'Shield',
     keywords: ['hash', 'md5', 'sha', 'checksum'],
     featured: true,
@@ -380,7 +380,7 @@ export const TOOL_REGISTRY = {
   'qr-code-generator': {
     name: 'QR Code Generator',
     description: 'Generate QR codes for text and URLs with PNG and SVG export',
-    category: 'utilities',
+    category: 'generators',
     icon: 'QrCode',
     keywords: ['qr', 'qrcode', 'barcode', 'url', 'text', 'png', 'svg'],
     component: () =>
