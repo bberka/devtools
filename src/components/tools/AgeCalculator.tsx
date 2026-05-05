@@ -1,10 +1,13 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { CalendarDays, Check, Copy, Trash2 } from 'lucide-react';
+import { CalendarDays, CalendarIcon, Check, Copy, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils/cn';
 import { useCopyToClipboard } from '@/hooks';
 
 type AgeBreakdown = {
@@ -30,6 +33,13 @@ function getTodayValue(): string {
   return `${year}-${month}-${day}`;
 }
 
+function maskDate(value: string): string {
+  const digits = value.replace(/\D/g, '').slice(0, 8);
+  if (digits.length <= 4) return digits;
+  if (digits.length <= 6) return `${digits.slice(0, 4)}-${digits.slice(4)}`;
+  return `${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6)}`;
+}
+
 function parseDateInput(value: string): Date | null {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
 
@@ -52,6 +62,7 @@ function parseDateInput(value: string): Date | null {
 
   return date;
 }
+
 
 function formatLongDate(value: string): string {
   const date = parseDateInput(value);
@@ -156,6 +167,8 @@ function calculateAge(birthDateValue: string, targetDateValue: string): AgeBreak
 export function AgeCalculator() {
   const [birthDate, setBirthDate] = useState('1990-06-15');
   const [targetDate, setTargetDate] = useState(getTodayValue());
+  const [birthOpen, setBirthOpen] = useState(false);
+  const [targetOpen, setTargetOpen] = useState(false);
   const copyResult = useCopyToClipboard();
 
   const result = useMemo(() => {
@@ -225,28 +238,74 @@ export function AgeCalculator() {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
-              <label htmlFor="birth-date" className="mb-2 block text-sm font-medium">
-                Birth date
-              </label>
-              <Input
-                id="birth-date"
-                type="date"
-                value={birthDate}
-                onChange={(event) => setBirthDate((event.target as HTMLInputElement).value)}
-                max={targetDate || undefined}
-              />
+              <label className="mb-2 block text-sm font-medium">Birth date</label>
+              <div className="flex gap-2">
+                <Popover open={birthOpen} onOpenChange={setBirthOpen}>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" size="icon" className="shrink-0">
+                      <CalendarIcon className="h-4 w-4" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={birthDate ? (() => { const [y, m, d] = birthDate.split('-').map(Number); return new Date(y, m - 1, d); })() : undefined}
+                      onSelect={(date) => {
+                        if (!date) return;
+                        setBirthDate(`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`);
+                        setBirthOpen(false);
+                      }}
+                      disabled={(date) => {
+                        if (!targetDate) return false;
+                        const [y, m, d] = targetDate.split('-').map(Number);
+                        return date > new Date(y, m - 1, d);
+                      }}
+                    />
+                  </PopoverContent>
+                </Popover>
+                <Input
+                  type="text"
+                  value={birthDate}
+                  onChange={(e) => setBirthDate(maskDate((e.target as HTMLInputElement).value))}
+                  placeholder="YYYY-MM-DD"
+                  className={cn('font-mono', !parseDateInput(birthDate) && birthDate && 'border-destructive')}
+                />
+              </div>
             </div>
             <div>
-              <label htmlFor="target-date" className="mb-2 block text-sm font-medium">
-                Age at
-              </label>
-              <Input
-                id="target-date"
-                type="date"
-                value={targetDate}
-                onChange={(event) => setTargetDate((event.target as HTMLInputElement).value)}
-                min={birthDate || undefined}
-              />
+              <label className="mb-2 block text-sm font-medium">Age at</label>
+              <div className="flex gap-2">
+                <Popover open={targetOpen} onOpenChange={setTargetOpen}>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" size="icon" className="shrink-0">
+                      <CalendarIcon className="h-4 w-4" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={targetDate ? (() => { const [y, m, d] = targetDate.split('-').map(Number); return new Date(y, m - 1, d); })() : undefined}
+                      onSelect={(date) => {
+                        if (!date) return;
+                        setTargetDate(`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`);
+                        setTargetOpen(false);
+                      }}
+                      disabled={(date) => {
+                        if (!birthDate) return false;
+                        const [y, m, d] = birthDate.split('-').map(Number);
+                        return date < new Date(y, m - 1, d);
+                      }}
+                    />
+                  </PopoverContent>
+                </Popover>
+                <Input
+                  type="text"
+                  value={targetDate}
+                  onChange={(e) => setTargetDate(maskDate((e.target as HTMLInputElement).value))}
+                  placeholder="YYYY-MM-DD"
+                  className={cn('font-mono', !parseDateInput(targetDate) && targetDate && 'border-destructive')}
+                />
+              </div>
             </div>
           </div>
 
