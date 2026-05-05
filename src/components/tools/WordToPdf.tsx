@@ -4,7 +4,8 @@ import { useState, useRef, type ChangeEvent } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FileText, Upload, Download, Trash2, FileInput } from 'lucide-react';
-import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import { PDFDocument, rgb } from 'pdf-lib';
+import fontkit from '@pdf-lib/fontkit';
 // @ts-ignore
 import mammoth from 'mammoth/mammoth.browser.min.js';
 
@@ -39,7 +40,11 @@ export function WordToPdf() {
 
       // 2. Generate PDF using pdf-lib
       const pdfDoc = await PDFDocument.create();
-      const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+      pdfDoc.registerFontkit(fontkit);
+
+      const fontUrl = 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Regular.ttf';
+      const fontBytes = await fetch(fontUrl).then(res => res.arrayBuffer());
+      const font = await pdfDoc.embedFont(fontBytes);
       
       let page = pdfDoc.addPage();
       const { width, height } = page.getSize();
