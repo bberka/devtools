@@ -21,15 +21,15 @@ Static web app for everyday browser-side workflows: converting files, formatting
 
 ## Tool Categories
 
-- Converters: 14 tools
-- Encoders & Decoders: 2 tools
+- Converters: 8 tools
+- Encoders & Decoders: 5 tools
 - Generators: 4 tools
 - Formatters & Validators: 6 tools
-- Text Tools: 6 tools
-- Utilities: 2 tools
-- Security: 3 tools
+- Text Tools: 7 tools
+- Utilities: 3 tools
+- Security: 5 tools
 - Networking: 4 tools
-- Design: 3 tools
+- Design: 4 tools
 - Calculators: 7 tools
 
 See [DEV-PLAN.md](./DEV-PLAN.md) for the full tool list, roadmap, and remaining work.
@@ -53,8 +53,8 @@ See [DEV-PLAN.md](./DEV-PLAN.md) for the full tool list, roadmap, and remaining 
 ### Install
 
 ```bash
-git clone https://github.com/bberka/tools.berkaybayar.com.git
-cd tools.berkaybayar.com
+git clone https://github.com/bberka/devtools
+cd devtools
 npm install
 ```
 

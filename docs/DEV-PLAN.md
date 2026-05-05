@@ -16,7 +16,7 @@
 - [x] Static export configuration
 - [x] Home page with search and category filtering
 - [x] Tool routes generated from `TOOLS`
-- [x] 40 tool pages wired into the renderer
+- [x] 53 tool pages wired into the renderer
 - [x] Favorites
 - [x] Recent tools
 - [x] Dark mode
