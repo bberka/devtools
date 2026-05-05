@@ -30,7 +30,7 @@ Static web app for everyday browser-side workflows: converting files, formatting
 - Security: 5 tools
 - Networking: 4 tools
 - Design: 4 tools
-- PDF Tools: 5 tools
+- PDF Tools: 8 tools
 - Image Tools: 9 tools
 - Calculators: 7 tools
 

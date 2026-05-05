@@ -10,6 +10,39 @@ type ToolRegistryEntry = ToolMetadata & {
 };
 
 export const TOOL_REGISTRY = {
+  'pdf-to-image': {
+    name: 'PDF to Image',
+    description: 'Convert PDF pages into high-quality PNG images',
+    category: 'pdf-tools',
+    icon: 'ImageIcon',
+    keywords: ['pdf', 'image', 'png', 'convert', 'extract'],
+    component: () =>
+      import('@/components/tools/PdfToImage').then(
+        (module) => module.PdfToImage
+      ),
+  },
+  'pdf-to-word': {
+    name: 'PDF to Word',
+    description: 'Extract text from a PDF to a Word document',
+    category: 'pdf-tools',
+    icon: 'FileOutput',
+    keywords: ['pdf', 'word', 'docx', 'convert', 'extract', 'text'],
+    component: () =>
+      import('@/components/tools/PdfToWord').then(
+        (module) => module.PdfToWord
+      ),
+  },
+  'word-to-pdf': {
+    name: 'Word to PDF',
+    description: 'Convert Word documents (.docx) to PDF format',
+    category: 'pdf-tools',
+    icon: 'FileInput',
+    keywords: ['word', 'docx', 'pdf', 'convert', 'document'],
+    component: () =>
+      import('@/components/tools/WordToPdf').then(
+        (module) => module.WordToPdf
+      ),
+  },
   'pdf-split': {
     name: 'Split PDF',
     description: 'Extract specific pages or ranges from a PDF document',

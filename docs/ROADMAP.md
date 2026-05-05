@@ -1,6 +1,6 @@
 # Roadmap
 
-Live at [tools.berkaybayar.com](https://tools.berkaybayar.com/). 64 tools across 12 categories.
+Live at [tools.berkaybayar.com](https://tools.berkaybayar.com/). 67 tools across 12 categories.
 
 ## Immediate
 
@@ -15,9 +15,6 @@ Live at [tools.berkaybayar.com](https://tools.berkaybayar.com/). 64 tools across
 
 - Edit PDF
 - Compress PDF
-- PDF to Image
-- PDF to Word
-- Word to PDF
 - PDF Watermark
 
 ### Utilities
