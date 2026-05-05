@@ -5,6 +5,7 @@ import { Calendar as CalendarIcon, CalendarRange, Check, Copy, Trash2 } from 'lu
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useCopyToClipboard } from '@/hooks';
 import { cn } from '@/lib/utils/cn';
@@ -27,6 +28,13 @@ function getTodayValue(): string {
   const day = String(now.getDate()).padStart(2, '0');
 
   return `${year}-${month}-${day}`;
+}
+
+function maskDate(value: string): string {
+  const digits = value.replace(/\D/g, '').slice(0, 8);
+  if (digits.length <= 4) return digits;
+  if (digits.length <= 6) return `${digits.slice(0, 4)}-${digits.slice(4)}`;
+  return `${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6)}`;
 }
 
 function parseDateInput(value: string): Date | null {
@@ -67,20 +75,6 @@ function formatLongDate(value: string): string {
   }).format(date);
 }
 
-function formatButtonDate(value: string): string {
-  const date = parseDateInput(value);
-
-  if (!date) {
-    return 'Pick a date';
-  }
-
-  return new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    timeZone: 'UTC',
-  }).format(date);
-}
 
 function formatNumber(value: number): string {
   return new Intl.NumberFormat('en-US').format(value);
@@ -206,86 +200,74 @@ export function DateDifferenceCalculator() {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
-              <label className="mb-2 block text-sm font-medium">
-                Start date
-              </label>
-              <Popover open={startOpen} onOpenChange={setStartOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      'w-full justify-start text-left font-normal',
-                      !startDate && 'text-muted-foreground'
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {formatButtonDate(startDate)}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={startDate ? (() => { const [y, m, d] = startDate.split('-').map(Number); return new Date(y, m - 1, d); })() : undefined}
-                    onSelect={(date) => {
-                      if (!date) {
-                        return;
-                      }
-
-                      const nextValue = `${date.getFullYear()}-${String(
-                        date.getMonth() + 1
-                      ).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-                      setStartDate(nextValue);
-                      setStartOpen(false);
-                    }}
-                    disabled={(date) => {
-                      if (!endDate) return false;
-                      const [y, m, d] = endDate.split('-').map(Number);
-                      return date > new Date(y, m - 1, d);
-                    }}
-                  />
-                </PopoverContent>
-              </Popover>
+              <label className="mb-2 block text-sm font-medium">Start date</label>
+              <div className="flex gap-2">
+                <Popover open={startOpen} onOpenChange={setStartOpen}>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" size="icon" className="shrink-0">
+                      <CalendarIcon className="h-4 w-4" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={startDate ? (() => { const [y, m, d] = startDate.split('-').map(Number); return new Date(y, m - 1, d); })() : undefined}
+                      onSelect={(date) => {
+                        if (!date) return;
+                        setStartDate(`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`);
+                        setStartOpen(false);
+                      }}
+                      disabled={(date) => {
+                        if (!endDate) return false;
+                        const [y, m, d] = endDate.split('-').map(Number);
+                        return date > new Date(y, m - 1, d);
+                      }}
+                    />
+                  </PopoverContent>
+                </Popover>
+                <Input
+                  type="text"
+                  value={startDate}
+                  onChange={(e) => setStartDate(maskDate((e.target as HTMLInputElement).value))}
+                  placeholder="YYYY-MM-DD"
+                  className={cn('font-mono', !parseDateInput(startDate) && startDate && 'border-destructive')}
+                />
+              </div>
             </div>
             <div>
-              <label className="mb-2 block text-sm font-medium">
-                End date
-              </label>
-              <Popover open={endOpen} onOpenChange={setEndOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      'w-full justify-start text-left font-normal',
-                      !endDate && 'text-muted-foreground'
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {formatButtonDate(endDate)}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={endDate ? (() => { const [y, m, d] = endDate.split('-').map(Number); return new Date(y, m - 1, d); })() : undefined}
-                    onSelect={(date) => {
-                      if (!date) {
-                        return;
-                      }
-
-                      const nextValue = `${date.getFullYear()}-${String(
-                        date.getMonth() + 1
-                      ).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-                      setEndDate(nextValue);
-                      setEndOpen(false);
-                    }}
-                    disabled={(date) => {
-                      if (!startDate) return false;
-                      const [y, m, d] = startDate.split('-').map(Number);
-                      return date < new Date(y, m - 1, d);
-                    }}
-                  />
-                </PopoverContent>
-              </Popover>
+              <label className="mb-2 block text-sm font-medium">End date</label>
+              <div className="flex gap-2">
+                <Popover open={endOpen} onOpenChange={setEndOpen}>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" size="icon" className="shrink-0">
+                      <CalendarIcon className="h-4 w-4" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={endDate ? (() => { const [y, m, d] = endDate.split('-').map(Number); return new Date(y, m - 1, d); })() : undefined}
+                      onSelect={(date) => {
+                        if (!date) return;
+                        setEndDate(`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`);
+                        setEndOpen(false);
+                      }}
+                      disabled={(date) => {
+                        if (!startDate) return false;
+                        const [y, m, d] = startDate.split('-').map(Number);
+                        return date < new Date(y, m - 1, d);
+                      }}
+                    />
+                  </PopoverContent>
+                </Popover>
+                <Input
+                  type="text"
+                  value={endDate}
+                  onChange={(e) => setEndDate(maskDate((e.target as HTMLInputElement).value))}
+                  placeholder="YYYY-MM-DD"
+                  className={cn('font-mono', !parseDateInput(endDate) && endDate && 'border-destructive')}
+                />
+              </div>
             </div>
           </div>
 
