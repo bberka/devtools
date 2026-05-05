@@ -145,6 +145,8 @@ export function CommandPalette() {
       networking: [],
       design: [],
       calculators: [],
+      'pdf-tools': [],
+      'image-tools': [],
     };
 
     // Get all tool IDs that are already in recent or favorites

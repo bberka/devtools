@@ -13,7 +13,7 @@ export const TOOL_REGISTRY = {
   'pdf-split': {
     name: 'Split PDF',
     description: 'Extract specific pages or ranges from a PDF document',
-    category: 'converters',
+    category: 'pdf-tools',
     icon: 'Scissors',
     keywords: ['pdf', 'split', 'extract', 'pages', 'documents'],
     component: () =>
@@ -24,7 +24,7 @@ export const TOOL_REGISTRY = {
   'image-to-pdf': {
     name: 'Image to PDF',
     description: 'Convert images (JPEG, PNG) into a PDF document',
-    category: 'converters',
+    category: 'pdf-tools',
     icon: 'FileImage',
     keywords: ['image', 'pdf', 'convert', 'jpeg', 'png'],
     component: () =>
@@ -35,7 +35,7 @@ export const TOOL_REGISTRY = {
   'pdf-merge': {
     name: 'Merge PDF',
     description: 'Combine multiple PDF documents into a single file',
-    category: 'converters',
+    category: 'pdf-tools',
     icon: 'Files',
     keywords: ['pdf', 'merge', 'combine', 'join', 'documents'],
     component: () =>
@@ -46,7 +46,7 @@ export const TOOL_REGISTRY = {
   'markdown-to-pdf': {
     name: 'Markdown Converter',
     description: 'Convert Markdown to PDF, HTML, TXT, PNG, or JPG',
-    category: 'converters',
+    category: 'pdf-tools',
     icon: 'FileText',
     keywords: ['markdown', 'pdf', 'html', 'convert', 'export', 'txt', 'png', 'jpg'],
     component: () =>
@@ -57,7 +57,7 @@ export const TOOL_REGISTRY = {
   'html-converter': {
     name: 'HTML Converter',
     description: 'Convert HTML to PDF, Markdown, HTML, or plain text with export options',
-    category: 'converters',
+    category: 'pdf-tools',
     icon: 'FileCode',
     keywords: [
       'html',
@@ -78,7 +78,7 @@ export const TOOL_REGISTRY = {
   'color-blindness-simulator': {
     name: 'Color Blindness Simulator',
     description: 'Visualize images through various color blindness filters',
-    category: 'design',
+    category: 'image-tools',
     icon: 'Eye',
     keywords: ['color', 'blindness', 'simulator', 'protanopia', 'deuteranopia', 'accessibility'],
     component: () =>
@@ -89,7 +89,7 @@ export const TOOL_REGISTRY = {
   'color-palette-extractor': {
     name: 'Color Palette Extractor',
     description: 'Extract dominant colors from any image',
-    category: 'design',
+    category: 'image-tools',
     icon: 'Palette',
     keywords: ['color', 'palette', 'extract', 'image', 'colors'],
     component: () =>
@@ -100,7 +100,7 @@ export const TOOL_REGISTRY = {
   'image-to-icon': {
     name: 'Image to Icon',
     description: 'Convert images to multi-resolution ICO files',
-    category: 'converters',
+    category: 'image-tools',
     icon: 'Box',
     keywords: ['image', 'icon', 'ico', 'favicon', 'convert'],
     component: () =>
@@ -111,7 +111,7 @@ export const TOOL_REGISTRY = {
   'svg-to-png': {
     name: 'SVG to PNG Converter',
     description: 'Rasterize SVG code or files into high-resolution PNG images',
-    category: 'design',
+    category: 'image-tools',
     icon: 'FileImage',
     keywords: ['svg', 'png', 'rasterize', 'convert', 'vector'],
     component: () =>
@@ -122,7 +122,7 @@ export const TOOL_REGISTRY = {
   'image-converter': {
     name: 'Image Converter & Editor',
     description: 'Convert, resize, rotate, flip, and apply filters to images',
-    category: 'design',
+    category: 'image-tools',
     icon: 'Image',
     keywords: ['image', 'convert', 'resize', 'rotate', 'flip', 'filters', 'ico', 'favicon'],
     component: () =>
@@ -133,7 +133,7 @@ export const TOOL_REGISTRY = {
   'image-compressor': {
     name: 'Compress Image',
     description: 'Reduce image file size with adjustable quality and dimensions',
-    category: 'converters',
+    category: 'image-tools',
     icon: 'Zap',
     keywords: ['image', 'compress', 'optimize', 'shrink', 'size'],
     component: () =>
@@ -144,7 +144,7 @@ export const TOOL_REGISTRY = {
   'image-resizer': {
     name: 'Resize Image',
     description: 'Change image dimensions with aspect ratio control',
-    category: 'design',
+    category: 'image-tools',
     icon: 'Maximize',
     keywords: ['image', 'resize', 'dimensions', 'width', 'height'],
     component: () =>
@@ -155,7 +155,7 @@ export const TOOL_REGISTRY = {
   'image-cropper': {
     name: 'Crop Image',
     description: 'Crop images with preset aspect ratios or free selection',
-    category: 'design',
+    category: 'image-tools',
     icon: 'Crop',
     keywords: ['image', 'crop', 'cut', 'aspect ratio'],
     component: () =>
@@ -166,7 +166,7 @@ export const TOOL_REGISTRY = {
   'exif-viewer-remover': {
     name: 'EXIF Viewer & Remover',
     description: 'Inspect local image metadata and export a cleaned copy',
-    category: 'utilities',
+    category: 'image-tools',
     icon: 'Shield',
     keywords: ['exif', 'metadata', 'image', 'jpeg', 'gps', 'privacy', 'remove'],
     component: () =>

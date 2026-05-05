@@ -73,6 +73,20 @@ export const CATEGORIES: Record<ToolCategory, CategoryInfo> = {
     description: 'Math, percentage, and conversion calculators',
     color: 'text-emerald-500',
   },
+  'pdf-tools': {
+    id: 'pdf-tools',
+    name: 'PDF Tools',
+    icon: 'FileText',
+    description: 'Merge, split, and convert PDF documents',
+    color: 'text-red-600',
+  },
+  'image-tools': {
+    id: 'image-tools',
+    name: 'Image Tools',
+    icon: 'Image',
+    description: 'Edit, compress, and transform images',
+    color: 'text-orange-600',
+  },
 };
 
 // Tool metadata is derived from the typed registry so metadata and component

@@ -39,6 +39,8 @@ export function HomeContent() {
       networking: [],
       design: [],
       calculators: [],
+      'pdf-tools': [],
+      'image-tools': [],
     };
 
     filteredTools.forEach((tool) => {

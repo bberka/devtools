@@ -8,7 +8,9 @@ export type ToolCategory =
   | 'security'
   | 'networking'
   | 'design'
-  | 'calculators';
+  | 'calculators'
+  | 'pdf-tools'
+  | 'image-tools';
 
 export interface Tool {
   id: string; // slug-style: 'base64-encoder'
