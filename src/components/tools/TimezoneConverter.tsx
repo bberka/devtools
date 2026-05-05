@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { ArrowRightLeft, CalendarIcon, Check, Clock3, Copy, Trash2 } from 'lucide-react';
+import { IMaskInput } from 'react-imask';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,7 +16,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { useCopyToClipboard } from '@/hooks';
+import { cn } from '@/lib/utils/cn';
 
 type DateParts = {
   year: number;
@@ -31,20 +34,34 @@ type TimeZoneOption = {
   label: string;
 };
 
-const FALLBACK_TIME_ZONES = [
+const COMMON_TIME_ZONES = [
   'UTC',
+  // Americas
   'America/New_York',
   'America/Chicago',
   'America/Denver',
   'America/Los_Angeles',
   'America/Toronto',
+  'America/Vancouver',
+  'America/Mexico_City',
   'America/Sao_Paulo',
+  'America/Argentina/Buenos_Aires',
+  // Europe
   'Europe/London',
   'Europe/Paris',
   'Europe/Berlin',
+  'Europe/Rome',
+  'Europe/Madrid',
+  'Europe/Amsterdam',
+  'Europe/Stockholm',
+  'Europe/Warsaw',
   'Europe/Istanbul',
   'Europe/Moscow',
+  // Africa
   'Africa/Cairo',
+  'Africa/Lagos',
+  'Africa/Johannesburg',
+  // Middle East & Asia
   'Asia/Dubai',
   'Asia/Karachi',
   'Asia/Kolkata',
@@ -55,10 +72,16 @@ const FALLBACK_TIME_ZONES = [
   'Asia/Hong_Kong',
   'Asia/Tokyo',
   'Asia/Seoul',
+  // Oceania
   'Australia/Perth',
   'Australia/Sydney',
   'Pacific/Auckland',
+  'Pacific/Honolulu',
 ] as const;
+
+const FALLBACK_TIME_ZONES = COMMON_TIME_ZONES;
+
+const MAX_SEARCH_RESULTS = 50;
 
 function getDefaultSourceTimeZone(): string {
   try {
@@ -256,6 +279,15 @@ export function TimezoneConverter() {
     []
   );
 
+  const commonTimeZoneOptions = useMemo<TimeZoneOption[]>(
+    () =>
+      COMMON_TIME_ZONES.map((timeZone) => ({
+        value: timeZone,
+        label: buildTimeZoneLabel(timeZone),
+      })),
+    []
+  );
+
   const defaultSourceTimeZone = useMemo(() => {
     const resolved = getDefaultSourceTimeZone();
     return timeZoneOptions.some((option) => option.value === resolved) ? resolved : 'UTC';
@@ -273,31 +305,19 @@ export function TimezoneConverter() {
 
   const filteredSourceOptions = useMemo(() => {
     const query = sourceSearch.trim().toLowerCase();
-
-    if (!query) {
-      return timeZoneOptions;
-    }
-
-    return timeZoneOptions.filter(
-      (option) =>
-        option.label.toLowerCase().includes(query) ||
-        option.value.toLowerCase().includes(query)
-    );
-  }, [sourceSearch, timeZoneOptions]);
+    if (!query) return commonTimeZoneOptions;
+    return timeZoneOptions
+      .filter((o) => o.label.toLowerCase().includes(query) || o.value.toLowerCase().includes(query))
+      .slice(0, MAX_SEARCH_RESULTS);
+  }, [sourceSearch, timeZoneOptions, commonTimeZoneOptions]);
 
   const filteredTargetOptions = useMemo(() => {
     const query = targetSearch.trim().toLowerCase();
-
-    if (!query) {
-      return timeZoneOptions;
-    }
-
-    return timeZoneOptions.filter(
-      (option) =>
-        option.label.toLowerCase().includes(query) ||
-        option.value.toLowerCase().includes(query)
-    );
-  }, [targetSearch, timeZoneOptions]);
+    if (!query) return commonTimeZoneOptions;
+    return timeZoneOptions
+      .filter((o) => o.label.toLowerCase().includes(query) || o.value.toLowerCase().includes(query))
+      .slice(0, MAX_SEARCH_RESULTS);
+  }, [targetSearch, timeZoneOptions, commonTimeZoneOptions]);
 
   const result = useMemo(() => {
     const inputParts = parseDateTimeInput(inputValue);
@@ -398,23 +418,8 @@ export function TimezoneConverter() {
             <div className="flex gap-2">
               <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
                 <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="flex-1 justify-start text-left font-normal"
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4 shrink-0" />
-                    {inputValue
-                      ? new Intl.DateTimeFormat('en-US', {
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric',
-                        }).format(
-                          (() => {
-                            const [y, m, d] = inputValue.slice(0, 10).split('-').map(Number);
-                            return new Date(y, m - 1, d);
-                          })()
-                        )
-                      : 'Pick a date'}
+                  <Button variant="outline" size="icon" className="shrink-0">
+                    <CalendarIcon className="h-4 w-4" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
@@ -437,6 +442,16 @@ export function TimezoneConverter() {
                   />
                 </PopoverContent>
               </Popover>
+              <IMaskInput
+                mask="0000-00-00"
+                value={inputValue.slice(0, 10)}
+                onAccept={(datePart) => {
+                  const time = inputValue.length >= 16 ? inputValue.slice(11, 16) : '00:00';
+                  setInputValue(`${datePart}T${time}`);
+                }}
+                placeholder="YYYY-MM-DD"
+                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm font-mono w-36"
+              />
               <div className="flex items-center gap-1">
                 <Select
                   value={inputValue.length >= 16 ? inputValue.slice(11, 13) : '00'}
@@ -484,47 +499,44 @@ export function TimezoneConverter() {
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_auto_1fr] lg:items-end">
             <div>
               <label className="mb-2 block text-sm font-medium">From</label>
-              <Select
-                value={sourceTimeZone}
-                onValueChange={setSourceTimeZone}
-                open={sourceOpen}
-                onOpenChange={(open) => {
-                  setSourceOpen(open);
-                  if (!open) {
-                    setSourceSearch('');
-                  }
-                }}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select source time zone" />
-                </SelectTrigger>
-                <SelectContent>
-                  <div className="p-1">
+              <Popover open={sourceOpen} onOpenChange={(open) => { setSourceOpen(open); if (!open) setSourceSearch(''); }}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="w-full justify-start text-left font-normal truncate">
+                    <span className="truncate">{buildTimeZoneLabel(sourceTimeZone)}</span>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[var(--radix-popover-trigger-width)] min-w-full max-w-none overflow-hidden p-0" align="start">
+                  <div className="border-b p-1">
                     <Input
                       value={sourceSearch}
-                      onChange={(event) =>
-                        setSourceSearch((event.target as HTMLInputElement).value)
-                      }
-                      onKeyDown={(event) => event.stopPropagation()}
+                      onChange={(e) => setSourceSearch((e.target as HTMLInputElement).value)}
                       placeholder="Search time zones..."
                       className="h-9"
                       autoFocus
                     />
                   </div>
-                  <SelectGroup>
-                    {filteredSourceOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                  {filteredSourceOptions.length === 0 && (
-                    <div className="px-3 py-2 text-sm text-muted-foreground">
-                      No matching time zones
+                  <ScrollArea className="h-60">
+                    <div className="p-1">
+                      {filteredSourceOptions.map((option) => (
+                        <button
+                          key={option.value}
+                          className={cn(
+                            'flex w-full cursor-default items-center truncate rounded-sm px-2 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground',
+                            sourceTimeZone === option.value && 'bg-accent font-medium'
+                          )}
+                          type="button"
+                          onClick={() => { setSourceTimeZone(option.value); setSourceOpen(false); setSourceSearch(''); }}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                      {filteredSourceOptions.length === 0 && (
+                        <div className="px-2 py-1.5 text-sm text-muted-foreground">No matching time zones</div>
+                      )}
                     </div>
-                  )}
-                </SelectContent>
-              </Select>
+                  </ScrollArea>
+                </PopoverContent>
+              </Popover>
             </div>
 
             <div className="flex justify-center lg:pb-0.5">
@@ -541,47 +553,44 @@ export function TimezoneConverter() {
 
             <div>
               <label className="mb-2 block text-sm font-medium">To</label>
-              <Select
-                value={targetTimeZone}
-                onValueChange={setTargetTimeZone}
-                open={targetOpen}
-                onOpenChange={(open) => {
-                  setTargetOpen(open);
-                  if (!open) {
-                    setTargetSearch('');
-                  }
-                }}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select target time zone" />
-                </SelectTrigger>
-                <SelectContent>
-                  <div className="p-1">
+              <Popover open={targetOpen} onOpenChange={(open) => { setTargetOpen(open); if (!open) setTargetSearch(''); }}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="w-full justify-start text-left font-normal truncate">
+                    <span className="truncate">{buildTimeZoneLabel(targetTimeZone)}</span>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[var(--radix-popover-trigger-width)] min-w-full max-w-none overflow-hidden p-0" align="start">
+                  <div className="border-b p-1">
                     <Input
                       value={targetSearch}
-                      onChange={(event) =>
-                        setTargetSearch((event.target as HTMLInputElement).value)
-                      }
-                      onKeyDown={(event) => event.stopPropagation()}
+                      onChange={(e) => setTargetSearch((e.target as HTMLInputElement).value)}
                       placeholder="Search time zones..."
                       className="h-9"
                       autoFocus
                     />
                   </div>
-                  <SelectGroup>
-                    {filteredTargetOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                  {filteredTargetOptions.length === 0 && (
-                    <div className="px-3 py-2 text-sm text-muted-foreground">
-                      No matching time zones
+                  <ScrollArea className="h-60">
+                    <div className="p-1">
+                      {filteredTargetOptions.map((option) => (
+                        <button
+                          key={option.value}
+                          className={cn(
+                            'flex w-full cursor-default items-center truncate rounded-sm px-2 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground',
+                            targetTimeZone === option.value && 'bg-accent font-medium'
+                          )}
+                          type="button"
+                          onClick={() => { setTargetTimeZone(option.value); setTargetOpen(false); setTargetSearch(''); }}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                      {filteredTargetOptions.length === 0 && (
+                        <div className="px-2 py-1.5 text-sm text-muted-foreground">No matching time zones</div>
+                      )}
                     </div>
-                  )}
-                </SelectContent>
-              </Select>
+                  </ScrollArea>
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
 

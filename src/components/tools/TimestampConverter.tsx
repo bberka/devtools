@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { IMaskInput } from 'react-imask';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
@@ -15,13 +16,6 @@ import {
 import { Calendar } from '../ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { CalendarIcon, Trash2 } from 'lucide-react';
-
-function maskDate(value: string): string {
-  const digits = value.replace(/\D/g, '').slice(0, 8);
-  if (digits.length <= 4) return digits;
-  if (digits.length <= 6) return `${digits.slice(0, 4)}-${digits.slice(4)}`;
-  return `${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6)}`;
-}
 
 type Unit = 'seconds' | 'milliseconds';
 
@@ -195,15 +189,14 @@ export function TimestampConverter() {
                     />
                   </PopoverContent>
                 </Popover>
-                <Input
-                  type="text"
+                <IMaskInput
+                  mask="0000-00-00"
                   value={dateInput}
-                  onChange={(e) => {
-                    const masked = maskDate((e.target as HTMLInputElement).value);
-                    handleDateTimeChange(masked, hourInput, minuteInput);
+                  onAccept={(value) => {
+                    handleDateTimeChange(value, hourInput, minuteInput);
                   }}
                   placeholder="YYYY-MM-DD"
-                  className="font-mono w-36"
+                  className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm font-mono w-36"
                 />
                 <div className="flex items-center gap-1">
                   <Select

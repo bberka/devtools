@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { CalendarDays, CalendarIcon, Check, Copy, Trash2 } from 'lucide-react';
+import { IMaskInput } from 'react-imask';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -31,13 +32,6 @@ function getTodayValue(): string {
   const day = String(now.getDate()).padStart(2, '0');
 
   return `${year}-${month}-${day}`;
-}
-
-function maskDate(value: string): string {
-  const digits = value.replace(/\D/g, '').slice(0, 8);
-  if (digits.length <= 4) return digits;
-  if (digits.length <= 6) return `${digits.slice(0, 4)}-${digits.slice(4)}`;
-  return `${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6)}`;
 }
 
 function parseDateInput(value: string): Date | null {
@@ -263,12 +257,15 @@ export function AgeCalculator() {
                     />
                   </PopoverContent>
                 </Popover>
-                <Input
-                  type="text"
+                <IMaskInput
+                  mask="0000-00-00"
                   value={birthDate}
-                  onChange={(e) => setBirthDate(maskDate((e.target as HTMLInputElement).value))}
+                  onAccept={(value) => setBirthDate(value)}
                   placeholder="YYYY-MM-DD"
-                  className={cn('font-mono', !parseDateInput(birthDate) && birthDate && 'border-destructive')}
+                  className={cn(
+                    'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm font-mono',
+                    !parseDateInput(birthDate) && birthDate && 'border-destructive'
+                  )}
                 />
               </div>
             </div>
@@ -298,12 +295,15 @@ export function AgeCalculator() {
                     />
                   </PopoverContent>
                 </Popover>
-                <Input
-                  type="text"
+                <IMaskInput
+                  mask="0000-00-00"
                   value={targetDate}
-                  onChange={(e) => setTargetDate(maskDate((e.target as HTMLInputElement).value))}
+                  onAccept={(value) => setTargetDate(value)}
                   placeholder="YYYY-MM-DD"
-                  className={cn('font-mono', !parseDateInput(targetDate) && targetDate && 'border-destructive')}
+                  className={cn(
+                    'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm font-mono',
+                    !parseDateInput(targetDate) && targetDate && 'border-destructive'
+                  )}
                 />
               </div>
             </div>
