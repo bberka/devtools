@@ -88,6 +88,9 @@ Commit prefixes used in this repo:
 - Keep tools client-side and privacy-first unless a feature explicitly requires an external API.
 - Prefer real-time processing for lightweight conversions.
 - Use explicit action buttons for expensive operations, file uploads, cryptographic work, network requests, and exports.
+- Keep all tools static-export compatible.
+- Fix layout and responsiveness outside `src/components/ui`; shared UI primitives should stay generated and reusable.
+- Run `npm run build` before considering a change complete.
 
 ## Adding a New Tool
 

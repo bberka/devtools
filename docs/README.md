@@ -32,7 +32,7 @@ Static web app for everyday browser-side workflows: converting files, formatting
 - Design: 4 tools
 - Calculators: 7 tools
 
-See [DEV-PLAN.md](./DEV-PLAN.md) for the full tool list, roadmap, and remaining work.
+See [ROADMAP.md](./ROADMAP.md) for planned work and expansion backlog.
 
 ## Tech Stack
 
