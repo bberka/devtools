@@ -30,7 +30,7 @@ export function PdfToImage() {
       pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
       const arrayBuffer = await pdfFile.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
       const totalPages = pdf.numPages;
       const imageUrls: string[] = [];
 
@@ -57,6 +57,7 @@ export function PdfToImage() {
       setImages(imageUrls);
     } catch (error) {
       console.error('Error converting PDF to images:', error);
+      alert('Failed to convert PDF: ' + (error instanceof Error ? error.message : String(error)));
     } finally {
       setConverting(false);
     }

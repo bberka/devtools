@@ -5,7 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { FileText, Upload, Download, Trash2, FileInput } from 'lucide-react';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
-import mammoth from 'mammoth';
+// @ts-ignore
+import mammoth from 'mammoth/mammoth.browser.min.js';
 
 export function WordToPdf() {
   const [wordFile, setWordFile] = useState<File | null>(null);
@@ -96,7 +97,7 @@ export function WordToPdf() {
 
     } catch (error) {
       console.error('Error converting Word to PDF:', error);
-      alert('Failed to convert document. Make sure it is a valid .docx file.');
+      alert('Failed to convert document: ' + (error instanceof Error ? error.message : String(error)));
     } finally {
       setConverting(false);
     }

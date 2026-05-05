@@ -28,7 +28,7 @@ export function PdfToWord() {
       pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
       
       const arrayBuffer = await pdfFile.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
       const totalPages = pdf.numPages;
       
       let fullText = '';
@@ -64,7 +64,7 @@ export function PdfToWord() {
 
     } catch (error) {
       console.error('Error converting PDF to Word:', error);
-      alert('Failed to extract text from PDF. Ensure the PDF contains actual text, not just scanned images.');
+      alert('Failed to extract text from PDF: ' + (error instanceof Error ? error.message : String(error)));
     } finally {
       setConverting(false);
     }
