@@ -23,15 +23,6 @@ Live at [tools.berkaybayar.com](https://tools.berkaybayar.com/). 53 tools across
 - [ ] Word to PDF
 - [ ] PDF Watermark
 
-### Image
-
-- [x] SVG to PNG / rasterize image
-- [x] Expand Image Converter into dedicated Compress Image, Resize Image, and Crop routes
-- [x] Image Rotate / Flip
-- [x] Color Palette Extractor
-- [x] Image to Icon route
-
-
 ### Text & Design
 
 - [ ] Expand Markdown Previewer into a full Markdown Editor

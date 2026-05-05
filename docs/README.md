@@ -21,7 +21,7 @@ Static web app for everyday browser-side workflows: converting files, formatting
 
 ## Tool Categories
 
-- Converters: 8 tools
+- Converters: 9 tools
 - Encoders & Decoders: 5 tools
 - Generators: 4 tools
 - Formatters & Validators: 6 tools
@@ -29,7 +29,7 @@ Static web app for everyday browser-side workflows: converting files, formatting
 - Utilities: 3 tools
 - Security: 5 tools
 - Networking: 4 tools
-- Design: 4 tools
+- Design: 9 tools
 - Calculators: 7 tools
 
 See [ROADMAP.md](./ROADMAP.md) for planned work and expansion backlog.
