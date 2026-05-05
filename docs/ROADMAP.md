@@ -14,19 +14,19 @@ Live at [tools.berkaybayar.com](https://tools.berkaybayar.com/). 53 tools across
 ### PDF
 
 - [ ] Edit PDF
-- [ ] Merge PDF
-- [ ] Split PDF
+- [x] Merge PDF
+- [x] Split PDF
 - [ ] Compress PDF
 - [ ] PDF to Image
-- [ ] Image to PDF
+- [x] Image to PDF
 - [ ] PDF to Word
 - [ ] Word to PDF
 - [ ] PDF Watermark
 
 ### Text & Design
 
-- [ ] Expand Markdown Previewer into a full Markdown Editor
-- [ ] Color Blindness Simulator
+- [x] Expand Markdown Previewer into a full Markdown Editor
+- [x] Color Blindness Simulator
 
 ### Utilities
 

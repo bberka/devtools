@@ -10,6 +10,39 @@ type ToolRegistryEntry = ToolMetadata & {
 };
 
 export const TOOL_REGISTRY = {
+  'pdf-split': {
+    name: 'Split PDF',
+    description: 'Extract specific pages or ranges from a PDF document',
+    category: 'converters',
+    icon: 'Scissors',
+    keywords: ['pdf', 'split', 'extract', 'pages', 'documents'],
+    component: () =>
+      import('@/components/tools/PdfSplit').then(
+        (module) => module.PdfSplit
+      ),
+  },
+  'image-to-pdf': {
+    name: 'Image to PDF',
+    description: 'Convert images (JPEG, PNG) into a PDF document',
+    category: 'converters',
+    icon: 'FileImage',
+    keywords: ['image', 'pdf', 'convert', 'jpeg', 'png'],
+    component: () =>
+      import('@/components/tools/ImageToPdf').then(
+        (module) => module.ImageToPdf
+      ),
+  },
+  'pdf-merge': {
+    name: 'Merge PDF',
+    description: 'Combine multiple PDF documents into a single file',
+    category: 'converters',
+    icon: 'Files',
+    keywords: ['pdf', 'merge', 'combine', 'join', 'documents'],
+    component: () =>
+      import('@/components/tools/PdfMerge').then(
+        (module) => module.PdfMerge
+      ),
+  },
   'markdown-to-pdf': {
     name: 'Markdown Converter',
     description: 'Convert Markdown to PDF, HTML, TXT, PNG, or JPG',
@@ -40,6 +73,17 @@ export const TOOL_REGISTRY = {
     component: () =>
       import('@/components/tools/HtmlConverter').then(
         (module) => module.HtmlConverter
+      ),
+  },
+  'color-blindness-simulator': {
+    name: 'Color Blindness Simulator',
+    description: 'Visualize images through various color blindness filters',
+    category: 'design',
+    icon: 'Eye',
+    keywords: ['color', 'blindness', 'simulator', 'protanopia', 'deuteranopia', 'accessibility'],
+    component: () =>
+      import('@/components/tools/ColorBlindnessSimulator').then(
+        (module) => module.ColorBlindnessSimulator
       ),
   },
   'color-palette-extractor': {
@@ -370,15 +414,15 @@ export const TOOL_REGISTRY = {
         (module) => module.XmlValidator
       ),
   },
-  'markdown-preview': {
-    name: 'Markdown Previewer',
-    description: 'Preview Markdown with syntax highlighting',
+  'markdown-editor': {
+    name: 'Markdown Editor',
+    description: 'Write and preview Markdown with a toolbar and HTML export',
     category: 'text-tools',
-    icon: 'Eye',
-    keywords: ['markdown', 'preview', 'render'],
+    icon: 'FileCode',
+    keywords: ['markdown', 'preview', 'render', 'editor', 'write', 'html', 'export'],
     component: () =>
-      import('@/components/tools/MarkdownPreviewer').then(
-        (module) => module.MarkdownPreviewer
+      import('@/components/tools/MarkdownEditor').then(
+        (module) => module.MarkdownEditor
       ),
   },
   'text-diff': {
