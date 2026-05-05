@@ -25,11 +25,12 @@ Live at [tools.berkaybayar.com](https://tools.berkaybayar.com/). 53 tools across
 
 ### Image
 
-- [ ] SVG to PNG / rasterize image
-- [ ] Expand Image Converter into dedicated Compress Image, Resize Image, and Crop routes
-- [ ] Image Rotate / Flip
-- [ ] Color Palette Extractor
-- [ ] Image to Icon route
+- [x] SVG to PNG / rasterize image
+- [x] Expand Image Converter into dedicated Compress Image, Resize Image, and Crop routes
+- [x] Image Rotate / Flip
+- [x] Color Palette Extractor
+- [x] Image to Icon route
+
 
 ### Text & Design
 

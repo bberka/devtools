@@ -42,15 +42,81 @@ export const TOOL_REGISTRY = {
         (module) => module.HtmlConverter
       ),
   },
-  'image-converter': {
-    name: 'Image Converter',
-    description: 'Convert, resize, crop, and compress images',
+  'color-palette-extractor': {
+    name: 'Color Palette Extractor',
+    description: 'Extract dominant colors from any image',
+    category: 'design',
+    icon: 'Palette',
+    keywords: ['color', 'palette', 'extract', 'image', 'colors'],
+    component: () =>
+      import('@/components/tools/ColorPaletteExtractor').then(
+        (module) => module.ColorPaletteExtractor
+      ),
+  },
+  'image-to-icon': {
+    name: 'Image to Icon',
+    description: 'Convert images to multi-resolution ICO files',
     category: 'converters',
+    icon: 'Box',
+    keywords: ['image', 'icon', 'ico', 'favicon', 'convert'],
+    component: () =>
+      import('@/components/tools/ImageToIcon').then(
+        (module) => module.ImageToIcon
+      ),
+  },
+  'svg-to-png': {
+    name: 'SVG to PNG Converter',
+    description: 'Rasterize SVG code or files into high-resolution PNG images',
+    category: 'design',
+    icon: 'FileImage',
+    keywords: ['svg', 'png', 'rasterize', 'convert', 'vector'],
+    component: () =>
+      import('@/components/tools/SvgToPng').then(
+        (module) => module.SvgToPng
+      ),
+  },
+  'image-converter': {
+    name: 'Image Converter & Editor',
+    description: 'Convert, resize, rotate, flip, and apply filters to images',
+    category: 'design',
     icon: 'Image',
-    keywords: ['image', 'convert', 'resize', 'crop', 'compress', 'ico', 'favicon'],
+    keywords: ['image', 'convert', 'resize', 'rotate', 'flip', 'filters', 'ico', 'favicon'],
     component: () =>
       import('@/components/tools/ImageConverter').then(
         (module) => module.ImageConverter
+      ),
+  },
+  'image-compressor': {
+    name: 'Compress Image',
+    description: 'Reduce image file size with adjustable quality and dimensions',
+    category: 'converters',
+    icon: 'Zap',
+    keywords: ['image', 'compress', 'optimize', 'shrink', 'size'],
+    component: () =>
+      import('@/components/tools/ImageCompressor').then(
+        (module) => module.ImageCompressor
+      ),
+  },
+  'image-resizer': {
+    name: 'Resize Image',
+    description: 'Change image dimensions with aspect ratio control',
+    category: 'design',
+    icon: 'Maximize',
+    keywords: ['image', 'resize', 'dimensions', 'width', 'height'],
+    component: () =>
+      import('@/components/tools/ImageResizer').then(
+        (module) => module.ImageResizer
+      ),
+  },
+  'image-cropper': {
+    name: 'Crop Image',
+    description: 'Crop images with preset aspect ratios or free selection',
+    category: 'design',
+    icon: 'Crop',
+    keywords: ['image', 'crop', 'cut', 'aspect ratio'],
+    component: () =>
+      import('@/components/tools/ImageCropper').then(
+        (module) => module.ImageCropper
       ),
   },
   'exif-viewer-remover': {

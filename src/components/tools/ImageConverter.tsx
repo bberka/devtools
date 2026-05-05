@@ -50,6 +50,9 @@ export function ImageConverter() {
   const [width, setWidth] = useState<number | ''>('');
   const [height, setHeight] = useState<number | ''>('');
   const [maintainAspectRatio, setMaintainAspectRatio] = useState(true);
+  const [rotation, setRotation] = useState(0);
+  const [flipHorizontal, setFlipHorizontal] = useState(false);
+  const [flipVertical, setFlipVertical] = useState(false);
   const [grayscale, setGrayscale] = useState(false);
   const [sepia, setSepia] = useState(false);
   const [blur, setBlur] = useState(0);
@@ -110,8 +113,10 @@ export function ImageConverter() {
           }
         }
 
-        canvas.width = targetWidth as number;
-        canvas.height = targetHeight as number;
+        // Adjust dimensions for rotation
+        const isRotated90 = (rotation / 90) % 2 !== 0;
+        canvas.width = isRotated90 ? targetHeight as number : targetWidth as number;
+        canvas.height = isRotated90 ? targetWidth as number : targetHeight as number;
 
         // Apply filters
         ctx.filter = `
@@ -123,8 +128,19 @@ export function ImageConverter() {
           saturate(${saturation}%)
         `.trim();
 
-        // Draw image
-        ctx.drawImage(img, 0, 0, targetWidth as number, targetHeight as number);
+        // Handle transformations
+        ctx.save();
+        ctx.translate(canvas.width / 2, canvas.height / 2);
+        ctx.rotate((rotation * Math.PI) / 180);
+        ctx.scale(flipHorizontal ? -1 : 1, flipVertical ? -1 : 1);
+        ctx.drawImage(
+          img,
+          -(targetWidth as number) / 2,
+          -(targetHeight as number) / 2,
+          targetWidth as number,
+          targetHeight as number
+        );
+        ctx.restore();
 
         // Convert to desired format
         const mimeType = outputFormat === 'ico' ? 'image/png' : `image/${outputFormat}`;
@@ -204,6 +220,9 @@ export function ImageConverter() {
     setOriginalFile(null);
     setWidth('');
     setHeight('');
+    setRotation(0);
+    setFlipHorizontal(false);
+    setFlipVertical(false);
     setGrayscale(false);
     setSepia(false);
     setBlur(0);
@@ -222,10 +241,10 @@ export function ImageConverter() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Upload className="h-5 w-5" />
-            Upload Image
+            <ImageIcon className="h-5 w-5" />
+            Image Converter & Editor
           </CardTitle>
-          <CardDescription>Upload an image to convert (PNG, JPEG, WebP, ICO, GIF, BMP)</CardDescription>
+          <CardDescription>Convert, resize, rotate, flip, and apply filters to images</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <input
@@ -247,8 +266,8 @@ export function ImageConverter() {
         <>
           <Card>
             <CardHeader>
-              <CardTitle>Conversion Settings</CardTitle>
-              <CardDescription>Configure output format and options</CardDescription>
+              <CardTitle>Settings</CardTitle>
+              <CardDescription>Configure output format, dimensions, and transformations</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -318,6 +337,44 @@ export function ImageConverter() {
                   />
                   Maintain aspect ratio
                 </label>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Transform</label>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <label className="text-xs text-muted-foreground">Rotate: {rotation}°</label>
+                    <input
+                      type="range"
+                      min="0"
+                      max="270"
+                      step="90"
+                      value={rotation}
+                      onChange={(e) => setRotation(parseInt((e.target as HTMLInputElement).value))}
+                      className="w-full"
+                    />
+                  </div>
+                  <div className="flex gap-4 items-center h-full pt-4">
+                    <label className="flex items-center gap-2 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={flipHorizontal}
+                        onChange={(e) => setFlipHorizontal((e.target as HTMLInputElement).checked)}
+                        className="accent-primary"
+                      />
+                      Flip H
+                    </label>
+                    <label className="flex items-center gap-2 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={flipVertical}
+                        onChange={(e) => setFlipVertical((e.target as HTMLInputElement).checked)}
+                        className="accent-primary"
+                      />
+                      Flip V
+                    </label>
+                  </div>
+                </div>
               </div>
 
               <div className="space-y-2">
