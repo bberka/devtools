@@ -4,7 +4,6 @@ const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
 const STATIC_ASSETS = [
   '/',
-  '/offline.html',
   '/manifest.webmanifest',
   '/favicon.ico',
   '/app-icon.svg',
@@ -67,35 +66,10 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  if (request.mode === 'navigate') {
-    event.respondWith(handleNavigationRequest(request));
-    return;
-  }
-
   if (isStaticAsset(url)) {
     event.respondWith(staleWhileRevalidate(request));
   }
 });
-
-async function handleNavigationRequest(request) {
-  const cache = await caches.open(RUNTIME_CACHE);
-
-  try {
-    const response = await fetch(request);
-
-    if (response.ok) {
-      cache.put(request, response.clone());
-    }
-
-    return response;
-  } catch {
-    return (
-      (await caches.match(request)) ||
-      (await caches.match(normalizeNavigationUrl(request.url))) ||
-      (await caches.match('/offline.html'))
-    );
-  }
-}
 
 async function staleWhileRevalidate(request) {
   const cachedResponse = await caches.match(request);
@@ -113,20 +87,13 @@ async function staleWhileRevalidate(request) {
     return cachedResponse;
   }
 
-  try {
-    const response = await fetch(request);
+  const response = await fetch(request);
 
-    if (response.ok) {
-      cache.put(request, response.clone());
-    }
-
-    return response;
-  } catch {
-    return (
-      (await caches.match(request)) ||
-      (await caches.match('/offline.html'))
-    );
+  if (response.ok) {
+    cache.put(request, response.clone());
   }
+
+  return response;
 }
 
 function isStaticAsset(url) {
@@ -136,14 +103,4 @@ function isStaticAsset(url) {
       (extension) => url.pathname.endsWith(extension)
     )
   );
-}
-
-function normalizeNavigationUrl(url) {
-  const { pathname } = new URL(url);
-
-  if (pathname === '/') {
-    return '/';
-  }
-
-  return pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
 }

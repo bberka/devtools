@@ -16,7 +16,7 @@ Static web app for everyday browser-side workflows: converting files, formatting
 - Static export with `next build`
 - Search, category filtering, favorites, recent tools, compact mode, dark mode
 - Command palette with keyboard navigation
-- PWA install and offline support
+- PWA install support
 - Responsive layout for desktop and mobile
 
 ## Tool Categories
