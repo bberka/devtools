@@ -31,6 +31,7 @@ import { getModifierKey, isModifierKey } from '@/lib/utils/keyboard';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogTitle } from './ui/dialog';
 import { cn } from '@/lib/utils/cn';
+import { TooltipSimple } from './ui/tooltip';
 
 const CATEGORY_ICONS: Record<string, LucideIcon> = {
   RefreshCw,
@@ -548,33 +549,37 @@ export function CommandPalette() {
               </div>
               <div className="flex flex-wrap gap-3">
                 {recentToolsData.length > 0 && !search && (
+                  <TooltipSimple content="Clear recent tools">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        clearRecentTools();
+                        toast.success('Recent tools cleared');
+                      }}
+                      className="hover:text-foreground transition-colors"
+                      aria-label="Clear recent tools"
+                    >
+                      <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px]">
+                        {modKey}+⇧+Del
+                      </kbd>{' '}
+                      clear
+                    </button>
+                  </TooltipSimple>
+                )}
+                <TooltipSimple content="Toggle favorite for focused tool">
                   <button
                     type="button"
-                    onClick={() => {
-                      clearRecentTools();
-                      toast.success('Recent tools cleared');
-                    }}
-                    className="hover:text-foreground transition-colors"
-                    title="Clear recent tools"
+                    onClick={() => selectedTool && handleToggleFavorite(selectedTool)}
+                    className="hover:text-foreground transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+                    aria-label="Toggle favorite for focused tool"
+                    disabled={!selectedTool}
                   >
                     <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px]">
-                      {modKey}+⇧+Del
+                      {modKey}+⇧+F
                     </kbd>{' '}
-                    clear
+                    favorite
                   </button>
-                )}
-                <button
-                  type="button"
-                  onClick={() => selectedTool && handleToggleFavorite(selectedTool)}
-                  className="hover:text-foreground transition-colors disabled:cursor-not-allowed disabled:opacity-50"
-                  title="Toggle favorite for focused tool"
-                  disabled={!selectedTool}
-                >
-                  <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px]">
-                    {modKey}+⇧+F
-                  </kbd>{' '}
-                  favorite
-                </button>
+                </TooltipSimple>
                 <span>
                   <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px]">
                     esc

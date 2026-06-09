@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useState } from 'react';
 import { Button } from '../ui/button';
+import { TooltipSimple } from '../ui/tooltip';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Slider } from '../ui/slider';
 import { Checkbox } from '../ui/checkbox';
@@ -544,15 +545,17 @@ export function PasswordGenerator() {
             </div>
             <div className="flex items-center gap-2">
               {!hasError && <span className={`text-sm font-medium ${strength.tone}`}>{strength.label}</span>}
-              <Button
-                variant={isCopied ? 'default' : 'ghost'}
-                size="icon"
-                onClick={handleCopy}
-                disabled={hasError}
-                title={isCopied ? 'Copied!' : 'Copy output'}
-              >
-                {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-              </Button>
+              <TooltipSimple content={isCopied ? 'Copied!' : 'Copy output'}>
+                <Button
+                  variant={isCopied ? 'default' : 'ghost'}
+                  size="icon"
+                  onClick={handleCopy}
+                  disabled={hasError}
+                  aria-label="Copy password"
+                >
+                  {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                </Button>
+              </TooltipSimple>
             </div>
           </CardHeader>
           <CardContent className="space-y-4">

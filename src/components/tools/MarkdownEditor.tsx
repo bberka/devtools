@@ -6,6 +6,7 @@ import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { TooltipSimple } from '@/components/ui/tooltip';
 import {
   Eye,
   FileText,
@@ -322,18 +323,36 @@ export function MarkdownEditor() {
       {!fullPreview && (
         <Card className="border-none shadow-none bg-transparent">
           <CardContent className="p-0 flex flex-wrap gap-1">
-            <Button variant="outline" size="icon" onClick={() => insertText('# ', '')} title="H1"><Heading1 className="h-4 w-4" /></Button>
-            <Button variant="outline" size="icon" onClick={() => insertText('## ', '')} title="H2"><Heading2 className="h-4 w-4" /></Button>
+            <TooltipSimple content="H1">
+              <Button variant="outline" size="icon" onClick={() => insertText('# ', '')} aria-label="Heading 1"><Heading1 className="h-4 w-4" /></Button>
+            </TooltipSimple>
+            <TooltipSimple content="H2">
+              <Button variant="outline" size="icon" onClick={() => insertText('## ', '')} aria-label="Heading 2"><Heading2 className="h-4 w-4" /></Button>
+            </TooltipSimple>
             <div className="w-[1px] h-8 bg-border mx-1" />
-            <Button variant="outline" size="icon" onClick={() => insertText('**', '**')} title="Bold"><Bold className="h-4 w-4" /></Button>
-            <Button variant="outline" size="icon" onClick={() => insertText('_', '_')} title="Italic"><Italic className="h-4 w-4" /></Button>
+            <TooltipSimple content="Bold">
+              <Button variant="outline" size="icon" onClick={() => insertText('**', '**')} aria-label="Bold"><Bold className="h-4 w-4" /></Button>
+            </TooltipSimple>
+            <TooltipSimple content="Italic">
+              <Button variant="outline" size="icon" onClick={() => insertText('_', '_')} aria-label="Italic"><Italic className="h-4 w-4" /></Button>
+            </TooltipSimple>
             <div className="w-[1px] h-8 bg-border mx-1" />
-            <Button variant="outline" size="icon" onClick={() => insertText('- ', '')} title="Unordered List"><List className="h-4 w-4" /></Button>
-            <Button variant="outline" size="icon" onClick={() => insertText('1. ', '')} title="Ordered List"><ListOrdered className="h-4 w-4" /></Button>
+            <TooltipSimple content="Unordered List">
+              <Button variant="outline" size="icon" onClick={() => insertText('- ', '')} aria-label="Unordered List"><List className="h-4 w-4" /></Button>
+            </TooltipSimple>
+            <TooltipSimple content="Ordered List">
+              <Button variant="outline" size="icon" onClick={() => insertText('1. ', '')} aria-label="Ordered List"><ListOrdered className="h-4 w-4" /></Button>
+            </TooltipSimple>
             <div className="w-[1px] h-8 bg-border mx-1" />
-            <Button variant="outline" size="icon" onClick={() => insertText('[', '](url)')} title="Link"><Link className="h-4 w-4" /></Button>
-            <Button variant="outline" size="icon" onClick={() => insertText('`', '`')} title="Inline Code"><Code className="h-4 w-4" /></Button>
-            <Button variant="outline" size="icon" onClick={() => insertText('> ', '')} title="Quote"><Quote className="h-4 w-4" /></Button>
+            <TooltipSimple content="Link">
+              <Button variant="outline" size="icon" onClick={() => insertText('[', '](url)')} aria-label="Link"><Link className="h-4 w-4" /></Button>
+            </TooltipSimple>
+            <TooltipSimple content="Inline Code">
+              <Button variant="outline" size="icon" onClick={() => insertText('`', '`')} aria-label="Inline Code"><Code className="h-4 w-4" /></Button>
+            </TooltipSimple>
+            <TooltipSimple content="Quote">
+              <Button variant="outline" size="icon" onClick={() => insertText('> ', '')} aria-label="Quote"><Quote className="h-4 w-4" /></Button>
+            </TooltipSimple>
           </CardContent>
         </Card>
       )}

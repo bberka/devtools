@@ -6,6 +6,7 @@ import { RecentToolsProvider } from '@/lib/contexts/RecentToolsContext';
 import { CommandPaletteProvider } from '@/lib/contexts/CommandPaletteContext';
 import { SettingsProvider } from '@/lib/contexts/SettingsContext';
 import { Toaster } from 'sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -14,8 +15,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <RecentToolsProvider>
           <SettingsProvider>
             <CommandPaletteProvider>
-              {children}
-              <Toaster />
+              <TooltipProvider delayDuration={300}>
+                {children}
+                <Toaster />
+              </TooltipProvider>
             </CommandPaletteProvider>
           </SettingsProvider>
         </RecentToolsProvider>

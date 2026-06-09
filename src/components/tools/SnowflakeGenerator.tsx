@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { Button } from '../ui/button';
+import { TooltipSimple } from '../ui/tooltip';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Input } from '../ui/input';
@@ -32,6 +33,7 @@ import {
   Layers
 } from 'lucide-react';
 import { useCopyToClipboard } from '@/hooks';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 type PresetType = 'twitter' | 'discord' | 'instagram' | 'custom';
 
@@ -570,9 +572,11 @@ type DecodeResult = DecodeSuccess | DecodeError;
                   <p className="font-semibold text-foreground">Layout Bit Scheme:</p>
                   <div className="grid grid-cols-2 gap-y-1">
                     <div>Timestamp Epoch:</div>
-                    <div className="font-mono text-[11px] text-right truncate" title={PRESETS[preset].epochLabel}>
-                      {PRESETS[preset].epochLabel}
-                    </div>
+                    <TooltipSimple content={PRESETS[preset].epochLabel}>
+                      <div className="font-mono text-[11px] text-right truncate">
+                        {PRESETS[preset].epochLabel}
+                      </div>
+                    </TooltipSimple>
                     <div>Timestamp Bits:</div>
                     <div className="font-mono text-right">{timestampBits} bits</div>
                     {datacenterBits > 0 && (
@@ -800,87 +804,95 @@ type DecodeResult = DecodeSuccess | DecodeError;
                 </div>
                 {generatedIds.length > 0 && (
                   <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="sm" onClick={handleCopyAll} title="Copy all IDs">
-                      {copiedAll ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
-                      <span className="ml-1.5 hidden sm:inline">Copy All</span>
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={handleExportCsv} title="Export CSV" className="h-8 w-8">
-                      <FileSpreadsheet className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={handleExportJson} title="Export JSON" className="h-8 w-8">
-                      <FileJson className="h-4 w-4" />
-                    </Button>
+                    <TooltipSimple content="Copy all IDs">
+                      <Button variant="ghost" size="sm" onClick={handleCopyAll} aria-label="Copy all IDs">
+                        {copiedAll ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+                        <span className="ml-1.5 hidden sm:inline">Copy All</span>
+                      </Button>
+                    </TooltipSimple>
+                    <TooltipSimple content="Export CSV">
+                      <Button variant="ghost" size="icon" onClick={handleExportCsv} aria-label="Export CSV" className="h-8 w-8">
+                        <FileSpreadsheet className="h-4 w-4" />
+                      </Button>
+                    </TooltipSimple>
+                    <TooltipSimple content="Export JSON">
+                      <Button variant="ghost" size="icon" onClick={handleExportJson} aria-label="Export JSON" className="h-8 w-8">
+                        <FileJson className="h-4 w-4" />
+                      </Button>
+                    </TooltipSimple>
                   </div>
                 )}
               </CardHeader>
-              <CardContent className="p-0 flex-1 overflow-auto min-h-[300px]">
+              <CardContent className="p-0 flex-1 min-h-[300px] flex flex-col overflow-hidden">
                 {generatedIds.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center h-full text-muted-foreground p-8 text-center space-y-2">
+                  <div className="flex flex-col items-center justify-center h-full text-muted-foreground p-8 text-center space-y-2 flex-1">
                     <Info className="h-8 w-8 stroke-[1.5]" />
                     <p className="text-sm font-medium">No Snowflake IDs generated yet.</p>
                     <p className="text-xs">Adjust configuration on the left and click Generate.</p>
                   </div>
                 ) : (
-                  <div className="divide-y divide-border/60 max-h-[600px] overflow-y-auto">
-                    {generatedIds.map((item, index) => (
-                      <div key={item.id} className="p-4 hover:bg-muted/30 transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 group">
-                        <div className="space-y-1.5 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <span className="font-mono text-base font-bold select-all tracking-tight break-all text-primary">
-                              {item.id}
-                            </span>
-                            <Badge variant="outline" className="text-[10px] py-0 font-mono tracking-wider shrink-0 uppercase">
-                              {preset}
-                            </Badge>
+                  <ScrollArea className="max-h-[600px] flex-1">
+                    <div className="divide-y divide-border/60 pr-3">
+                      {generatedIds.map((item, index) => (
+                        <div key={item.id} className="p-4 hover:bg-muted/30 transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 group">
+                          <div className="space-y-1.5 min-w-0">
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono text-base font-bold select-all tracking-tight break-all text-primary">
+                                {item.id}
+                              </span>
+                              <Badge variant="outline" className="text-[10px] py-0 font-mono tracking-wider shrink-0 uppercase">
+                                {preset}
+                              </Badge>
+                            </div>
+                            <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                              <span className="flex items-center gap-1">
+                                <Calendar className="h-3 w-3" />
+                                {new Date(item.timestamp).toLocaleString()}
+                              </span>
+                              {datacenterBits > 0 && (
+                                <span>
+                                  {PRESETS[preset].labels.datacenter?.split(' ')[0] || 'Node A'}: <strong className="font-mono text-foreground">{item.datacenterId}</strong>
+                                </span>
+                              )}
+                              {workerBits > 0 && (
+                                <span>
+                                  {PRESETS[preset].labels.worker?.split(' ')[0] || 'Node B'}: <strong className="font-mono text-foreground">{item.workerId}</strong>
+                                </span>
+                              )}
+                              {processBits > 0 && (
+                                <span>
+                                  {PRESETS[preset].labels.process?.split(' ')[0] || 'Node C'}: <strong className="font-mono text-foreground">{item.processId}</strong>
+                                </span>
+                              )}
+                              <span>
+                                Seq: <strong className="font-mono text-foreground">{item.sequence}</strong>
+                              </span>
+                            </div>
                           </div>
-                          <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
-                            <span className="flex items-center gap-1">
-                              <Calendar className="h-3 w-3" />
-                              {new Date(item.timestamp).toLocaleString()}
-                            </span>
-                            {datacenterBits > 0 && (
-                              <span>
-                                {PRESETS[preset].labels.datacenter?.split(' ')[0] || 'Node A'}: <strong className="font-mono text-foreground">{item.datacenterId}</strong>
-                              </span>
-                            )}
-                            {workerBits > 0 && (
-                              <span>
-                                {PRESETS[preset].labels.worker?.split(' ')[0] || 'Node B'}: <strong className="font-mono text-foreground">{item.workerId}</strong>
-                              </span>
-                            )}
-                            {processBits > 0 && (
-                              <span>
-                                {PRESETS[preset].labels.process?.split(' ')[0] || 'Node C'}: <strong className="font-mono text-foreground">{item.processId}</strong>
-                              </span>
-                            )}
-                            <span>
-                              Seq: <strong className="font-mono text-foreground">{item.sequence}</strong>
-                            </span>
-                          </div>
-                        </div>
 
-                        <div className="flex items-center gap-2 shrink-0 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            className="text-xs h-8 px-2.5"
-                            onClick={() => handleInspectId(item.id)}
-                          >
-                            Decode
-                            <ArrowRight className="h-3 w-3 ml-1" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={() => handleCopyIndividual(item.id, index)}
-                          >
-                            {copiedIdIndex === index ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
-                          </Button>
+                          <div className="flex items-center gap-2 shrink-0 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              className="text-xs h-8 px-2.5"
+                              onClick={() => handleInspectId(item.id)}
+                            >
+                              Decode
+                              <ArrowRight className="h-3 w-3 ml-1" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8"
+                              onClick={() => handleCopyIndividual(item.id, index)}
+                            >
+                              {copiedIdIndex === index ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+                            </Button>
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  </ScrollArea>
                 )}
               </CardContent>
             </Card>

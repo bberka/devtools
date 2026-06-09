@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { AlertCircle, Check, Copy, SearchCode, Trash2, Wand2 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { TooltipSimple } from '@/components/ui/tooltip';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -413,17 +414,18 @@ export function RegexTester() {
               <div className="text-sm font-medium">{group.title}</div>
               <div className="flex flex-wrap gap-2">
                 {group.tokens.map((token) => (
-                  <Button
-                    key={`${group.title}-${token.label}`}
-                    onClick={() => appendSnippet(token.snippet)}
-                    variant="outline"
-                    size="sm"
-                    className="min-h-10 gap-2"
-                    title={token.hint}
-                  >
-                    <code className="font-mono text-xs">{token.snippet}</code>
-                    <span className="text-xs text-muted-foreground">{token.label}</span>
-                  </Button>
+                  <TooltipSimple key={`${group.title}-${token.label}`} content={token.hint}>
+                    <Button
+                      onClick={() => appendSnippet(token.snippet)}
+                      variant="outline"
+                      size="sm"
+                      className="min-h-10 gap-2"
+                      aria-label={`${token.label} (${token.snippet})`}
+                    >
+                      <code className="font-mono text-xs">{token.snippet}</code>
+                      <span className="text-xs text-muted-foreground">{token.label}</span>
+                    </Button>
+                  </TooltipSimple>
                 ))}
               </div>
             </div>

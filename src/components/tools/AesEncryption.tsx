@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Textarea } from '../ui/textarea';
+import { TooltipSimple } from '../ui/tooltip';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 import { Input } from '../ui/input';
 import { Copy, Check, Lock, Unlock, ArrowLeftRight, Trash2, KeyRound, Loader2 } from 'lucide-react';
@@ -238,9 +239,11 @@ export function AesEncryption() {
               </TabsList>
             </Tabs>
             {output && (
-              <Button variant="ghost" size="icon" onClick={handleSwapMode} title="Swap input/output">
-                <ArrowLeftRight className="h-4 w-4" />
-              </Button>
+              <TooltipSimple content="Swap input/output">
+                <Button variant="ghost" size="icon" onClick={handleSwapMode} aria-label="Swap input/output">
+                  <ArrowLeftRight className="h-4 w-4" />
+                </Button>
+              </TooltipSimple>
             )}
           </div>
         </CardContent>
@@ -266,14 +269,16 @@ export function AesEncryption() {
               placeholder="Enter password..."
               className="flex-1"
             />
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={handleGeneratePassword}
-              title="Generate random password"
-            >
-              <KeyRound className="h-4 w-4" />
-            </Button>
+            <TooltipSimple content="Generate random password">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleGeneratePassword}
+                aria-label="Generate random password"
+              >
+                <KeyRound className="h-4 w-4" />
+              </Button>
+            </TooltipSimple>
           </div>
           <p className="text-xs text-muted-foreground">
             Uses AES-256-GCM encryption with PBKDF2 key derivation (100,000 iterations)
@@ -350,17 +355,19 @@ export function AesEncryption() {
                   : `Decrypted text (${output.length} characters)`}
               </CardDescription>
             </div>
-            <Button
-              variant={isCopied ? 'default' : 'ghost'}
-              size="icon"
-              onClick={handleCopy}
-              title={isCopied ? 'Copied!' : 'Copy to clipboard'}
-            >
-              {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-            </Button>
+            <TooltipSimple content={isCopied ? 'Copied!' : 'Copy to clipboard'}>
+              <Button
+                variant={isCopied ? 'default' : 'ghost'}
+                size="icon"
+                onClick={handleCopy}
+                aria-label={isCopied ? 'Copied!' : 'Copy to clipboard'}
+              >
+                {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+              </Button>
+            </TooltipSimple>
           </CardHeader>
           <CardContent>
-            <pre className="w-full min-h-[100px] p-3 rounded-md bg-muted font-mono text-sm overflow-x-auto whitespace-pre-wrap break-all border border-input">
+            <pre className="w-full min-h-[100px] p-3 rounded-md bg-muted font-mono text-sm overflow-x-auto scrollbar-thin whitespace-pre-wrap break-all border border-input">
               {output}
             </pre>
           </CardContent>

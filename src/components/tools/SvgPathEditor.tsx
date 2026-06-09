@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
+import { TooltipSimple } from '../ui/tooltip';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Textarea } from '../ui/textarea';
 import { Input } from '../ui/input';
@@ -308,27 +309,31 @@ export function SvgPathEditor() {
               </CardDescription>
             </div>
             <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleUseOptimized}
-                title="Use optimized path"
-              >
-                <Maximize2 className="h-4 w-4 mr-2" />
-                Use
-              </Button>
-              <Button
-                variant={isCopied ? 'default' : 'ghost'}
-                size="icon"
-                onClick={() => handleCopy(optimizedPath)}
-                title={isCopied ? 'Copied!' : 'Copy to clipboard'}
-              >
-                {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-              </Button>
+              <TooltipSimple content="Use optimized path">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleUseOptimized}
+                  aria-label="Use optimized path"
+                >
+                  <Maximize2 className="h-4 w-4 mr-2" />
+                  Use
+                </Button>
+              </TooltipSimple>
+              <TooltipSimple content={isCopied ? 'Copied!' : 'Copy to clipboard'}>
+                <Button
+                  variant={isCopied ? 'default' : 'ghost'}
+                  size="icon"
+                  onClick={() => handleCopy(optimizedPath)}
+                  aria-label="Copy optimized path"
+                >
+                  {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                </Button>
+              </TooltipSimple>
             </div>
           </CardHeader>
           <CardContent>
-            <pre className="w-full min-h-[60px] p-3 rounded-md bg-muted font-mono text-sm overflow-x-auto whitespace-pre-wrap break-all border border-input">
+            <pre className="w-full min-h-[60px] p-3 rounded-md bg-muted font-mono text-sm overflow-x-auto scrollbar-thin whitespace-pre-wrap break-all border border-input">
               {optimizedPath}
             </pre>
           </CardContent>

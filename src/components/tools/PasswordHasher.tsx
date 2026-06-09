@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '../ui/button';
+import { TooltipSimple } from '../ui/tooltip';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 import { Textarea } from '../ui/textarea';
@@ -528,18 +529,20 @@ export function PasswordHasher() {
               <CardTitle className="text-lg font-bold">Hash Output</CardTitle>
               <CardDescription>{hash.length} characters (Modular Crypt Format)</CardDescription>
             </div>
-            <Button
-              variant={isCopied ? 'default' : 'ghost'}
-              size="icon"
-              onClick={handleCopy}
-              title={isCopied ? 'Copied!' : 'Copy to clipboard'}
-              className="h-9 w-9 transition-all duration-200"
-            >
-              {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-            </Button>
+            <TooltipSimple content={isCopied ? 'Copied!' : 'Copy to clipboard'}>
+              <Button
+                variant={isCopied ? 'default' : 'ghost'}
+                size="icon"
+                onClick={handleCopy}
+                aria-label="Copy hash output"
+                className="h-9 w-9 transition-all duration-200"
+              >
+                {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+              </Button>
+            </TooltipSimple>
           </CardHeader>
           <CardContent>
-            <pre className="w-full min-h-[60px] p-4 rounded-md bg-muted font-mono text-sm overflow-x-auto whitespace-pre-wrap break-all border border-input leading-relaxed selection:bg-primary/20">
+            <pre className="w-full min-h-[60px] p-4 rounded-md bg-muted font-mono text-sm overflow-x-auto scrollbar-thin whitespace-pre-wrap break-all border border-input leading-relaxed selection:bg-primary/20">
               {hash}
             </pre>
           </CardContent>

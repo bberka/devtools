@@ -132,6 +132,7 @@ export default function ErrorPage({ error, reset }: ErrorProps) {
                   <button
                     onClick={copyToClipboard}
                     className="absolute right-3 top-3 p-1.5 rounded-lg border bg-background hover:bg-muted text-muted-foreground hover:text-foreground transition-all duration-200"
+                    aria-label="Copy Stack Trace"
                     title="Copy Stack Trace"
                   >
                     {copied ? <Check className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}

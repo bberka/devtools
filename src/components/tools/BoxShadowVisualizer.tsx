@@ -26,6 +26,8 @@ import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { useCopyToClipboard } from '@/hooks';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { TooltipSimple } from '@/components/ui/tooltip';
 
 interface ShadowLayer {
   id: string;
@@ -413,94 +415,106 @@ export function BoxShadowVisualizer() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
-              <div className="space-y-2 max-h-[260px] overflow-y-auto pr-1">
-                {shadows.map((layer, index) => {
-                  const isSelected = layer.id === selectedId;
-                  return (
-                    <div
-                      key={layer.id}
-                      onClick={() => setSelectedId(layer.id)}
-                      className={`flex items-center justify-between gap-3 p-3 rounded-xl border transition-all cursor-pointer ${
-                        isSelected
-                          ? 'border-violet-500 bg-violet-500/5 shadow-sm'
-                          : 'border-border/60 hover:bg-muted/50 bg-card'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        {/* Layer Color Dot Swatch */}
-                        <div
-                          className="h-5 w-5 rounded-md border border-black/10 shrink-0"
-                          style={{
-                            backgroundColor: layer.color,
-                            opacity: layer.opacity,
-                          }}
-                        />
-                        <div className="min-w-0">
-                          <p className="text-sm font-semibold truncate">
-                            {layer.name}
-                          </p>
-                          <p className="text-xs text-muted-foreground font-mono truncate">
-                            {layer.inset ? 'inset ' : ''}
-                            {layer.offsetX}px {layer.offsetY}px {layer.blur}px {layer.spread}px
-                          </p>
+              <ScrollArea className="h-[260px] pr-3">
+                <div className="space-y-2">
+                  {shadows.map((layer, index) => {
+                    const isSelected = layer.id === selectedId;
+                    return (
+                      <div
+                        key={layer.id}
+                        onClick={() => setSelectedId(layer.id)}
+                        className={`flex items-center justify-between gap-3 p-3 rounded-xl border transition-all cursor-pointer ${
+                          isSelected
+                            ? 'border-violet-500 bg-violet-500/5 shadow-sm'
+                            : 'border-border/60 hover:bg-muted/50 bg-card'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          {/* Layer Color Dot Swatch */}
+                          <div
+                            className="h-5 w-5 rounded-md border border-black/10 shrink-0"
+                            style={{
+                              backgroundColor: layer.color,
+                              opacity: layer.opacity,
+                            }}
+                          />
+                          <div className="min-w-0">
+                            <p className="text-sm font-semibold truncate">
+                              {layer.name}
+                            </p>
+                            <p className="text-xs text-muted-foreground font-mono truncate">
+                              {layer.inset ? 'inset ' : ''}
+                              {layer.offsetX}px {layer.offsetY}px {layer.blur}px {layer.spread}px
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Operations */}
+                        <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
+                          <TooltipSimple content={layer.visible ? 'Hide Layer' : 'Show Layer'}>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground"
+                              onClick={() => updateSelectedLayer('visible', !layer.visible)}
+                              aria-label={layer.visible ? 'Hide Layer' : 'Show Layer'}
+                            >
+                              {layer.visible ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4 opacity-60" />}
+                            </Button>
+                          </TooltipSimple>
+                          <TooltipSimple content="Move Layer Up">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground"
+                              disabled={index === 0}
+                              onClick={() => moveLayer(index, 'up')}
+                              aria-label="Move Layer Up"
+                            >
+                              <ChevronUp className="h-4 w-4" />
+                            </Button>
+                          </TooltipSimple>
+                          <TooltipSimple content="Move Layer Down">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground"
+                              disabled={index === shadows.length - 1}
+                              onClick={() => moveLayer(index, 'down')}
+                              aria-label="Move Layer Down"
+                            >
+                              <ChevronDown className="h-4 w-4" />
+                            </Button>
+                          </TooltipSimple>
+                          <TooltipSimple content="Duplicate Layer">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground"
+                              onClick={() => duplicateLayer(layer)}
+                              aria-label="Duplicate Layer"
+                            >
+                              <Compass className="h-4 w-4" />
+                            </Button>
+                          </TooltipSimple>
+                          <TooltipSimple content="Delete Layer">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-500/10"
+                              disabled={shadows.length <= 1}
+                              onClick={() => deleteLayer(layer.id)}
+                              aria-label="Delete Layer"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </TooltipSimple>
                         </div>
                       </div>
-
-                      {/* Operations */}
-                      <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground"
-                          onClick={() => updateSelectedLayer('visible', !layer.visible)}
-                          title={layer.visible ? 'Hide Layer' : 'Show Layer'}
-                        >
-                          {layer.visible ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4 opacity-60" />}
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground"
-                          disabled={index === 0}
-                          onClick={() => moveLayer(index, 'up')}
-                          title="Move Layer Up"
-                        >
-                          <ChevronUp className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground"
-                          disabled={index === shadows.length - 1}
-                          onClick={() => moveLayer(index, 'down')}
-                          title="Move Layer Down"
-                        >
-                          <ChevronDown className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground"
-                          onClick={() => duplicateLayer(layer)}
-                          title="Duplicate Layer"
-                        >
-                          <Compass className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-500/10"
-                          disabled={shadows.length <= 1}
-                          onClick={() => deleteLayer(layer.id)}
-                          title="Delete Layer"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  })}
+                </div>
+              </ScrollArea>
             </CardContent>
           </Card>
 
@@ -658,15 +672,16 @@ export function BoxShadowVisualizer() {
                   <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Quick Colors</span>
                   <div className="flex flex-wrap gap-2">
                     {COLOR_PRESETS.map((c) => (
-                      <button
-                        key={c}
-                        onClick={() => updateSelectedLayer('color', c)}
-                        className={`w-6 h-6 rounded-md border border-black/10 transition-transform ${
-                          activeLayer.color.toUpperCase() === c.toUpperCase() ? 'scale-125 ring-2 ring-violet-500' : 'hover:scale-110'
-                        }`}
-                        style={{ backgroundColor: c }}
-                        title={c}
-                      />
+                      <TooltipSimple key={c} content={c}>
+                        <button
+                          onClick={() => updateSelectedLayer('color', c)}
+                          className={`w-6 h-6 rounded-md border border-black/10 transition-transform ${
+                            activeLayer.color.toUpperCase() === c.toUpperCase() ? 'scale-125 ring-2 ring-violet-500' : 'hover:scale-110'
+                          }`}
+                          style={{ backgroundColor: c }}
+                          aria-label={`Select color ${c}`}
+                        />
+                      </TooltipSimple>
                     ))}
                   </div>
                 </div>
@@ -890,67 +905,78 @@ export function BoxShadowVisualizer() {
 
               {/* Canvas controls bottom-left (floating) */}
               <div className="absolute bottom-3 left-3 flex items-center gap-1.5 p-1 rounded-xl bg-card/90 backdrop-blur-sm border shadow-sm no-drag">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className={`h-7 w-7 rounded-lg ${canvasBgType === 'light' ? 'bg-muted' : ''}`}
-                  onClick={() => setCanvasBgType('light')}
-                  title="Canvas: Light"
-                >
-                  <div className="h-4.5 w-4.5 rounded bg-slate-100 border border-slate-300" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className={`h-7 w-7 rounded-lg ${canvasBgType === 'dark' ? 'bg-muted' : ''}`}
-                  onClick={() => setCanvasBgType('dark')}
-                  title="Canvas: Dark"
-                >
-                  <div className="h-4.5 w-4.5 rounded bg-slate-900 border border-slate-700" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className={`h-7 w-7 rounded-lg ${canvasBgType === 'checkered' ? 'bg-muted' : ''}`}
-                  onClick={() => setCanvasBgType('checkered')}
-                  title="Canvas: Checkered"
-                >
-                  <LayoutGrid className="h-4 w-4" />
-                </Button>
+                <TooltipSimple content="Canvas: Light">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={`h-7 w-7 rounded-lg ${canvasBgType === 'light' ? 'bg-muted' : ''}`}
+                    onClick={() => setCanvasBgType('light')}
+                    aria-label="Canvas: Light"
+                  >
+                    <div className="h-4.5 w-4.5 rounded bg-slate-100 border border-slate-300" />
+                  </Button>
+                </TooltipSimple>
+                <TooltipSimple content="Canvas: Dark">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={`h-7 w-7 rounded-lg ${canvasBgType === 'dark' ? 'bg-muted' : ''}`}
+                    onClick={() => setCanvasBgType('dark')}
+                    aria-label="Canvas: Dark"
+                  >
+                    <div className="h-4.5 w-4.5 rounded bg-slate-900 border border-slate-700" />
+                  </Button>
+                </TooltipSimple>
+                <TooltipSimple content="Canvas: Checkered">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={`h-7 w-7 rounded-lg ${canvasBgType === 'checkered' ? 'bg-muted' : ''}`}
+                    onClick={() => setCanvasBgType('checkered')}
+                    aria-label="Canvas: Checkered"
+                  >
+                    <LayoutGrid className="h-4 w-4" />
+                  </Button>
+                </TooltipSimple>
                 <div className="h-5 w-px bg-border/80" />
                 {/* Custom bg input */}
                 <div className="flex items-center gap-1">
-                  <Input
-                    type="color"
-                    value={canvasCustomBg}
-                    onChange={(e) => {
-                      setCanvasCustomBg(e.target.value);
-                      setCanvasBgType('custom');
-                    }}
-                    className="w-5 h-5 p-0 border border-black/10 rounded cursor-pointer shrink-0"
-                    title="Custom Canvas Color"
-                  />
+                  <TooltipSimple content="Custom Canvas Color">
+                    <Input
+                      type="color"
+                      value={canvasCustomBg}
+                      onChange={(e) => {
+                        setCanvasCustomBg(e.target.value);
+                        setCanvasBgType('custom');
+                      }}
+                      className="w-5 h-5 p-0 border border-black/10 rounded cursor-pointer shrink-0"
+                    />
+                  </TooltipSimple>
                 </div>
                 <div className="h-5 w-px bg-border/80" />
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className={`h-7 w-7 rounded-lg ${showGrid ? 'bg-muted text-violet-600' : 'text-muted-foreground'}`}
-                  onClick={() => setShowGrid(!showGrid)}
-                  title="Grid Overlay"
-                >
-                  <LayoutGrid className="h-4 w-4 rotate-45" />
-                </Button>
+                <TooltipSimple content="Grid Overlay">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={`h-7 w-7 rounded-lg ${showGrid ? 'bg-muted text-violet-600' : 'text-muted-foreground'}`}
+                    onClick={() => setShowGrid(!showGrid)}
+                    aria-label="Grid Overlay"
+                  >
+                    <LayoutGrid className="h-4 w-4 rotate-45" />
+                  </Button>
+                </TooltipSimple>
                 <div className="h-5 w-px bg-border/80" />
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7 rounded-lg text-muted-foreground hover:text-foreground"
-                  onClick={resetAll}
-                  title="Reset Workspace"
-                >
-                  <RotateCcw className="h-3.5 w-3.5" />
-                </Button>
+                <TooltipSimple content="Reset Workspace">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7 rounded-lg text-muted-foreground hover:text-foreground"
+                    onClick={resetAll}
+                    aria-label="Reset Workspace"
+                  >
+                    <RotateCcw className="h-3.5 w-3.5" />
+                  </Button>
+                </TooltipSimple>
               </div>
 
             </div>
@@ -977,7 +1003,7 @@ export function BoxShadowVisualizer() {
                     {cssCopy.isCopied ? 'Copied' : 'Copy CSS'}
                   </Button>
                 </div>
-                <pre className="p-3 bg-muted dark:bg-muted/40 rounded-xl font-mono text-xs text-foreground border border-border/40 overflow-x-auto whitespace-pre">
+                <pre className="p-3 bg-muted dark:bg-muted/40 rounded-xl font-mono text-xs text-foreground border border-border/40 overflow-x-auto scrollbar-thin whitespace-pre">
                   {`box-shadow: ${getBoxShadowValue()};`}
                 </pre>
               </div>
@@ -996,7 +1022,7 @@ export function BoxShadowVisualizer() {
                     {tailwindCopy.isCopied ? 'Copied' : 'Copy Class'}
                   </Button>
                 </div>
-                <div className="p-3 bg-muted dark:bg-muted/40 rounded-xl font-mono text-xs text-foreground border border-border/40 overflow-x-auto break-all">
+                <div className="p-3 bg-muted dark:bg-muted/40 rounded-xl font-mono text-xs text-foreground border border-border/40 overflow-x-auto scrollbar-thin break-all">
                   {getTailwindValue()}
                 </div>
               </div>

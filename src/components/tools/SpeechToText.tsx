@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '../ui/button';
+import { TooltipSimple } from '../ui/tooltip';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Switch } from '../ui/switch';
@@ -475,7 +476,7 @@ export function SpeechToText() {
             {/* Transcription Output Container */}
             <div
               ref={scrollContainerRef}
-              className="w-full h-[320px] p-4 rounded-md bg-muted/40 border overflow-y-auto font-sans text-base leading-relaxed select-text whitespace-pre-wrap flex flex-col justify-start"
+              className="w-full h-[320px] p-4 rounded-md bg-muted/40 border overflow-y-auto scrollbar-thin font-sans text-base leading-relaxed select-text whitespace-pre-wrap flex flex-col justify-start"
             >
               {transcript || interim ? (
                 <div>
@@ -532,63 +533,71 @@ export function SpeechToText() {
               {/* Action Utilities */}
               <div className="flex flex-wrap items-center gap-2">
                 {/* Download Options */}
-                <Button
-                  onClick={() => handleDownloadFile('txt')}
-                  disabled={!transcript}
-                  variant="outline"
-                  size="sm"
-                  className="h-9"
-                  title="Download as TXT"
-                >
-                  <Download className="h-4 w-4 mr-2 text-muted-foreground" />
-                  TXT
-                </Button>
-                <Button
-                  onClick={() => handleDownloadFile('md')}
-                  disabled={!transcript}
-                  variant="outline"
-                  size="sm"
-                  className="h-9"
-                  title="Download as Markdown"
-                >
-                  <FileDown className="h-4 w-4 mr-2 text-muted-foreground" />
-                  MD
-                </Button>
+                <TooltipSimple content="Download as TXT">
+                  <Button
+                    onClick={() => handleDownloadFile('txt')}
+                    disabled={!transcript}
+                    variant="outline"
+                    size="sm"
+                    className="h-9"
+                    aria-label="Download as TXT"
+                  >
+                    <Download className="h-4 w-4 mr-2 text-muted-foreground" />
+                    TXT
+                  </Button>
+                </TooltipSimple>
+                <TooltipSimple content="Download as Markdown">
+                  <Button
+                    onClick={() => handleDownloadFile('md')}
+                    disabled={!transcript}
+                    variant="outline"
+                    size="sm"
+                    className="h-9"
+                    aria-label="Download as Markdown"
+                  >
+                    <FileDown className="h-4 w-4 mr-2 text-muted-foreground" />
+                    MD
+                  </Button>
+                </TooltipSimple>
 
                 {/* Copy */}
-                <Button
-                  onClick={async () => transcript && (await copyToClipboard(transcript))}
-                  disabled={!transcript}
-                  variant="outline"
-                  size="sm"
-                  className="h-9"
-                  title="Copy transcript"
-                >
-                  {isCopied ? (
-                    <>
-                      <Check className="h-4 w-4 mr-2 text-green-500" />
-                      Copied
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="h-4 w-4 mr-2 text-muted-foreground" />
-                      Copy
-                    </>
-                  )}
-                </Button>
+                <TooltipSimple content="Copy transcript">
+                  <Button
+                    onClick={async () => transcript && (await copyToClipboard(transcript))}
+                    disabled={!transcript}
+                    variant="outline"
+                    size="sm"
+                    className="h-9"
+                    aria-label="Copy transcript"
+                  >
+                    {isCopied ? (
+                      <>
+                        <Check className="h-4 w-4 mr-2 text-green-500" />
+                        Copied
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="h-4 w-4 mr-2 text-muted-foreground" />
+                        Copy
+                      </>
+                    )}
+                  </Button>
+                </TooltipSimple>
 
                 {/* Clear */}
-                <Button
-                  onClick={handleClear}
-                  disabled={!transcript && !interim}
-                  variant="outline"
-                  size="sm"
-                  className="h-9 border-destructive/20 hover:bg-destructive/5 text-destructive hover:text-destructive"
-                  title="Clear transcript"
-                >
-                  <Trash2 className="h-4 w-4 mr-2" />
-                  Clear
-                </Button>
+                <TooltipSimple content="Clear transcript">
+                  <Button
+                    onClick={handleClear}
+                    disabled={!transcript && !interim}
+                    variant="outline"
+                    size="sm"
+                    className="h-9 border-destructive/20 hover:bg-destructive/5 text-destructive hover:text-destructive"
+                    aria-label="Clear transcript"
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Clear
+                  </Button>
+                </TooltipSimple>
               </div>
             </div>
           </CardContent>

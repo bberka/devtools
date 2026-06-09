@@ -21,6 +21,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { useCopyToClipboard } from '@/hooks';
+import { TooltipSimple } from '@/components/ui/tooltip';
 
 type Rgb = {
   r: number;
@@ -228,20 +229,21 @@ function ColorValue({
         </p>
         <p className="truncate font-mono text-sm text-foreground">{value}</p>
       </div>
-      <Button
-        size="icon"
-        variant={copy.isCopied ? 'default' : 'outline'}
-        className="h-9 w-9 rounded-xl"
-        onClick={() => copy.copyToClipboard(value)}
-        aria-label={`Copy ${label}`}
-        title={`Copy ${label}`}
-      >
-        {copy.isCopied ? (
-          <Check className="h-4 w-4" />
-        ) : (
-          <Copy className="h-4 w-4" />
-        )}
-      </Button>
+      <TooltipSimple content={`Copy ${label}`}>
+        <Button
+          size="icon"
+          variant={copy.isCopied ? 'default' : 'outline'}
+          className="h-9 w-9 rounded-xl"
+          onClick={() => copy.copyToClipboard(value)}
+          aria-label={`Copy ${label}`}
+        >
+          {copy.isCopied ? (
+            <Check className="h-4 w-4" />
+          ) : (
+            <Copy className="h-4 w-4" />
+          )}
+        </Button>
+      </TooltipSimple>
     </div>
   );
 }
@@ -444,15 +446,15 @@ export function ColorPicker() {
                 </p>
                 <div className="grid grid-cols-6 gap-2 sm:grid-cols-8 lg:grid-cols-12">
                   {PRESETS.map((color) => (
-                    <button
-                      key={`picker-${color}`}
-                      type="button"
-                      className="h-9 rounded-xl border border-border/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                      style={{ backgroundColor: color }}
-                      onClick={() => setColor(hexToRgb(color) ?? rgb)}
-                      aria-label={`Use preset ${color}`}
-                      title={color}
-                    />
+                    <TooltipSimple key={`picker-${color}`} content={color}>
+                      <button
+                        type="button"
+                        className="h-9 rounded-xl border border-border/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                        style={{ backgroundColor: color }}
+                        onClick={() => setColor(hexToRgb(color) ?? rgb)}
+                        aria-label={`Use preset ${color}`}
+                      />
+                    </TooltipSimple>
                   ))}
                 </div>
               </div>
@@ -465,24 +467,32 @@ export function ColorPicker() {
             )}
 
             <div className="grid gap-2 sm:grid-cols-3">
-              <Button
-                onClick={handleEyeDropper}
-                variant={pickFeedbackVisible ? 'default' : 'outline'}
-                className="h-12 w-full rounded-xl"
-                disabled={!eyeDropperSupported}
-                title={
+              <TooltipSimple
+                content={
                   eyeDropperSupported
                     ? 'Pick a color from the screen'
                     : 'EyeDropper is not supported in this browser'
                 }
               >
-                {pickFeedbackVisible ? (
-                  <Check className="h-4 w-4" />
-                ) : (
-                  <Pipette className="h-4 w-4" />
-                )}
-                {pickFeedbackVisible ? 'Picked' : 'Pick From Screen'}
-              </Button>
+                <Button
+                  onClick={handleEyeDropper}
+                  variant={pickFeedbackVisible ? 'default' : 'outline'}
+                  className="h-12 w-full rounded-xl"
+                  disabled={!eyeDropperSupported}
+                  aria-label={
+                    eyeDropperSupported
+                      ? 'Pick a color from the screen'
+                      : 'EyeDropper is not supported in this browser'
+                  }
+                >
+                  {pickFeedbackVisible ? (
+                    <Check className="h-4 w-4" />
+                  ) : (
+                    <Pipette className="h-4 w-4" />
+                  )}
+                  {pickFeedbackVisible ? 'Picked' : 'Pick From Screen'}
+                </Button>
+              </TooltipSimple>
               <Button
                 onClick={saveCurrentColor}
                 variant={saveFeedbackVisible ? 'default' : 'outline'}
@@ -591,19 +601,19 @@ export function ColorPicker() {
             </div>
             <div className="grid grid-cols-3 gap-3 sm:grid-cols-6 lg:grid-cols-12">
               {savedColors.map((color) => (
-                <button
-                  key={color}
-                  type="button"
-                  className="group relative h-12 overflow-hidden rounded-2xl border border-border/70 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  style={{ backgroundColor: color }}
-                  onClick={() => setColor(hexToRgb(color) ?? rgb)}
-                  aria-label={`Use saved swatch ${color}`}
-                  title={color}
-                >
-                  <span className="absolute inset-x-1.5 bottom-1.5 rounded-full bg-black/20 px-2 py-1 text-center font-mono text-[10px] text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
-                    {color}
-                  </span>
-                </button>
+                <TooltipSimple key={color} content={color}>
+                  <button
+                    type="button"
+                    className="group relative h-12 overflow-hidden rounded-2xl border border-border/70 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    style={{ backgroundColor: color }}
+                    onClick={() => setColor(hexToRgb(color) ?? rgb)}
+                    aria-label={`Use saved swatch ${color}`}
+                  >
+                    <span className="absolute inset-x-1.5 bottom-1.5 rounded-full bg-black/20 px-2 py-1 text-center font-mono text-[10px] text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+                      {color}
+                    </span>
+                  </button>
+                </TooltipSimple>
               ))}
             </div>
           </CardContent>
@@ -669,16 +679,17 @@ function ThemeSwatchButton({ entry, hex, onClick }: { entry: ThemeEntry; hex: st
 
   return (
     <div className="overflow-hidden rounded-[22px] border border-border/70 bg-card shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
-      <button
-        type="button"
-        className="flex h-16 w-full flex-col justify-end px-3 py-2"
-        style={{ backgroundColor: hex, color: textColor }}
-        onClick={onClick}
-        aria-label={`Use ${entry.label}`}
-        title={`Use ${entry.label}`}
-      >
-        <span className="truncate font-mono text-[10px] font-medium opacity-70">{entry.variable}</span>
-      </button>
+      <TooltipSimple content={`Use ${entry.label}`}>
+        <button
+          type="button"
+          className="flex h-16 w-full flex-col justify-end px-3 py-2"
+          style={{ backgroundColor: hex, color: textColor }}
+          onClick={onClick}
+          aria-label={`Use ${entry.label}`}
+        >
+          <span className="truncate font-mono text-[10px] font-medium opacity-70">{entry.variable}</span>
+        </button>
+      </TooltipSimple>
       <div className="flex items-center gap-2 p-3">
         <div className="min-w-0 flex-1">
           <p className="truncate text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
@@ -686,16 +697,17 @@ function ThemeSwatchButton({ entry, hex, onClick }: { entry: ThemeEntry; hex: st
           </p>
           <p className="truncate font-mono text-sm text-foreground">{hex}</p>
         </div>
-        <Button
-          size="icon"
-          variant="ghost"
-          className="h-9 w-9 rounded-xl"
-          onClick={() => copy.copyToClipboard(`${entry.variable}: ${entry.hsl.h} ${entry.hsl.s}% ${entry.hsl.l}%;`)}
-          aria-label={`Copy ${entry.variable}`}
-          title={`Copy ${entry.variable}`}
-        >
-          {copy.isCopied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-        </Button>
+        <TooltipSimple content={`Copy ${entry.variable}`}>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="h-9 w-9 rounded-xl"
+            onClick={() => copy.copyToClipboard(`${entry.variable}: ${entry.hsl.h} ${entry.hsl.s}% ${entry.hsl.l}%;`)}
+            aria-label={`Copy ${entry.variable}`}
+          >
+            {copy.isCopied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+          </Button>
+        </TooltipSimple>
       </div>
     </div>
   );
@@ -741,14 +753,15 @@ function SwatchButton({
 
   return (
     <div className="overflow-hidden rounded-[22px] border border-border/70 bg-card shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
-      <button
-        type="button"
-        className="h-20 w-full"
-        style={{ backgroundColor: color }}
-        onClick={onClick}
-        aria-label={`Use ${label} ${color}`}
-        title={`Use ${color}`}
-      />
+      <TooltipSimple content={`Use ${color}`}>
+        <button
+          type="button"
+          className="h-20 w-full"
+          style={{ backgroundColor: color }}
+          onClick={onClick}
+          aria-label={`Use ${label} ${color}`}
+        />
+      </TooltipSimple>
       <div className="flex items-center gap-2 p-3">
         <div className="min-w-0 flex-1">
           <p className="truncate text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
@@ -758,20 +771,21 @@ function SwatchButton({
             {color}
           </p>
         </div>
-        <Button
-          size="icon"
-          variant="ghost"
-          className="h-9 w-9 rounded-xl"
-          onClick={() => copy.copyToClipboard(color)}
-          aria-label={`Copy ${color}`}
-          title={`Copy ${color}`}
-        >
-          {copy.isCopied ? (
-            <Check className="h-3.5 w-3.5" />
-          ) : (
-            <Copy className="h-3.5 w-3.5" />
-          )}
-        </Button>
+        <TooltipSimple content={`Copy ${color}`}>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="h-9 w-9 rounded-xl"
+            onClick={() => copy.copyToClipboard(color)}
+            aria-label={`Copy ${color}`}
+          >
+            {copy.isCopied ? (
+              <Check className="h-3.5 w-3.5" />
+            ) : (
+              <Copy className="h-3.5 w-3.5" />
+            )}
+          </Button>
+        </TooltipSimple>
       </div>
     </div>
   );

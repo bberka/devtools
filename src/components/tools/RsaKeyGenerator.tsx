@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '../ui/button';
+import { TooltipSimple } from '../ui/tooltip';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import {
   Select,
@@ -245,26 +246,30 @@ export function RsaKeyGenerator() {
                 </CardDescription>
               </div>
               <div className="flex gap-2">
-                <Button
-                  variant={copiedKey === 'public' ? 'default' : 'ghost'}
-                  size="icon"
-                  onClick={handleCopyPublic}
-                  title="Copy public key"
-                >
-                  {copiedKey === 'public' ? (
-                    <Check className="h-4 w-4" />
-                  ) : (
-                    <Copy className="h-4 w-4" />
-                  )}
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handleDownloadPublic}
-                  title="Download public key"
-                >
-                  <Download className="h-4 w-4" />
-                </Button>
+                <TooltipSimple content="Copy public key">
+                  <Button
+                    variant={copiedKey === 'public' ? 'default' : 'ghost'}
+                    size="icon"
+                    onClick={handleCopyPublic}
+                    aria-label="Copy public key"
+                  >
+                    {copiedKey === 'public' ? (
+                      <Check className="h-4 w-4" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
+                  </Button>
+                </TooltipSimple>
+                <TooltipSimple content="Download public key">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleDownloadPublic}
+                    aria-label="Download public key"
+                  >
+                    <Download className="h-4 w-4" />
+                  </Button>
+                </TooltipSimple>
               </div>
             </CardHeader>
             <CardContent>
@@ -284,26 +289,30 @@ export function RsaKeyGenerator() {
                 </CardDescription>
               </div>
               <div className="flex gap-2">
-                <Button
-                  variant={copiedKey === 'private' ? 'default' : 'ghost'}
-                  size="icon"
-                  onClick={handleCopyPrivate}
-                  title="Copy private key"
-                >
-                  {copiedKey === 'private' ? (
-                    <Check className="h-4 w-4" />
-                  ) : (
-                    <Copy className="h-4 w-4" />
-                  )}
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handleDownloadPrivate}
-                  title="Download private key"
-                >
-                  <Download className="h-4 w-4" />
-                </Button>
+                <TooltipSimple content="Copy private key">
+                  <Button
+                    variant={copiedKey === 'private' ? 'default' : 'ghost'}
+                    size="icon"
+                    onClick={handleCopyPrivate}
+                    aria-label="Copy private key"
+                  >
+                    {copiedKey === 'private' ? (
+                      <Check className="h-4 w-4" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
+                  </Button>
+                </TooltipSimple>
+                <TooltipSimple content="Download private key">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleDownloadPrivate}
+                    aria-label="Download private key"
+                  >
+                    <Download className="h-4 w-4" />
+                  </Button>
+                </TooltipSimple>
               </div>
             </CardHeader>
             <CardContent>

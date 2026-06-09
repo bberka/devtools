@@ -16,6 +16,7 @@ import {
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { useCopyToClipboard } from '@/hooks';
+import { TooltipSimple } from '@/components/ui/tooltip';
 
 type Unit = 'px' | 'rem';
 type Property = 'font-size' | 'padding' | 'margin' | 'width' | 'height' | 'gap' | 'custom';
@@ -423,22 +424,24 @@ export function ClampCalculator() {
           <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             {label}
           </span>
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-7 w-7 text-muted-foreground hover:text-foreground"
-            onClick={() => copyHook.copyToClipboard(text)}
-            disabled={!text}
-            title={`Copy ${label}`}
-          >
-            {copyHook.isCopied ? (
-              <Check className="h-3.5 w-3.5 text-emerald-500 animate-in fade-in" />
-            ) : (
-              <Copy className="h-3.5 w-3.5" />
-            )}
-          </Button>
+          <TooltipSimple content={`Copy ${label}`}>
+            <Button
+              size="icon"
+              variant="ghost"
+              className="h-7 w-7 text-muted-foreground hover:text-foreground"
+              onClick={() => copyHook.copyToClipboard(text)}
+              disabled={!text}
+              aria-label={`Copy ${label}`}
+            >
+              {copyHook.isCopied ? (
+                <Check className="h-3.5 w-3.5 text-emerald-500 animate-in fade-in" />
+              ) : (
+                <Copy className="h-3.5 w-3.5" />
+              )}
+            </Button>
+          </TooltipSimple>
         </div>
-        <div className="overflow-x-auto whitespace-nowrap rounded bg-muted/50 p-2 font-mono text-sm font-medium text-foreground">
+        <div className="overflow-x-auto scrollbar-thin whitespace-nowrap rounded bg-muted/50 p-2 font-mono text-sm font-medium text-foreground">
           {text || '-'}
         </div>
       </div>
@@ -639,9 +642,9 @@ export function ClampCalculator() {
                 <div className="space-y-1.5">
                   <label className="text-sm font-semibold text-foreground flex items-center gap-1.5">
                     <span>Base Font Size</span>
-                    <span title="Used for conversions between px and rem">
-                      <HelpCircle className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                    </span>
+                    <TooltipSimple content="Used for conversions between px and rem">
+                      <HelpCircle className="h-3.5 w-3.5 text-muted-foreground cursor-help" aria-label="Base font size conversions info" />
+                    </TooltipSimple>
                   </label>
                   <div className="relative">
                     <Input

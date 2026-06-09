@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui
 import { Input } from '../ui/input';
 import { Copy, Check, MapPin, Loader2, Search, Globe, Wifi } from 'lucide-react';
 import { useCopyToClipboard, useActionButton } from '@/hooks';
+import { TooltipSimple } from '../ui/tooltip';
 
 interface IpInfo {
   ip: string;
@@ -199,14 +200,16 @@ export function IpLookup() {
                     <code className="flex-1 p-2 rounded-md bg-muted font-mono text-sm break-all">
                       {ipInfo.ip}
                     </code>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleCopy(ipInfo.ip, 'ip')}
-                      title="Copy IP"
-                    >
-                      {copiedField === 'ip' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                    </Button>
+                    <TooltipSimple content="Copy IP">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleCopy(ipInfo.ip, 'ip')}
+                        aria-label="Copy IP"
+                      >
+                        {copiedField === 'ip' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      </Button>
+                    </TooltipSimple>
                   </div>
                 </div>
 
@@ -218,14 +221,16 @@ export function IpLookup() {
                       <code className="flex-1 p-2 rounded-md bg-muted font-mono text-sm break-all">
                         {ipInfo.hostname}
                       </code>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleCopy(ipInfo.hostname!, 'hostname')}
-                        title="Copy hostname"
-                      >
-                        {copiedField === 'hostname' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                      </Button>
+                      <TooltipSimple content="Copy hostname">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleCopy(ipInfo.hostname!, 'hostname')}
+                          aria-label="Copy hostname"
+                        >
+                          {copiedField === 'hostname' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                        </Button>
+                      </TooltipSimple>
                     </div>
                   </div>
                 )}
@@ -278,14 +283,16 @@ export function IpLookup() {
                       <code className="flex-1 p-2 rounded-md bg-muted font-mono text-sm">
                         {ipInfo.loc}
                       </code>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleCopy(ipInfo.loc!, 'location')}
-                        title="Copy coordinates"
-                      >
-                        {copiedField === 'location' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                      </Button>
+                      <TooltipSimple content="Copy coordinates">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleCopy(ipInfo.loc!, 'location')}
+                          aria-label="Copy coordinates"
+                        >
+                          {copiedField === 'location' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                        </Button>
+                      </TooltipSimple>
                     </div>
                   </div>
                 )}
@@ -308,14 +315,16 @@ export function IpLookup() {
                       <code className="flex-1 p-2 rounded-md bg-muted font-mono text-sm break-all">
                         {ipInfo.org}
                       </code>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleCopy(ipInfo.org!, 'organization')}
-                        title="Copy organization"
-                      >
-                        {copiedField === 'organization' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                      </Button>
+                      <TooltipSimple content="Copy organization">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleCopy(ipInfo.org!, 'organization')}
+                          aria-label="Copy organization"
+                        >
+                          {copiedField === 'organization' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                        </Button>
+                      </TooltipSimple>
                     </div>
                   </div>
                 )}

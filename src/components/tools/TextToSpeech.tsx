@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Button } from '../ui/button';
+import { TooltipSimple } from '../ui/tooltip';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Textarea } from '../ui/textarea';
 import { Slider } from '../ui/slider';
@@ -417,7 +418,7 @@ export function TextToSpeech() {
               <div className="space-y-3">
                 <div
                   ref={readerScrollContainerRef}
-                  className="w-full h-[320px] p-4 rounded-md bg-muted/40 border overflow-y-auto font-sans text-base leading-relaxed select-text flex flex-col gap-1.5"
+                  className="w-full h-[320px] p-4 rounded-md bg-muted/40 border overflow-y-auto scrollbar-thin font-sans text-base leading-relaxed select-text flex flex-col gap-1.5"
                 >
                   {sentences.length === 0 ? (
                     <span className="text-muted-foreground italic text-sm">
@@ -524,47 +525,53 @@ export function TextToSpeech() {
 
               {/* Utility Tools */}
               <div className="flex items-center gap-2">
-                <Button
-                  onClick={handlePaste}
-                  variant="outline"
-                  size="sm"
-                  className="h-9"
-                  title="Paste from clipboard"
-                >
-                  <ClipboardPaste className="h-4 w-4 mr-2 text-muted-foreground" />
-                  Paste
-                </Button>
-                <Button
-                  onClick={async () => text && (await copyToClipboard(text))}
-                  disabled={!text}
-                  variant="outline"
-                  size="sm"
-                  className="h-9"
-                  title="Copy text"
-                >
-                  {isCopied ? (
-                    <>
-                      <Check className="h-4 w-4 mr-2 text-green-500" />
-                      Copied
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="h-4 w-4 mr-2 text-muted-foreground" />
-                      Copy
-                    </>
-                  )}
-                </Button>
-                <Button
-                  onClick={handleClear}
-                  disabled={!text}
-                  variant="outline"
-                  size="sm"
-                  className="h-9 border-destructive/20 hover:bg-destructive/5 text-destructive hover:text-destructive"
-                  title="Clear all"
-                >
-                  <Trash2 className="h-4 w-4 mr-2" />
-                  Clear
-                </Button>
+                <TooltipSimple content="Paste from clipboard">
+                  <Button
+                    onClick={handlePaste}
+                    variant="outline"
+                    size="sm"
+                    className="h-9"
+                    aria-label="Paste from clipboard"
+                  >
+                    <ClipboardPaste className="h-4 w-4 mr-2 text-muted-foreground" />
+                    Paste
+                  </Button>
+                </TooltipSimple>
+                <TooltipSimple content="Copy text">
+                  <Button
+                    onClick={async () => text && (await copyToClipboard(text))}
+                    disabled={!text}
+                    variant="outline"
+                    size="sm"
+                    className="h-9"
+                    aria-label="Copy text"
+                  >
+                    {isCopied ? (
+                      <>
+                        <Check className="h-4 w-4 mr-2 text-green-500" />
+                        Copied
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="h-4 w-4 mr-2 text-muted-foreground" />
+                        Copy
+                      </>
+                    )}
+                  </Button>
+                </TooltipSimple>
+                <TooltipSimple content="Clear all">
+                  <Button
+                    onClick={handleClear}
+                    disabled={!text}
+                    variant="outline"
+                    size="sm"
+                    className="h-9 border-destructive/20 hover:bg-destructive/5 text-destructive hover:text-destructive"
+                    aria-label="Clear all"
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Clear
+                  </Button>
+                </TooltipSimple>
               </div>
             </div>
           </CardContent>

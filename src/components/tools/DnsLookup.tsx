@@ -14,6 +14,7 @@ import {
 } from '../ui/select';
 import { Copy, Check, Server, Loader2, Search } from 'lucide-react';
 import { useCopyToClipboard, useActionButton } from '@/hooks';
+import { TooltipSimple } from '../ui/tooltip';
 
 type RecordType = 'A' | 'AAAA' | 'MX' | 'TXT' | 'NS' | 'CNAME' | 'SOA';
 
@@ -224,14 +225,16 @@ export function DnsLookup() {
                 Found {dnsResponse.Answer.length} {recordType} record{dnsResponse.Answer.length !== 1 ? 's' : ''}
               </CardDescription>
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={copyAllRecords}
-              title="Copy all records"
-            >
-              {copiedItem === 'all-records' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-            </Button>
+            <TooltipSimple content="Copy all records">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={copyAllRecords}
+                aria-label="Copy all records"
+              >
+                {copiedItem === 'all-records' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+              </Button>
+            </TooltipSimple>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -251,15 +254,17 @@ export function DnsLookup() {
                         {record.data}
                       </code>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleCopy(record.data, `record-${index}`)}
-                      title="Copy record"
-                      className="shrink-0"
-                    >
-                      {copiedItem === `record-${index}` ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                    </Button>
+                    <TooltipSimple content="Copy record">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleCopy(record.data, `record-${index}`)}
+                        aria-label="Copy record"
+                        className="shrink-0"
+                      >
+                        {copiedItem === `record-${index}` ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      </Button>
+                    </TooltipSimple>
                   </div>
                   {record.name && record.name !== domain && (
                     <div className="text-xs text-muted-foreground">

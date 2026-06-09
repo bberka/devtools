@@ -3,6 +3,7 @@
 import { Star } from 'lucide-react';
 import { Button } from './ui/button';
 import { useFavorites } from '@/lib/contexts/FavoritesContext';
+import { TooltipSimple } from './ui/tooltip';
 
 interface FavoriteButtonProps {
   toolId: string;
@@ -29,21 +30,22 @@ export function FavoriteButton({
 
   if (variant === 'card') {
     return (
-      <button
-        type="button"
-        onClick={handleToggle}
-        className="rounded p-1 transition-colors hover:bg-accent group/star"
-        aria-label={isFav ? 'Remove from favorites' : 'Add to favorites'}
-        title={isFav ? 'Remove from favorites' : 'Add to favorites'}
-      >
-        <Star
-          className={
-            isFav
-              ? 'size-5 fill-yellow-500 text-yellow-500 transition-all'
-              : 'size-5 text-muted-foreground transition-all group-hover/star:text-yellow-500'
-          }
-        />
-      </button>
+      <TooltipSimple content={isFav ? 'Remove from favorites' : 'Add to favorites'}>
+        <button
+          type="button"
+          onClick={handleToggle}
+          className="rounded p-1 transition-colors hover:bg-accent group/star"
+          aria-label={isFav ? 'Remove from favorites' : 'Add to favorites'}
+        >
+          <Star
+            className={
+              isFav
+                ? 'size-5 fill-yellow-500 text-yellow-500 transition-all'
+                : 'size-5 text-muted-foreground transition-all group-hover/star:text-yellow-500'
+            }
+          />
+        </button>
+      </TooltipSimple>
     );
   }
 

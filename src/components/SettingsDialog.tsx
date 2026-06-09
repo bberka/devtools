@@ -16,6 +16,7 @@ import { useFavorites } from '@/lib/contexts/FavoritesContext';
 import { useRecentTools } from '@/lib/contexts/RecentToolsContext';
 import { useSettings } from '@/lib/contexts/SettingsContext';
 import { useTheme } from '@/lib/contexts/ThemeContext';
+import { TooltipSimple } from './ui/tooltip';
 
 export function SettingsDialog() {
   const { theme, toggleTheme } = useTheme();
@@ -36,9 +37,11 @@ export function SettingsDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Open settings" title="Settings">
-          <Settings className="h-5 w-5" />
-        </Button>
+        <TooltipSimple content="Settings">
+          <Button variant="ghost" size="icon" aria-label="Open settings">
+            <Settings className="h-5 w-5" />
+          </Button>
+        </TooltipSimple>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -58,19 +61,20 @@ export function SettingsDialog() {
                   {theme === 'dark' ? 'Dark mode' : 'Light mode'}
                 </p>
               </div>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={toggleTheme}
-                aria-label="Toggle theme"
-                title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-              >
-                {theme === 'dark' ? (
-                  <Sun className="h-5 w-5" />
-                ) : (
-                  <Moon className="h-5 w-5" />
-                )}
-              </Button>
+              <TooltipSimple content={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={toggleTheme}
+                  aria-label="Toggle theme"
+                >
+                  {theme === 'dark' ? (
+                    <Sun className="h-5 w-5" />
+                  ) : (
+                    <Moon className="h-5 w-5" />
+                  )}
+                </Button>
+              </TooltipSimple>
             </div>
 
             <div className="flex items-center justify-between gap-4 rounded-lg border p-4">

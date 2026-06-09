@@ -15,6 +15,7 @@ import {
 import { Checkbox } from '../ui/checkbox';
 import { Copy, Check } from 'lucide-react';
 import { useCopyToClipboard } from '@/hooks';
+import { TooltipSimple } from '../ui/tooltip';
 
 type GenerateType = 'paragraphs' | 'sentences' | 'words';
 
@@ -163,14 +164,16 @@ export function LoremIpsumGenerator() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle>Output</CardTitle>
-            <Button
-              variant={isCopied ? "default" : "ghost"}
-              size="icon"
-              onClick={handleCopy}
-              title={isCopied ? "Copied!" : "Copy output"}
-            >
-              {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-            </Button>
+            <TooltipSimple content={isCopied ? "Copied!" : "Copy output"}>
+              <Button
+                variant={isCopied ? "default" : "ghost"}
+                size="icon"
+                onClick={handleCopy}
+                aria-label={isCopied ? "Copied!" : "Copy output"}
+              >
+                {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+              </Button>
+            </TooltipSimple>
           </CardHeader>
           <CardContent>
             <pre className="w-full min-h-[200px] p-3 rounded-md bg-muted text-sm overflow-x-auto whitespace-pre-wrap">

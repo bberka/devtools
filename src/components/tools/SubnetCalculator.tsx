@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
+import { TooltipSimple } from '../ui/tooltip';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Input } from '../ui/input';
 import { Copy, Check, Network, Calculator } from 'lucide-react';
@@ -247,14 +248,16 @@ export function SubnetCalculator() {
                     <code className="flex-1 p-2 rounded-md bg-muted font-mono text-sm">
                       {subnetInfo.ipAddress}/{subnetInfo.cidr}
                     </code>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleCopy(`${subnetInfo.ipAddress}/${subnetInfo.cidr}`, 'ip-cidr')}
-                      title="Copy IP/CIDR"
-                    >
-                      {copiedField === 'ip-cidr' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                    </Button>
+                    <TooltipSimple content="Copy IP/CIDR">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleCopy(`${subnetInfo.ipAddress}/${subnetInfo.cidr}`, 'ip-cidr')}
+                        aria-label="Copy IP/CIDR"
+                      >
+                        {copiedField === 'ip-cidr' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      </Button>
+                    </TooltipSimple>
                   </div>
                 </div>
 
@@ -265,14 +268,16 @@ export function SubnetCalculator() {
                     <code className="flex-1 p-2 rounded-md bg-muted font-mono text-sm">
                       {subnetInfo.subnetMask}
                     </code>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleCopy(subnetInfo.subnetMask, 'subnet-mask')}
-                      title="Copy subnet mask"
-                    >
-                      {copiedField === 'subnet-mask' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                    </Button>
+                    <TooltipSimple content="Copy subnet mask">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleCopy(subnetInfo.subnetMask, 'subnet-mask')}
+                        aria-label="Copy subnet mask"
+                      >
+                        {copiedField === 'subnet-mask' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      </Button>
+                    </TooltipSimple>
                   </div>
                 </div>
 
@@ -283,14 +288,16 @@ export function SubnetCalculator() {
                     <code className="flex-1 p-2 rounded-md bg-muted font-mono text-sm">
                       {subnetInfo.wildcardMask}
                     </code>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleCopy(subnetInfo.wildcardMask, 'wildcard-mask')}
-                      title="Copy wildcard mask"
-                    >
-                      {copiedField === 'wildcard-mask' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                    </Button>
+                    <TooltipSimple content="Copy wildcard mask">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleCopy(subnetInfo.wildcardMask, 'wildcard-mask')}
+                        aria-label="Copy wildcard mask"
+                      >
+                        {copiedField === 'wildcard-mask' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      </Button>
+                    </TooltipSimple>
                   </div>
                 </div>
 
@@ -303,14 +310,16 @@ export function SubnetCalculator() {
                     <code className="flex-1 p-2 rounded-md bg-muted font-mono text-xs break-all">
                       {subnetInfo.binarySubnetMask}
                     </code>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleCopy(subnetInfo.binarySubnetMask, 'binary-mask')}
-                      title="Copy binary mask"
-                    >
-                      {copiedField === 'binary-mask' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                    </Button>
+                    <TooltipSimple content="Copy binary mask">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleCopy(subnetInfo.binarySubnetMask, 'binary-mask')}
+                        aria-label="Copy binary mask"
+                      >
+                        {copiedField === 'binary-mask' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      </Button>
+                    </TooltipSimple>
                   </div>
                 </div>
               </div>
@@ -334,14 +343,16 @@ export function SubnetCalculator() {
                     <code className="flex-1 p-2 rounded-md bg-muted font-mono text-sm">
                       {subnetInfo.networkAddress}
                     </code>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleCopy(subnetInfo.networkAddress, 'network-address')}
-                      title="Copy network address"
-                    >
-                      {copiedField === 'network-address' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                    </Button>
+                    <TooltipSimple content="Copy network address">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleCopy(subnetInfo.networkAddress, 'network-address')}
+                        aria-label="Copy network address"
+                      >
+                        {copiedField === 'network-address' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      </Button>
+                    </TooltipSimple>
                   </div>
                 </div>
 
@@ -354,14 +365,16 @@ export function SubnetCalculator() {
                     <code className="flex-1 p-2 rounded-md bg-muted font-mono text-sm">
                       {subnetInfo.broadcastAddress}
                     </code>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleCopy(subnetInfo.broadcastAddress, 'broadcast-address')}
-                      title="Copy broadcast address"
-                    >
-                      {copiedField === 'broadcast-address' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                    </Button>
+                    <TooltipSimple content="Copy broadcast address">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleCopy(subnetInfo.broadcastAddress, 'broadcast-address')}
+                        aria-label="Copy broadcast address"
+                      >
+                        {copiedField === 'broadcast-address' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      </Button>
+                    </TooltipSimple>
                   </div>
                 </div>
 
@@ -374,14 +387,16 @@ export function SubnetCalculator() {
                     <code className="flex-1 p-2 rounded-md bg-muted font-mono text-sm">
                       {subnetInfo.firstUsableIP}
                     </code>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleCopy(subnetInfo.firstUsableIP, 'first-ip')}
-                      title="Copy first IP"
-                    >
-                      {copiedField === 'first-ip' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                    </Button>
+                    <TooltipSimple content="Copy first IP">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleCopy(subnetInfo.firstUsableIP, 'first-ip')}
+                        aria-label="Copy first IP"
+                      >
+                        {copiedField === 'first-ip' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      </Button>
+                    </TooltipSimple>
                   </div>
                 </div>
 
@@ -394,14 +409,16 @@ export function SubnetCalculator() {
                     <code className="flex-1 p-2 rounded-md bg-muted font-mono text-sm">
                       {subnetInfo.lastUsableIP}
                     </code>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleCopy(subnetInfo.lastUsableIP, 'last-ip')}
-                      title="Copy last IP"
-                    >
-                      {copiedField === 'last-ip' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                    </Button>
+                    <TooltipSimple content="Copy last IP">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleCopy(subnetInfo.lastUsableIP, 'last-ip')}
+                        aria-label="Copy last IP"
+                      >
+                        {copiedField === 'last-ip' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      </Button>
+                    </TooltipSimple>
                   </div>
                 </div>
 

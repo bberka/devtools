@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { TooltipSimple } from '@/components/ui/tooltip';
 import {
   Card,
   CardContent,
@@ -512,36 +513,42 @@ export function GlassmorphismGenerator() {
               <div className="flex items-center gap-2">
                 <span className="text-xs font-semibold text-muted-foreground mr-1">Preview Card Content:</span>
                 <div className="flex rounded-lg border border-border/70 bg-muted/30 p-0.5">
-                  <Button
-                    size="sm"
-                    variant={mockup === 'credit-card' ? 'default' : 'ghost'}
-                    className="h-7 px-2.5 text-xs rounded-md"
-                    onClick={() => setMockup('credit-card')}
-                    title="Credit Card mockup"
-                  >
-                    <CreditCard className="h-3.5 w-3.5 mr-1" />
-                    Card
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant={mockup === 'login-form' ? 'default' : 'ghost'}
-                    className="h-7 px-2.5 text-xs rounded-md"
-                    onClick={() => setMockup('login-form')}
-                    title="Login form mockup"
-                  >
-                    <Lock className="h-3.5 w-3.5 mr-1" />
-                    Login
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant={mockup === 'dashboard' ? 'default' : 'ghost'}
-                    className="h-7 px-2.5 text-xs rounded-md"
-                    onClick={() => setMockup('dashboard')}
-                    title="Dashboard widget mockup"
-                  >
-                    <LayoutDashboard className="h-3.5 w-3.5 mr-1" />
-                    Stats
-                  </Button>
+                  <TooltipSimple content="Credit Card mockup">
+                    <Button
+                      size="sm"
+                      variant={mockup === 'credit-card' ? 'default' : 'ghost'}
+                      className="h-7 px-2.5 text-xs rounded-md"
+                      onClick={() => setMockup('credit-card')}
+                      aria-label="Credit Card mockup"
+                    >
+                      <CreditCard className="h-3.5 w-3.5 mr-1" />
+                      Card
+                    </Button>
+                  </TooltipSimple>
+                  <TooltipSimple content="Login form mockup">
+                    <Button
+                      size="sm"
+                      variant={mockup === 'login-form' ? 'default' : 'ghost'}
+                      className="h-7 px-2.5 text-xs rounded-md"
+                      onClick={() => setMockup('login-form')}
+                      aria-label="Login form mockup"
+                    >
+                      <Lock className="h-3.5 w-3.5 mr-1" />
+                      Login
+                    </Button>
+                  </TooltipSimple>
+                  <TooltipSimple content="Dashboard widget mockup">
+                    <Button
+                      size="sm"
+                      variant={mockup === 'dashboard' ? 'default' : 'ghost'}
+                      className="h-7 px-2.5 text-xs rounded-md"
+                      onClick={() => setMockup('dashboard')}
+                      aria-label="Dashboard widget mockup"
+                    >
+                      <LayoutDashboard className="h-3.5 w-3.5 mr-1" />
+                      Stats
+                    </Button>
+                  </TooltipSimple>
                 </div>
               </div>
             </CardHeader>
@@ -764,20 +771,22 @@ export function GlassmorphismGenerator() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="relative group">
-                <pre className="overflow-x-auto rounded-xl border border-border bg-muted/40 p-4 font-mono text-xs text-foreground leading-relaxed min-h-36">
+                <pre className="overflow-x-auto scrollbar-thin rounded-xl border border-border bg-muted/40 p-4 font-mono text-xs text-foreground leading-relaxed min-h-36">
                   {exportTab === 'css' && cssCode}
                   {exportTab === 'tailwind' && tailwindCode}
                   {exportTab === 'react' && reactInlineCode}
                 </pre>
-                <Button
-                  size="icon"
-                  variant={copy.isCopied ? 'default' : 'outline'}
-                  onClick={handleCopyCode}
-                  className="absolute right-3 top-3 h-8 w-8 rounded-lg shadow-sm transition hover:scale-105"
-                  title="Copy code"
-                >
-                  {copy.isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                </Button>
+                <TooltipSimple content="Copy code">
+                  <Button
+                    size="icon"
+                    variant={copy.isCopied ? 'default' : 'outline'}
+                    onClick={handleCopyCode}
+                    className="absolute right-3 top-3 h-8 w-8 rounded-lg shadow-sm transition hover:scale-105"
+                    aria-label="Copy code"
+                  >
+                    {copy.isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  </Button>
+                </TooltipSimple>
               </div>
 
               <div className="flex items-start gap-2.5 rounded-xl border border-border bg-muted/20 px-4 py-3 text-xs text-muted-foreground">

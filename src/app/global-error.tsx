@@ -100,7 +100,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
 
               <CardContent className="space-y-6">
                 {/* Error Box */}
-                <div className="p-4 rounded-xl bg-destructive/5 border border-destructive/10 text-destructive/90 text-sm font-mono overflow-x-auto whitespace-pre-wrap">
+                <div className="p-4 rounded-xl bg-destructive/5 border border-destructive/10 text-destructive/90 text-sm font-mono overflow-x-auto scrollbar-thin whitespace-pre-wrap">
                   <span className="font-bold">Error:</span> {error.message || 'System crash details unavailable.'}
                 </div>
 
@@ -152,6 +152,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
                         <button
                           onClick={copyToClipboard}
                           className="absolute right-3 top-3 p-1.5 rounded-lg border bg-background hover:bg-muted text-muted-foreground hover:text-foreground transition-all duration-200"
+                          aria-label="Copy Stack Trace"
                           title="Copy Stack Trace"
                         >
                           {copied ? <Check className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
