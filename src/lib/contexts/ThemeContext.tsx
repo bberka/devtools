@@ -14,13 +14,13 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('dark');
+  const [theme, setThemeState] = useState<Theme>(() => {
+    if (typeof window === 'undefined') return 'dark';
+    return getTheme();
+  });
 
   // Initialize theme on mount (avoid hydration mismatch)
   useEffect(() => {
-    const savedTheme = getTheme();
-    setThemeState(savedTheme);
-
     // Listen for cross-tab changes
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'dev-toolbox:theme') {

@@ -358,7 +358,14 @@ export function ExifViewerRemover() {
   const [outputFormat, setOutputFormat] = useState<OutputFormat>('original');
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
   const copyResult = useCopyToClipboard();
+
+  const handleCopyField = async (value: string, label: string) => {
+    await copyResult.copyToClipboard(value);
+    setCopiedField(label);
+    setTimeout(() => setCopiedField(null), 2000);
+  };
 
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const input = event.target as HTMLInputElement;
@@ -657,14 +664,14 @@ export function ExifViewerRemover() {
                           <div className="break-all font-mono text-sm text-muted-foreground">
                             {field.value}
                           </div>
-                          <Button
-                            onClick={() => copyResult.copyToClipboard(field.value)}
-                            variant={copyResult.isCopied ? 'default' : 'ghost'}
+                           <Button
+                            onClick={() => handleCopyField(field.value, field.label)}
+                            variant={copiedField === field.label ? 'default' : 'ghost'}
                             size="icon"
                             className="h-8 w-8"
                             aria-label={`Copy ${field.label}`}
                           >
-                            {copyResult.isCopied ? (
+                            {copiedField === field.label ? (
                               <Check className="h-4 w-4" />
                             ) : (
                               <Copy className="h-4 w-4" />

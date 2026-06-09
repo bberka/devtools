@@ -136,7 +136,7 @@ export function RegexTester() {
     return value;
   }, [flags]);
 
-  const testRegex = () => {
+  function testRegex() {
     if (!pattern) {
       setMatches([]);
       setError('');
@@ -186,7 +186,7 @@ export function RegexTester() {
       setError(regexError instanceof Error ? regexError.message : 'Invalid regular expression');
       setMatches([]);
     }
-  };
+  }
 
   const highlightedText = useMemo(() => {
     if (!testString || matches.length === 0) {

@@ -4,7 +4,8 @@ import { useState, useRef, useCallback } from 'react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Textarea } from '../ui/textarea';
-import { Copy, Check, Trash2, ArrowLeftRight, Upload, FileText, X, Image as ImageIcon } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
+import { Copy, Check, Trash2, ArrowLeftRight, Upload, FileText, X, Image as ImageIcon, Binary } from 'lucide-react';
 import { useCopyToClipboard } from '@/hooks';
 
 type Mode = 'encode' | 'decode';
@@ -135,18 +136,34 @@ export function Base64Converter() {
   return (
     <div className="space-y-6">
       {/* Tab */}
-      <div className="flex gap-2">
-        <Button variant={tab === 'text' ? 'default' : 'outline'} onClick={() => switchTab('text')}>Text</Button>
-        <Button variant={tab === 'file' ? 'default' : 'outline'} onClick={() => switchTab('file')}>File / Image</Button>
-      </div>
+      <Tabs value={tab} onValueChange={(val) => switchTab(val as Tab)}>
+        <TabsList className="grid grid-cols-2 max-w-[400px]">
+          <TabsTrigger value="text" className="flex items-center gap-2">
+            <FileText className="h-4 w-4" />
+            Text
+          </TabsTrigger>
+          <TabsTrigger value="file" className="flex items-center gap-2">
+            <ImageIcon className="h-4 w-4" />
+            File / Image
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
 
       {tab === 'text' ? (
         <>
           {/* Mode */}
-          <div className="flex gap-2">
-            <Button variant={mode === 'encode' ? 'default' : 'outline'} onClick={() => onModeChange('encode')}>Encode</Button>
-            <Button variant={mode === 'decode' ? 'default' : 'outline'} onClick={() => onModeChange('decode')}>Decode</Button>
-          </div>
+          <Tabs value={mode} onValueChange={(val) => onModeChange(val as Mode)}>
+            <TabsList className="grid grid-cols-2 max-w-[300px]">
+              <TabsTrigger value="encode" className="flex items-center gap-2">
+                <Binary className="h-4 w-4" />
+                Encode
+              </TabsTrigger>
+              <TabsTrigger value="decode" className="flex items-center gap-2">
+                <FileText className="h-4 w-4" />
+                Decode
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
 
           <Card>
             <CardHeader>

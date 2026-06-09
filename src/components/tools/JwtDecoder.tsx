@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -111,6 +111,10 @@ export function JwtDecoder() {
     typeof decoded?.payload.iat === 'number' ? decoded.payload.iat : null;
   const expiresAt =
     typeof decoded?.payload.exp === 'number' ? decoded.payload.exp : null;
+  const isExpired = useMemo(() => {
+    if (expiresAt === null) return false;
+    return expiresAt < Date.now() / 1000;
+  }, [expiresAt]);
   const notBefore =
     typeof decoded?.payload.nbf === 'number' ? decoded.payload.nbf : null;
 
@@ -205,7 +209,7 @@ export function JwtDecoder() {
                     <div className="flex gap-2">
                       <span className="text-muted-foreground">Expires At (exp):</span>
                       <span>{formatTimestamp(expiresAt)}</span>
-                      {expiresAt < Date.now() / 1000 && (
+                      {isExpired && (
                         <span className="text-destructive font-semibold">(Expired)</span>
                       )}
                     </div>

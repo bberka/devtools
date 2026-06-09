@@ -36,7 +36,9 @@ export function PdfToWord() {
       for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
         const page = await pdf.getPage(pageNum);
         const textContent = await page.getTextContent();
-        const pageText = textContent.items.map((item: any) => item.str).join(' ');
+        const pageText = textContent.items
+          .map((item) => (item as { str?: string }).str ?? '')
+          .join(' ');
         fullText += pageText + '\n\n';
       }
 

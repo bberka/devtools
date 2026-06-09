@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Textarea } from '../ui/textarea';
@@ -22,22 +22,18 @@ export function HtmlEncoder() {
   const [error, setError] = useState('');
   const { copyToClipboard, isCopied } = useCopyToClipboard();
 
-  useEffect(() => {
-    handleConvert();
-  }, [input, mode]);
-
-  const encode = (text: string) => {
+  const encode = useCallback((text: string) => {
     return text.replace(/[&<>"']/g, (match) => htmlEntities[match]);
-  };
+  }, []);
 
-  const decode = (text: string) => {
+  const decode = useCallback((text: string) => {
     if (typeof document === 'undefined') return text;
     const textarea = document.createElement('textarea');
     textarea.innerHTML = text;
     return textarea.value;
-  };
+  }, []);
 
-  const handleConvert = () => {
+  const handleConvert = useCallback(() => {
     if (!input.trim()) {
       setOutput('');
       setError('');
@@ -55,7 +51,11 @@ export function HtmlEncoder() {
       setError(err instanceof Error ? err.message : 'Conversion failed');
       setOutput('');
     }
-  };
+  }, [input, mode, encode, decode]);
+
+  useEffect(() => {
+    handleConvert();
+  }, [handleConvert]);
 
   const handleCopy = async () => {
     if (output) {

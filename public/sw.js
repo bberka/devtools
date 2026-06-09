@@ -67,7 +67,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  if (isStaticAsset(url)) {
+  if (isStaticAsset(url) || PRECACHE_URLS.includes(url.pathname)) {
     event.respondWith(staleWhileRevalidate(request));
   }
 });

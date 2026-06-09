@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Textarea } from '../ui/textarea';
+import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 import { Input } from '../ui/input';
 import { Copy, Check, Lock, Unlock, ArrowLeftRight, Trash2, KeyRound, Loader2 } from 'lucide-react';
 import { useCopyToClipboard, useActionButton } from '@/hooks';
@@ -216,32 +217,26 @@ export function AesEncryption() {
       <Card>
         <CardContent className="pt-6">
           <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-            <div className="flex-1 flex gap-2">
-              <Button
-                variant={mode === 'encrypt' ? 'default' : 'outline'}
-                onClick={() => {
-                  setMode('encrypt');
-                  setOutput('');
-                  setError('');
-                }}
-                className="flex-1 sm:flex-none"
-              >
-                <Lock className="h-4 w-4 mr-2" />
-                Encrypt
-              </Button>
-              <Button
-                variant={mode === 'decrypt' ? 'default' : 'outline'}
-                onClick={() => {
-                  setMode('decrypt');
-                  setOutput('');
-                  setError('');
-                }}
-                className="flex-1 sm:flex-none"
-              >
-                <Unlock className="h-4 w-4 mr-2" />
-                Decrypt
-              </Button>
-            </div>
+            <Tabs
+              value={mode}
+              onValueChange={(val) => {
+                setMode(val as Mode);
+                setOutput('');
+                setError('');
+              }}
+              className="flex-1"
+            >
+              <TabsList className="grid grid-cols-2 max-w-[400px]">
+                <TabsTrigger value="encrypt" className="flex items-center gap-2">
+                  <Lock className="h-4 w-4" />
+                  Encrypt
+                </TabsTrigger>
+                <TabsTrigger value="decrypt" className="flex items-center gap-2">
+                  <Unlock className="h-4 w-4" />
+                  Decrypt
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
             {output && (
               <Button variant="ghost" size="icon" onClick={handleSwapMode} title="Swap input/output">
                 <ArrowLeftRight className="h-4 w-4" />

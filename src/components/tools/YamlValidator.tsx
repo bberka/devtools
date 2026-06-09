@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { useCopyToClipboard } from '@/hooks';
+import yaml from 'js-yaml';
 
 type ValidationResult = {
   valid: boolean;
@@ -37,7 +38,6 @@ export function YamlValidator() {
     }
 
     try {
-      const yaml = require('js-yaml') as typeof import('js-yaml');
       const parsed = yaml.load(input) as unknown;
 
       return {
