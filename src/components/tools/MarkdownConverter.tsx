@@ -1,8 +1,6 @@
 'use client';
 
-import { type CSSProperties, useEffect, useRef, useState } from 'react';
-import { cn } from '@/lib/utils';
-import { Switch } from '@/components/ui/switch';
+import { type CSSProperties, useRef, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -277,32 +275,12 @@ export function MarkdownConverter() {
       setBackgroundColor('#ffffff');
     }
   };
+
   const [includePageNumbers, setIncludePageNumbers] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [exportProgress, setExportProgress] = useState('');
-  const [fullPreview, setFullPreview] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const printFrameRef = useRef<HTMLIFrameElement | null>(null);
-
-  // Auto-resize textarea to fit content
-  useEffect(() => {
-    const textarea = textareaRef.current;
-    if (!textarea) return;
-
-    const adjustHeight = () => {
-      textarea.style.height = 'auto';
-      textarea.style.height = `${textarea.scrollHeight}px`;
-    };
-
-    const timer = setTimeout(adjustHeight, 0);
-
-    window.addEventListener('resize', adjustHeight);
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener('resize', adjustHeight);
-    };
-  }, [input, fullPreview]);
 
   const renderMarkdown = (text: string) => {
     if (!text.trim()) {
@@ -681,65 +659,37 @@ export function MarkdownConverter() {
 
   return (
     <div className="space-y-4">
-      {/* Premium Toggle Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border bg-card p-4 shadow-sm transition-all duration-300">
-        <div className="flex items-center gap-2.5">
-          <Eye className="h-5 w-5 text-primary animate-pulse" />
-          <div>
-            <h3 className="font-semibold text-foreground leading-none">Markdown Previewer</h3>
-            <p className="text-xs text-muted-foreground mt-1">
-              Toggle full preview mode to focus entirely on the rendered output
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-3 rounded-lg bg-muted/50 p-1.5 px-3 border border-border/50">
-          <span className="text-xs font-medium text-muted-foreground sm:text-sm">
-            {fullPreview ? 'Full Preview' : 'Split View'}
-          </span>
-          <Switch
-            checked={fullPreview}
-            onCheckedChange={setFullPreview}
-            aria-label="Toggle full preview mode"
-          />
-        </div>
-      </div>
-
-      <div className={cn(
-        "grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(360px,0.75fr)]",
-        fullPreview ? "items-start" : "items-stretch"
-      )}>
-        {!fullPreview && (
-          <Card className="flex h-full flex-col transition-all duration-300">
-            <CardHeader className="p-4 sm:p-6">
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5 text-muted-foreground" />
-                Markdown Input
-              </CardTitle>
-              <CardDescription>Write your markdown content.</CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-1 flex-col space-y-4 px-4 pb-4 pt-0 sm:px-6 sm:pb-6">
-              <Textarea
-                ref={textareaRef}
-                value={input}
-                onChange={(event) => handleInputChange(event.currentTarget.value)}
-                placeholder="# Enter your markdown here..."
-                className="min-h-[420px] w-full resize-none overflow-hidden font-mono text-sm border focus-visible:ring-primary/20 focus-visible:border-primary transition-all duration-200"
-              />
-
-              <div className="flex flex-wrap gap-2">
-                <Button onClick={handleClear} variant="outline" size="sm">
-                  <Trash2 className="h-4 w-4" />
-                  Clear
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        <Card className={cn("flex h-full flex-col transition-all duration-300", fullPreview ? "xl:order-2" : "")}>
+      <div className="grid grid-cols-1 items-stretch gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(360px,0.75fr)]">
+        <Card className="flex h-full flex-col">
           <CardHeader className="p-4 sm:p-6">
             <CardTitle className="flex items-center gap-2">
-              <Printer className="h-5 w-5 text-muted-foreground" />
+              <FileText className="h-5 w-5" />
+              Markdown Input
+            </CardTitle>
+            <CardDescription>Write your markdown content.</CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-1 flex-col space-y-4 px-4 pb-4 pt-0 sm:px-6 sm:pb-6">
+            <Textarea
+              value={input}
+              onChange={(event) => handleInputChange(event.currentTarget.value)}
+              placeholder="# Enter your markdown here..."
+              rows={18}
+              className="min-h-[420px] flex-1 resize-y font-mono text-sm xl:min-h-0"
+            />
+
+            <div className="flex flex-wrap gap-2">
+              <Button onClick={handleClear} variant="outline" size="sm">
+                <Trash2 className="h-4 w-4" />
+                Clear
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="flex h-full flex-col">
+          <CardHeader className="p-4 sm:p-6">
+            <CardTitle className="flex items-center gap-2">
+              <Printer className="h-5 w-5" />
               Export Settings
             </CardTitle>
             <CardDescription>PDF uses browser print so text stays selectable.</CardDescription>
@@ -891,30 +841,30 @@ export function MarkdownConverter() {
             </div>
           </CardContent>
         </Card>
-
-        <Card className={cn("flex h-full flex-col transition-all duration-300", fullPreview ? "xl:order-1 xl:col-span-1" : "xl:col-span-2")}>
-          <CardHeader className="p-4 sm:p-6">
-            <CardTitle className="flex items-center gap-2">
-              <Eye className="h-5 w-5 text-muted-foreground" />
-              Preview
-            </CardTitle>
-            <CardDescription>Rendered markdown used for export and print.</CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-1 flex-col px-4 pb-4 pt-0 sm:px-6 sm:pb-6">
-            <div className="flex-1 rounded-md border bg-muted/30 p-3 sm:p-4">
-              <style>{previewCss}</style>
-              <div
-                ref={previewRef}
-                className={`markdown-print-preview mx-auto w-full overflow-hidden p-4 shadow-sm sm:p-6 lg:p-8 ${
-                  pdfTheme === 'dark' ? 'dark-pdf' : ''
-                }`}
-                style={previewPageStyle}
-                dangerouslySetInnerHTML={{ __html: html }}
-              />
-            </div>
-          </CardContent>
-        </Card>
       </div>
+
+      <Card className="flex h-full flex-col">
+        <CardHeader className="p-4 sm:p-6">
+          <CardTitle className="flex items-center gap-2">
+            <Eye className="h-5 w-5" />
+            Preview
+          </CardTitle>
+          <CardDescription>Rendered markdown used for export and print.</CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-1 flex-col px-4 pb-4 pt-0 sm:px-6 sm:pb-6">
+          <div className="flex-1 rounded-md border bg-muted/30 p-3 sm:p-4">
+            <style>{previewCss}</style>
+            <div
+              ref={previewRef}
+              className={`markdown-print-preview mx-auto w-full overflow-hidden p-4 shadow-sm sm:p-6 lg:p-8 ${
+                pdfTheme === 'dark' ? 'dark-pdf' : ''
+              }`}
+              style={previewPageStyle}
+              dangerouslySetInnerHTML={{ __html: html }}
+            />
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

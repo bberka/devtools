@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { cn } from '@/lib/utils';
+import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -99,12 +101,32 @@ function greet() {
 export function MarkdownEditor() {
   const [input, setInput] = useState(defaultMarkdown);
   const [output, setOutput] = useState('');
+  const [fullPreview, setFullPreview] = useState(false);
   const { copyToClipboard, isCopied } = useCopyToClipboard();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     renderMarkdown(input);
   }, []);
+
+  // Auto-resize textarea to fit content
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const adjustHeight = () => {
+      textarea.style.height = 'auto';
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    };
+
+    const timer = setTimeout(adjustHeight, 0);
+
+    window.addEventListener('resize', adjustHeight);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', adjustHeight);
+    };
+  }, [input, fullPreview]);
 
   const renderMarkdown = (text: string) => {
     try {
@@ -150,50 +172,80 @@ export function MarkdownEditor() {
 
   return (
     <div className="space-y-4">
-      <Card className="border-none shadow-none bg-transparent">
-        <CardContent className="p-0 flex flex-wrap gap-1">
-          <Button variant="outline" size="icon" onClick={() => insertText('# ', '')} title="H1"><Heading1 className="h-4 w-4" /></Button>
-          <Button variant="outline" size="icon" onClick={() => insertText('## ', '')} title="H2"><Heading2 className="h-4 w-4" /></Button>
-          <div className="w-[1px] h-8 bg-border mx-1" />
-          <Button variant="outline" size="icon" onClick={() => insertText('**', '**')} title="Bold"><Bold className="h-4 w-4" /></Button>
-          <Button variant="outline" size="icon" onClick={() => insertText('_', '_')} title="Italic"><Italic className="h-4 w-4" /></Button>
-          <div className="w-[1px] h-8 bg-border mx-1" />
-          <Button variant="outline" size="icon" onClick={() => insertText('- ', '')} title="Unordered List"><List className="h-4 w-4" /></Button>
-          <Button variant="outline" size="icon" onClick={() => insertText('1. ', '')} title="Ordered List"><ListOrdered className="h-4 w-4" /></Button>
-          <div className="w-[1px] h-8 bg-border mx-1" />
-          <Button variant="outline" size="icon" onClick={() => insertText('[', '](url)')} title="Link"><Link className="h-4 w-4" /></Button>
-          <Button variant="outline" size="icon" onClick={() => insertText('`', '`')} title="Inline Code"><Code className="h-4 w-4" /></Button>
-          <Button variant="outline" size="icon" onClick={() => insertText('> ', '')} title="Quote"><Quote className="h-4 w-4" /></Button>
-        </CardContent>
-      </Card>
+      {/* Premium Toggle Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border bg-card p-4 shadow-sm transition-all duration-300">
+        <div className="flex items-center gap-2.5">
+          <Eye className="h-5 w-5 text-primary animate-pulse" />
+          <div>
+            <h3 className="font-semibold text-foreground leading-none">Markdown Editor</h3>
+            <p className="text-xs text-muted-foreground mt-1">
+              Toggle full preview mode to focus entirely on the rendered output
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3 rounded-lg bg-muted/50 p-1.5 px-3 border border-border/50">
+          <span className="text-xs font-medium text-muted-foreground sm:text-sm">
+            {fullPreview ? 'Full Preview' : 'Split View'}
+          </span>
+          <Switch
+            checked={fullPreview}
+            onCheckedChange={setFullPreview}
+            aria-label="Toggle full preview mode"
+          />
+        </div>
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium flex items-center gap-2">
-              <FileText className="h-4 w-4" /> Editor
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Textarea
-              ref={textareaRef}
-              value={input}
-              onChange={(e) => handleInputChange(e.target.value)}
-              placeholder="Write markdown here..."
-              className="min-h-[500px] font-mono text-sm leading-relaxed"
-            />
+      {!fullPreview && (
+        <Card className="border-none shadow-none bg-transparent">
+          <CardContent className="p-0 flex flex-wrap gap-1">
+            <Button variant="outline" size="icon" onClick={() => insertText('# ', '')} title="H1"><Heading1 className="h-4 w-4" /></Button>
+            <Button variant="outline" size="icon" onClick={() => insertText('## ', '')} title="H2"><Heading2 className="h-4 w-4" /></Button>
+            <div className="w-[1px] h-8 bg-border mx-1" />
+            <Button variant="outline" size="icon" onClick={() => insertText('**', '**')} title="Bold"><Bold className="h-4 w-4" /></Button>
+            <Button variant="outline" size="icon" onClick={() => insertText('_', '_')} title="Italic"><Italic className="h-4 w-4" /></Button>
+            <div className="w-[1px] h-8 bg-border mx-1" />
+            <Button variant="outline" size="icon" onClick={() => insertText('- ', '')} title="Unordered List"><List className="h-4 w-4" /></Button>
+            <Button variant="outline" size="icon" onClick={() => insertText('1. ', '')} title="Ordered List"><ListOrdered className="h-4 w-4" /></Button>
+            <div className="w-[1px] h-8 bg-border mx-1" />
+            <Button variant="outline" size="icon" onClick={() => insertText('[', '](url)')} title="Link"><Link className="h-4 w-4" /></Button>
+            <Button variant="outline" size="icon" onClick={() => insertText('`', '`')} title="Inline Code"><Code className="h-4 w-4" /></Button>
+            <Button variant="outline" size="icon" onClick={() => insertText('> ', '')} title="Quote"><Quote className="h-4 w-4" /></Button>
           </CardContent>
         </Card>
+      )}
 
-        <Card>
+      <div className={cn(
+        "grid grid-cols-1 gap-4",
+        fullPreview ? "grid-cols-1" : "lg:grid-cols-2"
+      )}>
+        {!fullPreview && (
+          <Card className="transition-all duration-300">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium flex items-center gap-2">
+                <FileText className="h-4 w-4 text-muted-foreground" /> Editor
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Textarea
+                ref={textareaRef}
+                value={input}
+                onChange={(e) => handleInputChange(e.target.value)}
+                placeholder="Write markdown here..."
+                className="min-h-[500px] w-full resize-none overflow-hidden font-mono text-sm leading-relaxed border focus-visible:ring-primary/20 focus-visible:border-primary transition-all duration-200"
+              />
+            </CardContent>
+          </Card>
+        )}
+
+        <Card className="transition-all duration-300">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium flex items-center gap-2">
-              <Eye className="h-4 w-4" /> Preview
+              <Eye className="h-4 w-4 text-muted-foreground" /> Preview
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div
-              className="prose prose-sm dark:prose-invert max-w-none min-h-[500px] p-4 border rounded-md overflow-auto bg-card"
+              className="prose prose-sm dark:prose-invert max-w-none min-h-[500px] p-4 border rounded-md bg-card"
               dangerouslySetInnerHTML={{ __html: output }}
             />
           </CardContent>
