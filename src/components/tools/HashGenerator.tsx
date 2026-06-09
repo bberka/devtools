@@ -4,7 +4,8 @@ import { useState, useRef, useCallback } from 'react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Textarea } from '../ui/textarea';
-import { Copy, Check, Upload, FileText, X } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
+import { Copy, Check, Upload, FileText, X, File } from 'lucide-react';
 import { useCopyToClipboard } from '@/hooks';
 
 type HashAlgorithm = 'MD5' | 'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512';
@@ -122,14 +123,18 @@ export function HashGenerator() {
 
   return (
     <div className="space-y-6">
-      <div className="flex gap-2">
-        <Button variant={mode === 'text' ? 'default' : 'outline'} onClick={() => switchMode('text')}>
-          Text
-        </Button>
-        <Button variant={mode === 'file' ? 'default' : 'outline'} onClick={() => switchMode('file')}>
-          File
-        </Button>
-      </div>
+      <Tabs value={mode} onValueChange={(val) => switchMode(val as 'text' | 'file')}>
+        <TabsList className="grid grid-cols-2 max-w-[400px]">
+          <TabsTrigger value="text" className="flex items-center gap-2">
+            <FileText className="h-4 w-4" />
+            Text
+          </TabsTrigger>
+          <TabsTrigger value="file" className="flex items-center gap-2">
+            <File className="h-4 w-4" />
+            File
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
 
       {mode === 'text' ? (
         <Card>
