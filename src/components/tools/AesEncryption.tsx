@@ -224,9 +224,9 @@ export function AesEncryption() {
                 setOutput('');
                 setError('');
               }}
-              className="flex-1"
+              className="flex-1 w-full"
             >
-              <TabsList className="grid grid-cols-2 max-w-[400px]">
+              <TabsList className="grid w-full grid-cols-2 h-auto">
                 <TabsTrigger value="encrypt" className="flex items-center gap-2">
                   <Lock className="h-4 w-4" />
                   Encrypt

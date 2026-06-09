@@ -123,8 +123,8 @@ export function HashGenerator() {
 
   return (
     <div className="space-y-6">
-      <Tabs value={mode} onValueChange={(val) => switchMode(val as 'text' | 'file')}>
-        <TabsList className="grid grid-cols-2 max-w-[400px]">
+      <Tabs value={mode} onValueChange={(val) => switchMode(val as 'text' | 'file')} className="w-full">
+        <TabsList className="grid w-full grid-cols-2 h-auto">
           <TabsTrigger value="text" className="flex items-center gap-2">
             <FileText className="h-4 w-4" />
             Text

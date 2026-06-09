@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
+import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 import { Textarea } from '../ui/textarea';
 import { Input } from '../ui/input';
 import { Slider } from '../ui/slider';
@@ -278,24 +279,18 @@ export function PasswordHasher() {
       {/* Mode Selector */}
       <Card className="border border-border bg-card shadow-sm">
         <CardContent className="pt-6">
-          <div className="flex gap-2">
-            <Button
-              variant={mode === 'hash' ? 'default' : 'outline'}
-              onClick={() => handleModeChange('hash')}
-              className="flex-1 sm:flex-none transition-all duration-200"
-            >
-              <Shield className="h-4 w-4 mr-2" />
-              Hash Password
-            </Button>
-            <Button
-              variant={mode === 'verify' ? 'default' : 'outline'}
-              onClick={() => handleModeChange('verify')}
-              className="flex-1 sm:flex-none transition-all duration-200"
-            >
-              <CheckCircle className="h-4 w-4 mr-2" />
-              Verify Password
-            </Button>
-          </div>
+          <Tabs value={mode} onValueChange={(val) => handleModeChange(val as Mode)} className="w-full">
+            <TabsList className="grid w-full grid-cols-2 h-auto">
+              <TabsTrigger value="hash" className="flex items-center gap-2">
+                <Shield className="h-4 w-4" />
+                Hash Password
+              </TabsTrigger>
+              <TabsTrigger value="verify" className="flex items-center gap-2">
+                <CheckCircle className="h-4 w-4" />
+                Verify Password
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </CardContent>
       </Card>
 

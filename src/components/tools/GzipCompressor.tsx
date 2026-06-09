@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Textarea } from '../ui/textarea';
-import { Copy, Check, Trash2, ArrowLeftRight } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
+import { Copy, Check, Trash2, ArrowLeftRight, FolderArchive, FolderOpen } from 'lucide-react';
 import { useCopyToClipboard } from '@/hooks';
 
 async function compress(text: string): Promise<string> {
@@ -110,14 +111,27 @@ export function GzipCompressor() {
 
   return (
     <div className="space-y-6">
-      <div className="flex gap-2">
-        <Button variant={mode === 'compress' ? 'default' : 'outline'} onClick={() => { setMode('compress'); setOutput(''); setError(''); setStats(null); }}>
-          Compress
-        </Button>
-        <Button variant={mode === 'decompress' ? 'default' : 'outline'} onClick={() => { setMode('decompress'); setOutput(''); setError(''); setStats(null); }}>
-          Decompress
-        </Button>
-      </div>
+      <Tabs
+        value={mode}
+        onValueChange={(val) => {
+          setMode(val as 'compress' | 'decompress');
+          setOutput('');
+          setError('');
+          setStats(null);
+        }}
+        className="w-full"
+      >
+        <TabsList className="grid w-full grid-cols-2 h-auto">
+          <TabsTrigger value="compress" className="flex items-center gap-2">
+            <FolderArchive className="h-4 w-4" />
+            Compress
+          </TabsTrigger>
+          <TabsTrigger value="decompress" className="flex items-center gap-2">
+            <FolderOpen className="h-4 w-4" />
+            Decompress
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
 
       <Card>
         <CardHeader>

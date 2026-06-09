@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
+import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 import { Textarea } from '../ui/textarea';
-import { Copy, Check, Trash2, ArrowLeftRight } from 'lucide-react';
+import { Copy, Check, Trash2, ArrowLeftRight, Link, Unlink } from 'lucide-react';
 import { useCopyToClipboard } from '@/hooks';
 
 export function UrlEncoder() {
@@ -58,20 +59,18 @@ export function UrlEncoder() {
   return (
     <div className="space-y-6">
       {/* Mode Toggle */}
-      <div className="flex gap-2">
-        <Button
-          variant={mode === 'encode' ? 'default' : 'outline'}
-          onClick={() => setMode('encode')}
-        >
-          Encode
-        </Button>
-        <Button
-          variant={mode === 'decode' ? 'default' : 'outline'}
-          onClick={() => setMode('decode')}
-        >
-          Decode
-        </Button>
-      </div>
+      <Tabs value={mode} onValueChange={(val) => setMode(val as 'encode' | 'decode')} className="w-full">
+        <TabsList className="grid w-full grid-cols-2 h-auto">
+          <TabsTrigger value="encode" className="flex items-center gap-2">
+            <Link className="h-4 w-4" />
+            Encode
+          </TabsTrigger>
+          <TabsTrigger value="decode" className="flex items-center gap-2">
+            <Unlink className="h-4 w-4" />
+            Decode
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
 
       {/* Input Section */}
       <Card>

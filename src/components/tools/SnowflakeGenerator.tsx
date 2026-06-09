@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { Button } from '../ui/button';
+import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Input } from '../ui/input';
 import { Slider } from '../ui/slider';
@@ -522,30 +523,18 @@ type DecodeResult = DecodeSuccess | DecodeError;
   return (
     <div className="space-y-6">
       {/* Custom Tabs */}
-      <div className="flex border-b border-border/80">
-        <button
-          onClick={() => setActiveTab('generate')}
-          className={`flex items-center gap-2 border-b-2 px-6 py-3 text-sm font-semibold transition-all ${
-            activeTab === 'generate'
-              ? 'border-primary text-primary'
-              : 'border-transparent text-muted-foreground hover:text-foreground'
-          }`}
-        >
-          <Sparkles className="h-4 w-4" />
-          Generate IDs
-        </button>
-        <button
-          onClick={() => setActiveTab('decode')}
-          className={`flex items-center gap-2 border-b-2 px-6 py-3 text-sm font-semibold transition-all ${
-            activeTab === 'decode'
-              ? 'border-primary text-primary'
-              : 'border-transparent text-muted-foreground hover:text-foreground'
-          }`}
-        >
-          <Search className="h-4 w-4" />
-          Decode ID
-        </button>
-      </div>
+      <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as 'generate' | 'decode')} className="w-full">
+        <TabsList className="grid w-full grid-cols-2 h-auto">
+          <TabsTrigger value="generate" className="flex items-center gap-2">
+            <Sparkles className="h-4 w-4" />
+            Generate IDs
+          </TabsTrigger>
+          <TabsTrigger value="decode" className="flex items-center gap-2">
+            <Search className="h-4 w-4" />
+            Decode ID
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
 
       {activeTab === 'generate' && (
         <div className="grid gap-6 lg:grid-cols-12">

@@ -136,8 +136,8 @@ export function Base64Converter() {
   return (
     <div className="space-y-6">
       {/* Tab */}
-      <Tabs value={tab} onValueChange={(val) => switchTab(val as Tab)}>
-        <TabsList className="grid grid-cols-2 max-w-[400px]">
+      <Tabs value={tab} onValueChange={(val) => switchTab(val as Tab)} className="w-full">
+        <TabsList className="grid w-full grid-cols-2 h-auto">
           <TabsTrigger value="text" className="flex items-center gap-2">
             <FileText className="h-4 w-4" />
             Text
@@ -152,8 +152,8 @@ export function Base64Converter() {
       {tab === 'text' ? (
         <>
           {/* Mode */}
-          <Tabs value={mode} onValueChange={(val) => onModeChange(val as Mode)}>
-            <TabsList className="grid grid-cols-2 max-w-[300px]">
+          <Tabs value={mode} onValueChange={(val) => onModeChange(val as Mode)} className="w-full">
+            <TabsList className="grid w-full grid-cols-2 h-auto">
               <TabsTrigger value="encode" className="flex items-center gap-2">
                 <Binary className="h-4 w-4" />
                 Encode

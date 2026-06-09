@@ -15,8 +15,11 @@ import {
   Info,
   RefreshCw,
   Cpu,
+  Wind,
+  Atom,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Card,
   CardContent,
@@ -734,7 +737,7 @@ export function GlassmorphismGenerator() {
 
           {/* Export Code Box */}
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-3">
+            <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 gap-3">
               <div>
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <Code className="h-4 w-4" />
@@ -742,32 +745,22 @@ export function GlassmorphismGenerator() {
                 </CardTitle>
                 <CardDescription>Copy standard CSS rules or Tailwind utilities for your components.</CardDescription>
               </div>
-              <div className="flex rounded-lg border border-border/70 bg-muted/30 p-0.5">
-                <Button
-                  size="sm"
-                  variant={exportTab === 'css' ? 'default' : 'ghost'}
-                  className="h-7 px-3 text-xs rounded-md"
-                  onClick={() => setExportTab('css')}
-                >
-                  CSS
-                </Button>
-                <Button
-                  size="sm"
-                  variant={exportTab === 'tailwind' ? 'default' : 'ghost'}
-                  className="h-7 px-3 text-xs rounded-md"
-                  onClick={() => setExportTab('tailwind')}
-                >
-                  Tailwind
-                </Button>
-                <Button
-                  size="sm"
-                  variant={exportTab === 'react' ? 'default' : 'ghost'}
-                  className="h-7 px-3 text-xs rounded-md"
-                  onClick={() => setExportTab('react')}
-                >
-                  React Styles
-                </Button>
-              </div>
+              <Tabs value={exportTab} onValueChange={(val) => setExportTab(val as ExportTabType)} className="w-full sm:w-auto">
+                <TabsList className="grid grid-cols-3 w-full sm:w-64 h-auto p-0.5 bg-muted/30 border border-border/70 rounded-lg">
+                  <TabsTrigger value="css" className="flex items-center gap-1.5 text-xs py-1.5 h-auto">
+                    <Code className="h-3.5 w-3.5" />
+                    CSS
+                  </TabsTrigger>
+                  <TabsTrigger value="tailwind" className="flex items-center gap-1.5 text-xs py-1.5 h-auto">
+                    <Wind className="h-3.5 w-3.5" />
+                    Tailwind
+                  </TabsTrigger>
+                  <TabsTrigger value="react" className="flex items-center gap-1.5 text-xs py-1.5 h-auto">
+                    <Atom className="h-3.5 w-3.5" />
+                    React
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="relative group">
