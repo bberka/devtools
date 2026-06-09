@@ -42,7 +42,7 @@ export function PdfWatermark() {
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
   const overlayCanvasRef = useRef<HTMLCanvasElement>(null);
   
-  const pdfDocRef = useRef<any>(null); // pdfjs doc instance
+  const pdfDocRef = useRef<import('pdfjs-dist').PDFDocumentProxy | null>(null); // pdfjs doc instance
   const [actualPageSize, setActualPageSize] = useState({ width: 612, height: 792 }); // Letter default
 
   // Clean up references
@@ -101,13 +101,14 @@ export function PdfWatermark() {
 
   // Render first page to preview canvas
   useEffect(() => {
-    if (!pdfDocRef.current || !previewLoaded || !previewCanvasRef.current) return;
+    const doc = pdfDocRef.current;
+    if (!doc || !previewLoaded || !previewCanvasRef.current) return;
 
     let active = true;
 
     const renderPreview = async () => {
       try {
-        const page = await pdfDocRef.current.getPage(1);
+        const page = await doc.getPage(1);
         
         // Render at a responsive preview scale (e.g. max width 500px)
         const defaultViewport = page.getViewport({ scale: 1.0 });
@@ -170,7 +171,7 @@ export function PdfWatermark() {
   ]);
 
   // Drawing overlay watermark logic
-  const drawOverlayWatermark = (canvas: HTMLCanvasElement, previewWidth: number, actualWidth: number) => {
+  function drawOverlayWatermark(canvas: HTMLCanvasElement, previewWidth: number, actualWidth: number) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -279,7 +280,7 @@ export function PdfWatermark() {
     }
 
     ctx.restore();
-  };
+  }
 
   // Hex color to rgb ratios helper
   const hexToRgbRatio = (hex: string) => {
@@ -315,7 +316,7 @@ export function PdfWatermark() {
       const rgbColor = hexToRgbRatio(textColor);
       
       // Embed watermark image if type is image
-      let embeddedImage: any = null;
+      let embeddedImage: import('pdf-lib').PDFImage | null = null;
       if (watermarkType === 'image' && watermarkImageFile) {
         const imgBytes = await watermarkImageFile.arrayBuffer();
         if (watermarkImageFile.type === 'image/png') {
@@ -481,7 +482,7 @@ export function PdfWatermark() {
       }
 
       const pdfBytes = await pdfDoc.save();
-      const blob = new Blob([pdfBytes] as any, { type: 'application/pdf' });
+      const blob = new Blob([pdfBytes as unknown as BlobPart], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
 
       const link = document.createElement('a');
@@ -591,7 +592,7 @@ export function PdfWatermark() {
                       <label className="text-xs font-medium">Watermark Text</label>
                       <Input
                         value={watermarkText}
-                        onChange={(e) => setWarmarkText(e.target.value)}
+                        onChange={(e) => setWatermarkText(e.target.value)}
                         placeholder="CONFIDENTIAL"
                       />
                     </div>
@@ -601,7 +602,7 @@ export function PdfWatermark() {
                         <label className="text-xs font-medium">Font Family</label>
                         <Select
                           value={fontFamily}
-                          onValueChange={(val: any) => setFontFamily(val)}
+                          onValueChange={(val) => setFontFamily(val as 'Helvetica' | 'Times Roman' | 'Courier')}
                         >
                           <SelectTrigger className="h-9">
                             <SelectValue />
@@ -727,7 +728,7 @@ export function PdfWatermark() {
                       <label className="text-xs font-medium">Placement</label>
                       <Select
                         value={placement}
-                        onValueChange={(val: any) => setPlacement(val)}
+                        onValueChange={(val) => setPlacement(val as typeof placement)}
                       >
                         <SelectTrigger className="h-9">
                           <SelectValue />
@@ -747,7 +748,7 @@ export function PdfWatermark() {
                       <label className="text-xs font-medium">Page Range</label>
                       <Select
                         value={pageRange}
-                        onValueChange={(val: any) => setPageRange(val)}
+                        onValueChange={(val) => setPageRange(val as typeof pageRange)}
                       >
                         <SelectTrigger className="h-9">
                           <SelectValue />

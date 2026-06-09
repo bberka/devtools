@@ -12,7 +12,7 @@ test.describe('DevTools Smoke Tests', () => {
       window.dispatchEvent(new Event('reset-home-state'));
     });
     // Wait for the main page title to be correct
-    await expect(page).toHaveTitle(/Dev\s*Tools/i);
+    await expect(page).toHaveTitle(/(Dev\s*Tools|Lazy\s*Tools)/i);
     // Wait for hydration to complete stably
     await page.waitForTimeout(1000);
   });

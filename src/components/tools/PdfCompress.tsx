@@ -129,7 +129,7 @@ export function PdfCompress() {
         compressedBytes = await newPdf.save();
       }
 
-      const blob = new Blob([compressedBytes] as any, { type: 'application/pdf' });
+      const blob = new Blob([compressedBytes as unknown as BlobPart], { type: 'application/pdf' });
       const reduction = ((pdfFile.size - blob.size) / pdfFile.size) * 100;
       
       setResult({
@@ -241,15 +241,17 @@ export function PdfCompress() {
                   Compression Level
                 </label>
                 <div className="grid grid-cols-3 gap-2">
-                  {[
-                    { id: 'low', name: 'Low', desc: 'Clear (220 DPI)' },
-                    { id: 'medium', name: 'Medium', desc: 'Balanced (150 DPI)' },
-                    { id: 'high', name: 'High', desc: 'Smallest (72 DPI)' },
-                  ].map((lvl) => (
+                  {(
+                    [
+                      { id: 'low', name: 'Low', desc: 'Clear (220 DPI)' },
+                      { id: 'medium', name: 'Medium', desc: 'Balanced (150 DPI)' },
+                      { id: 'high', name: 'High', desc: 'Smallest (72 DPI)' },
+                    ] as const
+                  ).map((lvl) => (
                     <button
                       key={lvl.id}
                       type="button"
-                      onClick={() => setCompressionLevel(lvl.id as any)}
+                      onClick={() => setCompressionLevel(lvl.id)}
                       className={cn(
                         "p-3 rounded-lg border text-center transition-all hover:bg-muted/20 flex flex-col items-center gap-0.5",
                         compressionLevel === lvl.id

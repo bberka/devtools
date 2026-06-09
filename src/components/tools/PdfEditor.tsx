@@ -74,7 +74,7 @@ export function PdfEditor() {
   const [editingTextId, setEditingTextId] = useState<string | null>(null);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const pdfDocRef = useRef<any>(null); // pdfjs doc instance
+  const pdfDocRef = useRef<import('pdfjs-dist').PDFDocumentProxy | null>(null); // pdfjs doc instance
   const workspaceRef = useRef<HTMLDivElement>(null);
   const pageCanvasRef = useRef<HTMLCanvasElement>(null);
   const drawingCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -163,13 +163,14 @@ export function PdfEditor() {
 
   // Render high-res page inside the annotator workspace
   useEffect(() => {
-    if (!pdfDocRef.current || !selectedPage || !pageCanvasRef.current) return;
+    const doc = pdfDocRef.current;
+    if (!doc || !selectedPage || !pageCanvasRef.current) return;
 
     let active = true;
 
     const renderActivePage = async () => {
       try {
-        const page = await pdfDocRef.current.getPage(selectedPage.originalIndex + 1);
+        const page = await doc.getPage(selectedPage.originalIndex + 1);
         
         // Render at scale 1.25 for comfortable editing. Adjust based on rotation
         const viewport = page.getViewport({
@@ -514,7 +515,7 @@ export function PdfEditor() {
       }
 
       const pdfBytes = await newPdf.save();
-      const blob = new Blob([pdfBytes] as any, { type: 'application/pdf' });
+      const blob = new Blob([pdfBytes as unknown as BlobPart], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
 
       const link = document.createElement('a');

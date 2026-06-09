@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { FileText, Upload, Download, Trash2, FileInput } from 'lucide-react';
 import { PDFDocument, rgb } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
-// @ts-ignore
+// @ts-expect-error - mammoth does not export typescript declarations
 import mammoth from 'mammoth/mammoth.browser.min.js';
 
 export function WordToPdf() {
@@ -96,7 +96,7 @@ export function WordToPdf() {
       }
 
       const pdfBytes = await pdfDoc.save();
-      const blob = new Blob([pdfBytes] as any, { type: 'application/pdf' });
+      const blob = new Blob([pdfBytes as unknown as BlobPart], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
       setPdfDataUrl(url);
 
