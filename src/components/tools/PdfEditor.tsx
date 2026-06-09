@@ -803,7 +803,7 @@ export function PdfEditor() {
                 </div>
 
                 {/* Workspace Canvas Layer */}
-                <div className="p-4 bg-muted/30 flex items-center justify-center overflow-auto min-h-[450px]">
+                <div className="p-4 bg-muted/30 flex items-center justify-center overflow-auto scrollbar-thin min-h-[450px]">
                   <div
                     ref={workspaceRef}
                     className="relative bg-white shadow-md rounded border border-border overflow-hidden select-none"

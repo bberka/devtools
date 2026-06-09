@@ -162,7 +162,7 @@ export function JwtDecoder() {
               <CardDescription>Algorithm and token type</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="bg-muted p-4 rounded-md font-mono text-sm overflow-x-auto">
+              <div className="bg-muted p-4 rounded-md font-mono text-sm overflow-x-auto scrollbar-thin">
                 <pre>{JSON.stringify(decoded.header, null, 2)}</pre>
               </div>
               <Button
@@ -191,7 +191,7 @@ export function JwtDecoder() {
               <CardDescription>Claims and data</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="bg-muted p-4 rounded-md font-mono text-sm overflow-x-auto">
+              <div className="bg-muted p-4 rounded-md font-mono text-sm overflow-x-auto scrollbar-thin">
                 <pre>{JSON.stringify(decoded.payload, null, 2)}</pre>
               </div>
 
