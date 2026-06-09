@@ -395,11 +395,14 @@ function ToolCard({
   const Icon = CATEGORY_ICONS[category.icon];
   return (
     <Link href={`/tools/${tool.id}`} className="group block h-full">
-      <Card className="h-full transition-all hover:border-primary/50 hover:shadow-lg">
+      <Card className={cn(
+        "h-full transition-all hover:border-primary/50 hover:shadow-lg",
+        compactMode && "flex flex-col justify-center"
+      )}>
         <CardHeader
           className={cn(compactMode ? 'space-y-0 p-3' : 'p-4 sm:p-6')}
         >
-          <div className="flex items-start justify-between gap-2">
+          <div className={cn("flex justify-between gap-2", compactMode ? "items-center" : "items-start")}>
             <div className="space-y-1">
               {showCategory && (
                 <div className="flex items-center flex-wrap gap-1.5 mb-1">
