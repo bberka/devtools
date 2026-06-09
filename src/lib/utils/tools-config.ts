@@ -116,18 +116,109 @@ export function getAllCategories(): CategoryInfo[] {
   return Object.values(CATEGORIES);
 }
 
+export function calculateSearchScore(tool: Tool, query: string): number {
+  const cleanQuery = query.trim().toLowerCase();
+  if (!cleanQuery) return 0;
+
+  let score = 0;
+  const toolName = tool.name.toLowerCase();
+  const toolId = tool.id.toLowerCase();
+  const toolDesc = tool.description.toLowerCase();
+  const toolKeywords = (tool.keywords || []).map((k) => k.toLowerCase());
+  const toolCategory = tool.category.toLowerCase();
+
+  // 1. Exact matches (highest priority)
+  if (toolName === cleanQuery) {
+    score += 100;
+  } else if (toolId === cleanQuery) {
+    score += 90;
+  } else if (toolKeywords.includes(cleanQuery)) {
+    score += 85;
+  }
+
+  // 2. Starts with / Prefix matches (high priority)
+  if (toolName.startsWith(cleanQuery)) {
+    score += 40;
+  } else if (toolName.includes(cleanQuery)) {
+    score += 20;
+  }
+
+  if (toolId.startsWith(cleanQuery)) {
+    score += 30;
+  } else if (toolId.includes(cleanQuery)) {
+    score += 15;
+  }
+
+  // 3. Keyword matches
+  for (const keyword of toolKeywords) {
+    if (keyword.startsWith(cleanQuery)) {
+      score += 25;
+    } else if (keyword.includes(cleanQuery)) {
+      score += 10;
+    }
+  }
+
+  // 4. Word-based matching (for multi-word queries)
+  const queryWords = cleanQuery.split(/[\s-_]+/).filter(Boolean);
+  if (queryWords.length > 1) {
+    let wordMatches = 0;
+    for (const word of queryWords) {
+      let wordScore = 0;
+      if (toolName === word) {
+        wordScore = Math.max(wordScore, 30);
+      } else if (toolName.includes(word)) {
+        wordScore = Math.max(wordScore, 10);
+      }
+
+      if (toolKeywords.includes(word)) {
+        wordScore = Math.max(wordScore, 15);
+      } else if (toolKeywords.some((k) => k.includes(word))) {
+        wordScore = Math.max(wordScore, 5);
+      }
+
+      if (toolDesc.includes(word)) {
+        wordScore = Math.max(wordScore, 5);
+      }
+
+      if (toolCategory.includes(word)) {
+        wordScore = Math.max(wordScore, 3);
+      }
+
+      if (wordScore > 0) {
+        score += wordScore;
+        wordMatches++;
+      }
+    }
+
+    // Boost score if all query words matched something in the tool
+    if (wordMatches === queryWords.length) {
+      score += 30;
+    }
+  } else {
+    // Single word description match
+    if (toolDesc.includes(cleanQuery)) {
+      score += 10;
+    }
+    // Single word category match
+    if (toolCategory.includes(cleanQuery)) {
+      score += 5;
+    }
+  }
+
+  return score;
+}
+
 export function searchTools(query: string): Tool[] {
-  const lowerQuery = query.toLowerCase().trim();
+  const cleanQuery = query.trim().toLowerCase();
 
-  if (!lowerQuery) return TOOLS;
+  if (!cleanQuery) return TOOLS.map(t => ({ ...t, score: undefined }));
 
-  return TOOLS.filter((tool) => {
-    const searchText = [tool.name, tool.description, ...(tool.keywords || [])]
-      .join(' ')
-      .toLowerCase();
-
-    return searchText.includes(lowerQuery);
-  });
+  return TOOLS.map((tool) => ({
+    ...tool,
+    score: calculateSearchScore(tool, cleanQuery),
+  }))
+    .filter((tool) => (tool.score ?? 0) > 0)
+    .sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
 }
 
 export function filterTools(
@@ -136,12 +227,7 @@ export function filterTools(
   favoritesOnly: boolean,
   favorites: string[]
 ): Tool[] {
-  let filtered = TOOLS;
-
-  // Filter by search
-  if (searchQuery) {
-    filtered = searchTools(searchQuery);
-  }
+  let filtered = searchQuery ? searchTools(searchQuery) : TOOLS.map(t => ({ ...t, score: undefined }));
 
   // Filter by category
   if (category) {

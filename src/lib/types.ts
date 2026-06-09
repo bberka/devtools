@@ -20,6 +20,7 @@ export interface Tool {
   icon?: string; // Lucide icon name
   keywords?: string[]; // For search
   featured?: boolean; // Show prominently
+  score?: number; // Match score for search
 }
 
 export interface CategoryInfo {
@@ -35,6 +36,7 @@ export interface GlobalSettings {
   favorites: string[]; // Tool IDs
   recentTools: string[]; // Last 5 accessed
   compactMode: boolean;
+  fullWidth: boolean;
 }
 
 export interface ToolSettings {

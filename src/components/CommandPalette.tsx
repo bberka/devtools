@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Command } from 'cmdk';
 import { Search, Clock, Star, ArrowRight } from 'lucide-react';
-import { TOOLS, CATEGORIES } from '@/lib/utils/tools-config';
+import { TOOLS, CATEGORIES, searchTools } from '@/lib/utils/tools-config';
 import type { Tool, ToolCategory } from '@/lib/types';
 import { useCommandPalette } from '@/lib/contexts/CommandPaletteContext';
 import { useFavorites } from '@/lib/contexts/FavoritesContext';
@@ -12,6 +12,7 @@ import { useRecentTools } from '@/lib/contexts/RecentToolsContext';
 import { getModifierKey, isModifierKey } from '@/lib/utils/keyboard';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogTitle } from './ui/dialog';
+import { Badge } from './ui/badge';
 
 export function CommandPalette() {
   const router = useRouter();
@@ -162,6 +163,12 @@ export function CommandPalette() {
     return groups;
   }, [recentTools, favorites]);
 
+  // Get search results sorted by score
+  const searchedTools = useMemo(() => {
+    if (!search) return [];
+    return searchTools(search);
+  }, [search]);
+
   // Handle navigation to tool
   const handleNavigate = (toolId: string, openInNewTab: boolean = false) => {
     // Track in recent tools
@@ -198,6 +205,7 @@ export function CommandPalette() {
         <DialogTitle className="sr-only">Command Search</DialogTitle>
         <Command
           className="flex max-h-[min(80vh,36rem)] min-h-0 flex-col overflow-hidden"
+          shouldFilter={false}
         >
           {/* Search Input */}
           <div className="flex items-center border-b px-3">
@@ -221,11 +229,30 @@ export function CommandPalette() {
               scrollPaddingBlockEnd: '0.5rem',
             }}
           >
-              <Command.Empty>
+              {search && searchedTools.length === 0 && (
                 <div className="py-6 text-center text-sm text-muted-foreground">
                   No tools found matching &quot;{search}&quot;
                 </div>
-              </Command.Empty>
+              )}
+
+              {/* Search Results (Custom Ordered) */}
+              {search && searchedTools.length > 0 && (
+                <Command.Group heading="Search Results">
+                  {searchedTools.map((tool) => (
+                    <Command.Item
+                      key={tool.id}
+                      value={tool.id}
+                      onSelect={() => handleNavigate(tool.id)}
+                      className="relative flex cursor-pointer select-none items-center rounded-sm px-3 py-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground"
+                    >
+                      <span className="flex-1">{tool.name}</span>
+                      <span className="mr-2 text-xs text-muted-foreground">
+                        {CATEGORIES[tool.category].name}
+                      </span>
+                    </Command.Item>
+                  ))}
+                </Command.Group>
+              )}
 
               {/* Recent Tools Group */}
               {recentToolsData.length > 0 && !search && (
@@ -264,7 +291,7 @@ export function CommandPalette() {
               )}
 
               {/* All Tools Grouped by Category */}
-              {(Object.entries(groupedTools) as Array<[ToolCategory, Tool[]]>).map(
+              {!search && (Object.entries(groupedTools) as Array<[ToolCategory, Tool[]]>).map(
                 ([categoryId, categoryTools]) => {
                   if (categoryTools.length === 0) return null;
 
@@ -276,7 +303,6 @@ export function CommandPalette() {
                         <Command.Item
                           key={tool.id}
                           value={tool.id}
-                          keywords={[tool.name, tool.description, ...(tool.keywords || [])]}
                           onSelect={() => handleNavigate(tool.id)}
                           className="relative flex cursor-pointer select-none items-center rounded-sm px-3 py-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground"
                         >

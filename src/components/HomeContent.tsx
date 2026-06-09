@@ -264,7 +264,7 @@ export function HomeContent() {
           {filteredTools.length > 0 ? (
             <ToolGrid compactMode={compactMode}>
               {filteredTools.map((tool) => (
-                <ToolCard key={tool.id} tool={tool} compactMode={compactMode} score={tool.score} />
+                <ToolCard key={tool.id} tool={tool} compactMode={compactMode} showCategory={true} />
               ))}
             </ToolGrid>
           ) : (
@@ -385,13 +385,14 @@ function ToolGrid({
 function ToolCard({
   tool,
   compactMode,
-  score,
+  showCategory = false,
 }: {
   tool: Tool;
   compactMode: boolean;
-  score?: number;
+  showCategory?: boolean;
 }) {
   const category = CATEGORIES[tool.category];
+  const Icon = CATEGORY_ICONS[category.icon];
   return (
     <Link href={`/tools/${tool.id}`} className="group block h-full">
       <Card className="h-full transition-all hover:border-primary/50 hover:shadow-lg">
@@ -400,16 +401,19 @@ function ToolCard({
         >
           <div className="flex items-start justify-between gap-2">
             <div className="space-y-1">
-              <div className="flex items-center flex-wrap gap-1.5 mb-1">
-                <span
-                  className={cn(
-                    'text-[10px] font-semibold uppercase tracking-wider',
-                    category.color
-                  )}
-                >
-                  {category.name}
-                </span>
-              </div>
+              {showCategory && (
+                <div className="flex items-center flex-wrap gap-1.5 mb-1">
+                  <span
+                    className={cn(
+                      'inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider',
+                      category.color
+                    )}
+                  >
+                    {Icon && <Icon className="h-3 w-3 shrink-0" />}
+                    <span>{category.name}</span>
+                  </span>
+                </div>
+              )}
               <CardTitle
                 className={cn(
                   'transition-colors group-hover:text-primary',
