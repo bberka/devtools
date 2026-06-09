@@ -19,7 +19,7 @@ import { useTheme } from '@/lib/contexts/ThemeContext';
 
 export function SettingsDialog() {
   const { theme, toggleTheme } = useTheme();
-  const { compactMode, setCompactMode } = useSettings();
+  const { compactMode, setCompactMode, fullWidth, setFullWidth } = useSettings();
   const { favorites, clearFavorites } = useFavorites();
   const { recentTools, clearRecentTools } = useRecentTools();
 
@@ -75,7 +75,12 @@ export function SettingsDialog() {
 
             <div className="flex items-center justify-between gap-4 rounded-lg border p-4">
               <div className="space-y-1">
-                <p className="text-sm font-medium">Compact Mode</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-medium">Compact Mode</p>
+                  <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-medium bg-muted text-muted-foreground rounded border">
+                    Alt + C
+                  </kbd>
+                </div>
                 <p className="text-sm text-muted-foreground">
                   Show more tools by trimming descriptions and spacing.
                 </p>
@@ -84,6 +89,25 @@ export function SettingsDialog() {
                 checked={compactMode}
                 onCheckedChange={setCompactMode}
                 aria-label="Toggle compact mode"
+              />
+            </div>
+
+            <div className="flex items-center justify-between gap-4 rounded-lg border p-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-medium">Full Width Mode</p>
+                  <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-medium bg-muted text-muted-foreground rounded border">
+                    Alt + W
+                  </kbd>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Expand container to fill the screen width.
+                </p>
+              </div>
+              <Switch
+                checked={fullWidth}
+                onCheckedChange={setFullWidth}
+                aria-label="Toggle full width mode"
               />
             </div>
           </section>

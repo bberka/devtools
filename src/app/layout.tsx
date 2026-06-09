@@ -4,6 +4,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { CommandPalette } from '@/components/CommandPalette';
 import { PWARegister } from '@/components/PWARegister';
+import { MainLayout } from '@/components/MainLayout';
 import '@/styles/globals.css';
 
 export const metadata: Metadata = {
@@ -118,7 +119,7 @@ export default function RootLayout({
           <PWARegister />
           <div className="min-h-screen overflow-x-clip bg-background">
             <Header />
-            <main className="container py-4 sm:py-6 lg:py-8">{children}</main>
+            <MainLayout>{children}</MainLayout>
             <Footer />
             <CommandPalette />
           </div>

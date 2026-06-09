@@ -8,6 +8,7 @@ const KEYS = {
   FAVORITES: `${STORAGE_PREFIX}:favorites`,
   RECENT: `${STORAGE_PREFIX}:recent`,
   COMPACT_MODE: `${STORAGE_PREFIX}:compact-mode`,
+  FULL_WIDTH: `${STORAGE_PREFIX}:full-width`,
   TOOL_SETTINGS: (toolId: string) => `${STORAGE_PREFIX}:tool:${toolId}`,
 } as const;
 
@@ -17,6 +18,7 @@ const DEFAULT_SETTINGS: GlobalSettings = {
   favorites: [],
   recentTools: [],
   compactMode: false,
+  fullWidth: false,
 };
 
 // Safe localStorage access (handles SSR)
@@ -100,6 +102,21 @@ export function setCompactMode(compactMode: boolean): void {
   if (!storage) return;
 
   storage.setItem(KEYS.COMPACT_MODE, String(compactMode));
+}
+
+// Full width mode
+export function getFullWidth(): boolean {
+  const storage = getStorage();
+  if (!storage) return DEFAULT_SETTINGS.fullWidth;
+
+  return storage.getItem(KEYS.FULL_WIDTH) === 'true';
+}
+
+export function setFullWidth(fullWidth: boolean): void {
+  const storage = getStorage();
+  if (!storage) return;
+
+  storage.setItem(KEYS.FULL_WIDTH, String(fullWidth));
 }
 
 // Recent tools
