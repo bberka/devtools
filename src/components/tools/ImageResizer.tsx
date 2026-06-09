@@ -4,6 +4,7 @@ import { useState, useRef, type ChangeEvent } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Image as ImageIcon, Upload, Download, Trash2, Maximize } from 'lucide-react';
 
 export function ImageResizer() {
@@ -119,15 +120,11 @@ export function ImageResizer() {
                   <Input type="number" value={height} onChange={(e) => handleHeightChange(e.target.value)} />
                 </div>
               </div>
-              <label className="flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  checked={maintainAspectRatio}
-                  onChange={(e) => setMaintainAspectRatio(e.target.checked)}
-                  className="accent-primary"
-                />
-                Maintain aspect ratio
-              </label>
+              <Checkbox
+                checked={maintainAspectRatio}
+                onCheckedChange={setMaintainAspectRatio}
+                label="Maintain aspect ratio"
+              />
               <div className="flex gap-2">
                 <Button onClick={resizeImage} disabled={processing}>
                   {processing ? 'Resizing...' : 'Resize Image'}

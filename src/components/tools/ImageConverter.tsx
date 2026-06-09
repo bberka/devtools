@@ -4,6 +4,7 @@ import { useState, useRef, type ChangeEvent } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Select,
   SelectContent,
@@ -328,15 +329,11 @@ export function ImageConverter() {
                     />
                   </div>
                 </div>
-                <label className="flex items-center gap-2 text-sm">
-                  <input
-                    type="checkbox"
-                    checked={maintainAspectRatio}
-                    onChange={(e) => setMaintainAspectRatio((e.target as HTMLInputElement).checked)}
-                    className="accent-primary"
-                  />
-                  Maintain aspect ratio
-                </label>
+                <Checkbox
+                  checked={maintainAspectRatio}
+                  onCheckedChange={setMaintainAspectRatio}
+                  label="Maintain aspect ratio"
+                />
               </div>
 
               <div className="space-y-2">
@@ -354,50 +351,34 @@ export function ImageConverter() {
                       className="w-full"
                     />
                   </div>
-                  <div className="flex gap-4 items-center h-full pt-4">
-                    <label className="flex items-center gap-2 text-sm">
-                      <input
-                        type="checkbox"
-                        checked={flipHorizontal}
-                        onChange={(e) => setFlipHorizontal((e.target as HTMLInputElement).checked)}
-                        className="accent-primary"
-                      />
-                      Flip H
-                    </label>
-                    <label className="flex items-center gap-2 text-sm">
-                      <input
-                        type="checkbox"
-                        checked={flipVertical}
-                        onChange={(e) => setFlipVertical((e.target as HTMLInputElement).checked)}
-                        className="accent-primary"
-                      />
-                      Flip V
-                    </label>
+                  <div className="flex gap-6 items-center h-full pt-4">
+                    <Checkbox
+                      checked={flipHorizontal}
+                      onCheckedChange={setFlipHorizontal}
+                      label="Flip H"
+                    />
+                    <Checkbox
+                      checked={flipVertical}
+                      onCheckedChange={setFlipVertical}
+                      label="Flip V"
+                    />
                   </div>
                 </div>
               </div>
 
               <div className="space-y-2">
                 <label className="text-sm font-medium">Filters</label>
-                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                  <label className="flex items-center gap-2 text-sm">
-                    <input
-                      type="checkbox"
-                      checked={grayscale}
-                      onChange={(e) => setGrayscale((e.target as HTMLInputElement).checked)}
-                      className="accent-primary"
-                    />
-                    Grayscale
-                  </label>
-                  <label className="flex items-center gap-2 text-sm">
-                    <input
-                      type="checkbox"
-                      checked={sepia}
-                      onChange={(e) => setSepia((e.target as HTMLInputElement).checked)}
-                      className="accent-primary"
-                    />
-                    Sepia
-                  </label>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <Checkbox
+                    checked={grayscale}
+                    onCheckedChange={setGrayscale}
+                    label="Grayscale"
+                  />
+                  <Checkbox
+                    checked={sepia}
+                    onCheckedChange={setSepia}
+                    label="Sepia"
+                  />
                 </div>
               </div>
 
