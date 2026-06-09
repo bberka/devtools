@@ -67,10 +67,40 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  if (isStaticAsset(url) || PRECACHE_URLS.includes(url.pathname)) {
+  // Use Network-First for page navigations to prevent stale HTML hydration/reload loops when online.
+  if (request.mode === 'navigate') {
+    event.respondWith(networkFirst(request));
+    return;
+  }
+
+  if (isStaticAsset(url)) {
     event.respondWith(staleWhileRevalidate(request));
   }
 });
+
+async function networkFirst(request) {
+  const cache = await caches.open(RUNTIME_CACHE);
+
+  try {
+    const response = await fetch(request);
+    if (response.ok) {
+      cache.put(request, response.clone());
+    }
+    return response;
+  } catch (error) {
+    const cachedResponse = await caches.match(request);
+    if (cachedResponse) {
+      return cachedResponse;
+    }
+    const url = new URL(request.url);
+    const normalizedPath = url.pathname.endsWith('/') ? url.pathname.slice(0, -1) : url.pathname;
+    const fallbackResponse = await caches.match(normalizedPath || '/');
+    if (fallbackResponse) {
+      return fallbackResponse;
+    }
+    throw error;
+  }
+}
 
 async function staleWhileRevalidate(request) {
   const cachedResponse = await caches.match(request);
