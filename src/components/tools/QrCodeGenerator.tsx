@@ -59,7 +59,7 @@ function getSafeFilename(value: string): string {
 }
 
 export function QrCodeGenerator() {
-  const [content, setContent] = useState('https://tools.berkaybayar.com');
+  const [content, setContent] = useState('https://lazytools.dev');
   const [size, setSize] = useState('320');
   const [margin, setMargin] = useState('2');
   const [foregroundColor, setForegroundColor] = useState('#111827');

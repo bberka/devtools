@@ -9,7 +9,7 @@ export function HomeIntro() {
   return (
     <div className="space-y-3 text-center sm:space-y-4">
       <h1 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
-        Developer Tools Collection
+        LazyTools Collection
       </h1>
       {!compactMode && (
         <p className="mx-auto max-w-3xl text-base text-muted-foreground sm:text-lg lg:text-xl">

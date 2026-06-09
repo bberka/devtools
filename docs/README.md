@@ -4,7 +4,7 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-Live at: **[tools.berkaybayar.com](https://tools.berkaybayar.com/)**
+Live at: **[lazytools.dev](https://lazytools.dev/)**
 
 ## About
 

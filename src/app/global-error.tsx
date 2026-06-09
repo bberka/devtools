@@ -55,7 +55,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
   return (
     <html lang="en">
       <head>
-        <title>Critical Application Error | Dev Tools</title>
+        <title>Critical Application Error | LazyTools</title>
         <script
           dangerouslySetInnerHTML={{
             __html: `

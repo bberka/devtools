@@ -30,7 +30,7 @@ export function Header() {
           }}
           className="min-w-0 text-lg font-bold transition-opacity hover:opacity-80 sm:text-2xl"
         >
-          Dev Tools
+          LazyTools
         </Link>
         <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
           <CommandPaletteButton />

@@ -9,8 +9,8 @@ import '@/styles/globals.css';
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | Dev Tools',
-    default: 'Dev Tools - Developer Utilities Collection',
+    template: '%s | LazyTools',
+    default: 'LazyTools - Developer Utilities Collection',
   },
   description:
     'A comprehensive collection of developer tools for everyday tasks including converters, formatters, generators, and more.',
@@ -42,24 +42,24 @@ export const metadata: Metadata = {
   },
   appleWebApp: {
     capable: true,
-    title: 'Dev Tools',
+    title: 'LazyTools',
     statusBarStyle: 'black-translucent',
   },
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || 'https://devtools.example.com'
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://lazytools.dev'
   ),
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: '/',
-    title: 'Dev Tools - Developer Utilities Collection',
+    title: 'LazyTools - Developer Utilities Collection',
     description:
       'A comprehensive collection of developer tools for everyday tasks',
-    siteName: 'Dev Tools',
+    siteName: 'LazyTools',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Dev Tools - Developer Utilities Collection',
+    title: 'LazyTools - Developer Utilities Collection',
     description:
       'A comprehensive collection of developer tools for everyday tasks',
     creator: '@bberka',

@@ -12,7 +12,7 @@ export default function CrashSimulator() {
   );
 
   useEffect(() => {
-    document.title = 'Crash Simulator | Dev Tools';
+    document.title = 'Crash Simulator | LazyTools';
   }, []);
 
   // Throw an error during rendering to trigger React/Next.js error boundaries

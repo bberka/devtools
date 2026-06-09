@@ -645,7 +645,7 @@ export function GlassmorphismGenerator() {
                       <div className="space-y-1">
                         <label className="text-[10px] uppercase tracking-wider text-white/60">Email</label>
                         <div className="h-9 w-full rounded-lg bg-white/10 border border-white/20 px-3 flex items-center text-xs text-white/70">
-                          user@berkaybayar.com
+                          user@lazytools.dev
                         </div>
                       </div>
 

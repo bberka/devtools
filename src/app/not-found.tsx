@@ -136,7 +136,7 @@ export default function NotFound() {
   const { toggle } = useCommandPalette();
 
   useEffect(() => {
-    document.title = 'Page Not Found | Dev Tools';
+    document.title = 'Page Not Found | LazyTools';
   }, []);
 
   const handleCategoryClick = (categoryId: ToolCategory) => {

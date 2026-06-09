@@ -19,7 +19,7 @@ export default function ErrorPage({ error, reset }: ErrorProps) {
   useEffect(() => {
     // Log the error to an error reporting service
     console.error('Captured application crash:', error);
-    document.title = 'Application Error | Dev Tools';
+    document.title = 'Application Error | LazyTools';
   }, [error]);
 
   const copyToClipboard = async () => {

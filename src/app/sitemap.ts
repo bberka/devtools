@@ -4,7 +4,7 @@ import { TOOLS } from '@/lib/utils/tools-config';
 export const dynamic = 'force-static';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://devtools.example.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://lazytools.dev';
 
   const toolPages = TOOLS.map((tool) => ({
     url: `${baseUrl}/tools/${tool.id}`,

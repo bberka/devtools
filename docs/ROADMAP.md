@@ -1,6 +1,6 @@
 # Roadmap
 
-Live at [tools.berkaybayar.com](https://tools.berkaybayar.com/). 72 tools across 12 categories.
+Live at [lazytools.dev](https://lazytools.dev/). 72 tools across 12 categories.
 
 ## Immediate
 
