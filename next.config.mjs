@@ -19,11 +19,6 @@ const nextConfig = {
 
   // Enable React strict mode for better development experience
   reactStrictMode: true,
-
-  // Optimize CSS
-  experimental: {
-    optimizeCss: true,
-  },
 };
 
 export default withBundleAnalyzer(nextConfig);

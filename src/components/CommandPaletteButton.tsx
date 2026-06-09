@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
 import { Button } from './ui/button';
 import { useCommandPalette } from '@/lib/contexts/CommandPaletteContext';
@@ -7,7 +8,13 @@ import { getModifierKey } from '@/lib/utils/keyboard';
 
 export function CommandPaletteButton() {
   const { toggle } = useCommandPalette();
-  const modifierKey = getModifierKey();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const modifierKey = mounted ? getModifierKey() : 'Ctrl';
 
   return (
     <Button

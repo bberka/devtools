@@ -179,8 +179,24 @@ export function ExampleTool() {
 
 ## Testing
 
-Automated tests are not implemented yet. Until they are added, manually test:
+Automated e2e tests are implemented using Playwright.
 
+To set up and run the e2e tests:
+
+```bash
+# Install Playwright browser dependencies (first-time setup)
+npm run test:e2e:install
+
+# Run tests in headless mode
+npm run test:e2e
+
+# Run tests with the Playwright UI runner
+npm run test:e2e:ui
+```
+
+If you are modifying core features (like Search, Favorites, Command Palette) or adding new tools, make sure to add/run the appropriate tests and verify that the suite passes.
+
+For manual verification:
 - The affected tool's main success and error paths
 - Light and dark mode
 - Mobile and desktop layouts
