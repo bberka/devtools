@@ -12,7 +12,7 @@ type ToolRegistryEntry = ToolMetadata & {
 export const TOOL_REGISTRY = {
   'pdf-to-image': {
     name: 'PDF to Image',
-    description: 'Convert PDF pages into high-quality PNG images',
+    description: 'Convert PDF document pages into high-quality PNG images.',
     category: 'pdf-tools',
     icon: 'ImageIcon',
     keywords: ['pdf', 'image', 'png', 'convert', 'extract'],
@@ -23,7 +23,7 @@ export const TOOL_REGISTRY = {
   },
   'pdf-to-word': {
     name: 'PDF to Word',
-    description: 'Extract text from a PDF to a Word document',
+    description: 'Extract text from PDF files into editable Word documents.',
     category: 'pdf-tools',
     icon: 'FileOutput',
     keywords: ['pdf', 'word', 'docx', 'convert', 'extract', 'text'],
@@ -34,7 +34,7 @@ export const TOOL_REGISTRY = {
   },
   'word-to-pdf': {
     name: 'Word to PDF',
-    description: 'Convert Word documents (.docx) to PDF format',
+    description: 'Convert Word documents (.docx) into standard PDF format.',
     category: 'pdf-tools',
     icon: 'FileInput',
     keywords: ['word', 'docx', 'pdf', 'convert', 'document'],
@@ -45,7 +45,7 @@ export const TOOL_REGISTRY = {
   },
   'pdf-split': {
     name: 'Split PDF',
-    description: 'Extract specific pages or ranges from a PDF document',
+    description: 'Extract specific pages or ranges from any PDF document.',
     category: 'pdf-tools',
     icon: 'Scissors',
     keywords: ['pdf', 'split', 'extract', 'pages', 'documents'],
@@ -56,7 +56,7 @@ export const TOOL_REGISTRY = {
   },
   'image-to-pdf': {
     name: 'Image to PDF',
-    description: 'Convert images (JPEG, PNG) into a PDF document',
+    description: 'Convert multiple images into a single PDF document.',
     category: 'pdf-tools',
     icon: 'FileImage',
     keywords: ['image', 'pdf', 'convert', 'jpeg', 'png'],
@@ -67,7 +67,7 @@ export const TOOL_REGISTRY = {
   },
   'pdf-merge': {
     name: 'Merge PDF',
-    description: 'Combine multiple PDF documents into a single file',
+    description: 'Combine multiple PDF files into a single document.',
     category: 'pdf-tools',
     icon: 'Files',
     keywords: ['pdf', 'merge', 'combine', 'join', 'documents'],
@@ -78,7 +78,7 @@ export const TOOL_REGISTRY = {
   },
   'markdown-to-pdf': {
     name: 'Markdown Converter',
-    description: 'Convert Markdown to PDF, HTML, TXT, PNG, or JPG',
+    description: 'Convert Markdown text to PDF, HTML, PNG, or JPG files.',
     category: 'pdf-tools',
     icon: 'FileText',
     keywords: ['markdown', 'pdf', 'html', 'convert', 'export', 'txt', 'png', 'jpg'],
@@ -89,7 +89,7 @@ export const TOOL_REGISTRY = {
   },
   'html-converter': {
     name: 'HTML Converter',
-    description: 'Convert HTML to PDF, Markdown, HTML, or plain text with export options',
+    description: 'Convert HTML code to PDF, Markdown, or plain text format.',
     category: 'pdf-tools',
     icon: 'FileCode',
     keywords: [
@@ -110,7 +110,7 @@ export const TOOL_REGISTRY = {
   },
   'color-blindness-simulator': {
     name: 'Color Blindness Simulator',
-    description: 'Visualize images through various color blindness filters',
+    description: 'Simulate color blindness filters on uploaded images.',
     category: 'image-tools',
     icon: 'Eye',
     keywords: ['color', 'blindness', 'simulator', 'protanopia', 'deuteranopia', 'accessibility'],
@@ -121,7 +121,7 @@ export const TOOL_REGISTRY = {
   },
   'color-palette-extractor': {
     name: 'Color Palette Extractor',
-    description: 'Extract dominant colors from any image',
+    description: 'Extract dominant color palettes from any uploaded image.',
     category: 'image-tools',
     icon: 'Palette',
     keywords: ['color', 'palette', 'extract', 'image', 'colors'],
@@ -132,7 +132,7 @@ export const TOOL_REGISTRY = {
   },
   'image-to-icon': {
     name: 'Image to Icon',
-    description: 'Convert images to multi-resolution ICO files',
+    description: 'Convert standard images into multi-resolution ICO files.',
     category: 'image-tools',
     icon: 'Box',
     keywords: ['image', 'icon', 'ico', 'favicon', 'convert'],
@@ -143,7 +143,7 @@ export const TOOL_REGISTRY = {
   },
   'svg-to-png': {
     name: 'SVG to PNG Converter',
-    description: 'Rasterize SVG code or files into high-resolution PNG images',
+    description: 'Rasterize SVG vector code or files into PNG images.',
     category: 'image-tools',
     icon: 'FileImage',
     keywords: ['svg', 'png', 'rasterize', 'convert', 'vector'],
@@ -154,7 +154,7 @@ export const TOOL_REGISTRY = {
   },
   'image-converter': {
     name: 'Image Converter & Editor',
-    description: 'Convert, resize, rotate, flip, and apply filters to images',
+    description: 'Convert formats, resize, rotate, and filter your images.',
     category: 'image-tools',
     icon: 'Image',
     keywords: ['image', 'convert', 'resize', 'rotate', 'flip', 'filters', 'ico', 'favicon'],
@@ -165,7 +165,7 @@ export const TOOL_REGISTRY = {
   },
   'image-compressor': {
     name: 'Compress Image',
-    description: 'Reduce image file size with adjustable quality and dimensions',
+    description: 'Compress images by adjusting quality and dimensions.',
     category: 'image-tools',
     icon: 'Zap',
     keywords: ['image', 'compress', 'optimize', 'shrink', 'size'],
@@ -176,7 +176,7 @@ export const TOOL_REGISTRY = {
   },
   'image-resizer': {
     name: 'Resize Image',
-    description: 'Change image dimensions with aspect ratio control',
+    description: 'Resize image dimensions with aspect ratio constraints.',
     category: 'image-tools',
     icon: 'Maximize',
     keywords: ['image', 'resize', 'dimensions', 'width', 'height'],
@@ -187,7 +187,7 @@ export const TOOL_REGISTRY = {
   },
   'image-cropper': {
     name: 'Crop Image',
-    description: 'Crop images with preset aspect ratios or free selection',
+    description: 'Crop images using preset or custom aspect ratios.',
     category: 'image-tools',
     icon: 'Crop',
     keywords: ['image', 'crop', 'cut', 'aspect ratio'],
@@ -198,7 +198,7 @@ export const TOOL_REGISTRY = {
   },
   'exif-viewer-remover': {
     name: 'EXIF Viewer & Remover',
-    description: 'Inspect local image metadata and export a cleaned copy',
+    description: 'Inspect and strip metadata from images for privacy.',
     category: 'image-tools',
     icon: 'Shield',
     keywords: ['exif', 'metadata', 'image', 'jpeg', 'gps', 'privacy', 'remove'],
@@ -209,7 +209,7 @@ export const TOOL_REGISTRY = {
   },
   'base64-converter': {
     name: 'Base64 Encoder/Decoder',
-    description: 'Encode and decode Base64 strings',
+    description: 'Encode text or files into Base64 and decode them.',
     category: 'encoders-decoders',
     icon: 'Binary',
     keywords: ['base64', 'encode', 'decode'],
@@ -221,7 +221,7 @@ export const TOOL_REGISTRY = {
   },
   'number-base-converter': {
     name: 'Number Base Converter',
-    description: 'Convert between binary, decimal, hex, and octal',
+    description: 'Convert numbers between binary, decimal, hex, and octal.',
     category: 'converters',
     icon: 'Hash',
     keywords: ['number', 'binary', 'hex', 'octal', 'decimal'],
@@ -232,7 +232,7 @@ export const TOOL_REGISTRY = {
   },
   'json-yaml-xml': {
     name: 'JSON ↔ YAML ↔ XML',
-    description: 'Convert between JSON, YAML, and XML formats',
+    description: 'Convert data seamlessly between JSON, YAML, and XML.',
     category: 'converters',
     icon: 'Code',
     keywords: ['json', 'yaml', 'xml', 'convert'],
@@ -243,7 +243,7 @@ export const TOOL_REGISTRY = {
   },
   'yaml-json-converter': {
     name: 'YAML ↔ JSON Converter',
-    description: 'Convert between YAML and JSON with focused formatting controls',
+    description: 'Convert between YAML and JSON with formatting controls.',
     category: 'converters',
     icon: 'ArrowRightLeft',
     keywords: ['yaml', 'json', 'converter', 'serialize', 'parse'],
@@ -254,7 +254,7 @@ export const TOOL_REGISTRY = {
   },
   'csv-json-converter': {
     name: 'CSV ↔ JSON Converter',
-    description: 'Convert CSV rows and JSON arrays with header-aware mapping',
+    description: 'Convert between CSV and JSON arrays with header mapping.',
     category: 'converters',
     icon: 'FileSpreadsheet',
     keywords: ['csv', 'json', 'converter', 'spreadsheet', 'table', 'delimiter'],
@@ -265,7 +265,7 @@ export const TOOL_REGISTRY = {
   },
   'timestamp-converter': {
     name: 'Unix Timestamp Converter',
-    description: 'Convert Unix timestamps to readable dates',
+    description: 'Convert Unix timestamps to readable date and time.',
     category: 'converters',
     icon: 'Clock',
     keywords: ['timestamp', 'unix', 'date', 'time'],
@@ -276,7 +276,7 @@ export const TOOL_REGISTRY = {
   },
   'url-encoder': {
     name: 'URL Encoder/Decoder',
-    description: 'Encode and decode URL strings',
+    description: 'Encode and decode URL parameters and queries safely.',
     category: 'encoders-decoders',
     icon: 'Link',
     keywords: ['url', 'encode', 'decode', 'uri'],
@@ -285,7 +285,7 @@ export const TOOL_REGISTRY = {
   },
   'html-encoder': {
     name: 'HTML Encoder/Decoder',
-    description: 'Encode and decode HTML entities',
+    description: 'Encode special characters to HTML entities and decode.',
     category: 'encoders-decoders',
     icon: 'Code2',
     keywords: ['html', 'encode', 'decode', 'entities'],
@@ -296,7 +296,7 @@ export const TOOL_REGISTRY = {
   },
   'color-converter': {
     name: 'Color Converter',
-    description: 'Convert between HEX, RGB, HSL color formats',
+    description: 'Convert colors between HEX, RGB, HSL, and other formats.',
     category: 'design',
     icon: 'Palette',
     keywords: ['color', 'hex', 'rgb', 'hsl', 'convert'],
@@ -307,7 +307,7 @@ export const TOOL_REGISTRY = {
   },
   'case-converter': {
     name: 'Case Converter',
-    description: 'Transform text case (camelCase, snake_case, etc.)',
+    description: 'Convert text between camelCase, snake_case, and more.',
     category: 'text-tools',
     icon: 'CaseSensitive',
     keywords: ['case', 'camel', 'snake', 'pascal', 'kebab', 'convert'],
@@ -318,7 +318,7 @@ export const TOOL_REGISTRY = {
   },
   'jwt-decoder': {
     name: 'JWT Decoder',
-    description: 'Decode and inspect JWT tokens',
+    description: 'Decode, parse, and inspect JSON Web Tokens (JWT).',
     category: 'encoders-decoders',
     icon: 'KeyRound',
     keywords: ['jwt', 'token', 'decode', 'authentication'],
@@ -327,7 +327,7 @@ export const TOOL_REGISTRY = {
   },
   'text-escape': {
     name: 'Text Escape/Unescape',
-    description: 'Escape and unescape special characters',
+    description: 'Escape or unescape special characters for programming.',
     category: 'encoders-decoders',
     icon: 'Quote',
     keywords: ['escape', 'unescape', 'text', 'special'],
@@ -336,7 +336,7 @@ export const TOOL_REGISTRY = {
   },
   'hash-generator': {
     name: 'Hash Generator',
-    description: 'Generate MD5, SHA-1, SHA-256, SHA-512 hashes',
+    description: 'Generate secure MD5, SHA-1, SHA-256, and SHA-512 hashes.',
     category: 'security',
     icon: 'Shield',
     keywords: ['hash', 'md5', 'sha', 'checksum'],
@@ -348,7 +348,7 @@ export const TOOL_REGISTRY = {
   },
   'uuid-generator': {
     name: 'UUID Generator',
-    description: 'Generate UUIDs (v4, v7, Snowflake)',
+    description: 'Generate random UUID v4, time-based v7, or custom IDs.',
     category: 'generators',
     icon: 'Fingerprint',
     keywords: ['uuid', 'guid', 'generate', 'unique'],
@@ -360,7 +360,7 @@ export const TOOL_REGISTRY = {
   },
   'snowflake-id-generator': {
     name: 'Snowflake ID Generator & Decoder',
-    description: 'Generate customizable 64-bit Snowflake IDs and decode existing IDs to extract timestamp, machine info, and sequence.',
+    description: 'Generate and decode customizable 64-bit Snowflake IDs.',
     category: 'generators',
     icon: 'Cpu',
     keywords: ['snowflake', 'id', 'generator', 'decoder', 'parser', 'unique', 'twitter', 'discord', 'instagram'],
@@ -371,7 +371,7 @@ export const TOOL_REGISTRY = {
   },
   'password-generator': {
     name: 'Password Generator',
-    description: 'Generate secure random passwords',
+    description: 'Generate secure, customizable random passwords.',
     category: 'generators',
     icon: 'Key',
     keywords: ['password', 'generate', 'random', 'secure'],
@@ -382,7 +382,7 @@ export const TOOL_REGISTRY = {
   },
   'lorem-ipsum': {
     name: 'Lorem Ipsum Generator',
-    description: 'Generate placeholder text',
+    description: 'Generate custom placeholder lorem ipsum text blocks.',
     category: 'generators',
     icon: 'AlignLeft',
     keywords: ['lorem', 'ipsum', 'placeholder', 'text'],
@@ -393,7 +393,7 @@ export const TOOL_REGISTRY = {
   },
   'sql-formatter': {
     name: 'SQL Formatter',
-    description: 'Format SQL with multi-database support',
+    description: 'Format SQL queries with multi-dialect database support.',
     category: 'formatters-validators',
     icon: 'Database',
     keywords: ['sql', 'format', 'database', 'query'],
@@ -404,7 +404,7 @@ export const TOOL_REGISTRY = {
   },
   'json-formatter': {
     name: 'JSON Formatter',
-    description: 'Format and validate JSON',
+    description: 'Format, prettify, and validate JSON data strings.',
     category: 'formatters-validators',
     icon: 'Braces',
     keywords: ['json', 'format', 'validate', 'pretty'],
@@ -416,7 +416,7 @@ export const TOOL_REGISTRY = {
   },
   'json-validator': {
     name: 'JSON Validator',
-    description: 'Validate JSON syntax and inspect normalized output',
+    description: 'Validate JSON syntax and inspect formatted outputs.',
     category: 'formatters-validators',
     icon: 'CheckCircle',
     keywords: ['json', 'validate', 'validator', 'syntax', 'parse'],
@@ -427,7 +427,7 @@ export const TOOL_REGISTRY = {
   },
   'yaml-validator': {
     name: 'YAML Validator',
-    description: 'Validate YAML syntax and inspect normalized output',
+    description: 'Validate YAML syntax and inspect formatted outputs.',
     category: 'formatters-validators',
     icon: 'FileCode',
     keywords: ['yaml', 'validate', 'validator', 'syntax', 'parse'],
@@ -438,7 +438,7 @@ export const TOOL_REGISTRY = {
   },
   'xml-formatter': {
     name: 'XML Formatter',
-    description: 'Format XML documents',
+    description: 'Format and prettify XML documents with custom spacing.',
     category: 'formatters-validators',
     icon: 'FileCode',
     keywords: ['xml', 'format', 'pretty'],
@@ -449,7 +449,7 @@ export const TOOL_REGISTRY = {
   },
   'xml-validator': {
     name: 'XML Validator',
-    description: 'Validate XML syntax',
+    description: 'Validate XML document syntax and check for errors.',
     category: 'formatters-validators',
     icon: 'CheckCircle',
     keywords: ['xml', 'validate', 'syntax'],
@@ -460,7 +460,7 @@ export const TOOL_REGISTRY = {
   },
   'markdown-editor': {
     name: 'Markdown Editor',
-    description: 'Write and preview Markdown with a toolbar and HTML export',
+    description: 'Write, preview, and export Markdown with a clean editor.',
     category: 'text-tools',
     icon: 'FileCode',
     keywords: ['markdown', 'preview', 'render', 'editor', 'write', 'html', 'export'],
@@ -471,7 +471,7 @@ export const TOOL_REGISTRY = {
   },
   'text-diff': {
     name: 'Text Diff Visualizer',
-    description: 'Compare text with side-by-side and inline views',
+    description: 'Compare texts using side-by-side or inline diff views.',
     category: 'text-tools',
     icon: 'GitCompare',
     keywords: ['diff', 'compare', 'text', 'changes'],
@@ -480,7 +480,7 @@ export const TOOL_REGISTRY = {
   },
   'regex-tester': {
     name: 'Regex Tester',
-    description: 'Test regular expressions with highlighting',
+    description: 'Test and debug regular expressions with highlighting.',
     category: 'text-tools',
     icon: 'SearchCode',
     keywords: ['regex', 'regexp', 'test', 'pattern'],
@@ -491,7 +491,7 @@ export const TOOL_REGISTRY = {
   },
   'word-counter': {
     name: 'Word Counter',
-    description: 'Count words, characters, sentences, and reading time',
+    description: 'Count words, characters, lines, and read time for text.',
     category: 'text-tools',
     icon: 'WholeWord',
     keywords: ['word', 'counter', 'characters', 'sentences', 'reading time', 'text'],
@@ -502,7 +502,7 @@ export const TOOL_REGISTRY = {
   },
   'find-replace': {
     name: 'Find and Replace',
-    description: 'Search text and preview literal or regex replacements',
+    description: 'Search and replace text using standard or regex terms.',
     category: 'text-tools',
     icon: 'Replace',
     keywords: ['find', 'replace', 'search', 'regex', 'text'],
@@ -513,7 +513,7 @@ export const TOOL_REGISTRY = {
   },
   'resume-ats-analyzer': {
     name: 'CV / Resume ATS Analyzer',
-    description: 'Parse PDF resumes in the browser and score ATS readability',
+    description: 'Parse PDF resumes and score their ATS search compliance.',
     category: 'text-tools',
     icon: 'FileSearch',
     keywords: ['resume', 'cv', 'ats', 'pdf', 'readability', 'keywords', 'job description'],
@@ -524,7 +524,7 @@ export const TOOL_REGISTRY = {
   },
   'cron-parser': {
     name: 'Cron Expression Parser',
-    description: 'Parse and generate cron expressions',
+    description: 'Parse, validate, and generate standard cron expressions.',
     category: 'utilities',
     icon: 'Calendar',
     keywords: ['cron', 'schedule', 'parse', 'generate'],
@@ -533,7 +533,7 @@ export const TOOL_REGISTRY = {
   },
   'qr-code-generator': {
     name: 'QR Code Generator',
-    description: 'Generate QR codes for text and URLs with PNG and SVG export',
+    description: 'Generate custom QR codes with PNG and SVG export options.',
     category: 'generators',
     icon: 'QrCode',
     keywords: ['qr', 'qrcode', 'barcode', 'url', 'text', 'png', 'svg'],
@@ -544,7 +544,7 @@ export const TOOL_REGISTRY = {
   },
   'gzip-compressor': {
     name: 'GZip Compressor / Decompressor',
-    description: 'Compress and decompress text using browser-native GZip (output as Base64)',
+    description: 'Compress and decompress text using native browser GZip.',
     category: 'utilities',
     icon: 'PackageOpen',
     keywords: ['gzip', 'compress', 'decompress', 'deflate', 'base64', 'zip'],
@@ -555,7 +555,7 @@ export const TOOL_REGISTRY = {
   },
   'rsa-key-generator': {
     name: 'RSA Key Pair Generator',
-    description: 'Generate RSA public/private key pairs (client-side)',
+    description: 'Generate secure client-side RSA public/private key pairs.',
     category: 'security',
     icon: 'KeySquare',
     keywords: ['rsa', 'key', 'pair', 'public', 'private', 'encryption', 'security'],
@@ -566,7 +566,7 @@ export const TOOL_REGISTRY = {
   },
   'aes-encryption': {
     name: 'AES Encryption/Decryption',
-    description: 'Encrypt and decrypt text using AES-256-GCM',
+    description: 'Encrypt and decrypt text using secure AES-256-GCM.',
     category: 'security',
     icon: 'Lock',
     keywords: ['aes', 'encrypt', 'decrypt', 'security', 'cipher'],
@@ -577,7 +577,7 @@ export const TOOL_REGISTRY = {
   },
   'password-hasher': {
     name: 'Password Hasher',
-    description: 'Hash and verify passwords with Bcrypt or Argon2 (Argon2id, Argon2i, Argon2d)',
+    description: 'Hash and verify passwords with Bcrypt or Argon2.',
     category: 'security',
     icon: 'ShieldCheck',
     keywords: ['bcrypt', 'argon2', 'argon2id', 'argon2i', 'argon2d', 'hash', 'password', 'verify', 'security'],
@@ -589,7 +589,7 @@ export const TOOL_REGISTRY = {
   },
   'bcrypt-hasher': {
     name: 'Bcrypt Hasher',
-    description: 'Hash and verify passwords with bcrypt',
+    description: 'Securely hash and verify passwords using Bcrypt.',
     category: 'security',
     icon: 'ShieldCheck',
     keywords: ['bcrypt', 'hash', 'password', 'verify', 'security'],
@@ -601,7 +601,7 @@ export const TOOL_REGISTRY = {
   },
   'certificate-decoder': {
     name: 'Certificate Decoder',
-    description: 'Inspect X.509 certificates: subject, issuer, SANs, key info, extensions, and fingerprints',
+    description: 'Inspect and decode X.509 certificates and fingerprints.',
     category: 'security',
     icon: 'BadgeCheck',
     keywords: ['certificate', 'x509', 'ssl', 'tls', 'pem', 'crt', 'der', 'openssl', 'inspect', 'decode'],
@@ -612,7 +612,7 @@ export const TOOL_REGISTRY = {
   },
   'ip-lookup': {
     name: 'IP Address Lookup',
-    description: 'Get detailed information about an IP address',
+    description: 'Look up geolocation and network details for any IP.',
     category: 'networking',
     icon: 'MapPin',
     keywords: ['ip', 'address', 'lookup', 'geolocation', 'network'],
@@ -621,7 +621,7 @@ export const TOOL_REGISTRY = {
   },
   'dns-lookup': {
     name: 'DNS Records Lookup',
-    description: 'Query DNS records (A, AAAA, MX, TXT, NS, etc.)',
+    description: 'Query DNS records like A, AAAA, MX, TXT, and CNAME.',
     category: 'networking',
     icon: 'Server',
     keywords: ['dns', 'lookup', 'records', 'domain', 'nameserver'],
@@ -630,7 +630,7 @@ export const TOOL_REGISTRY = {
   },
   'subnet-calculator': {
     name: 'Subnet Calculator',
-    description: 'Calculate subnet masks, CIDR, IP ranges',
+    description: 'Calculate network subnets, CIDR ranges, and IP masks.',
     category: 'networking',
     icon: 'Network',
     keywords: ['subnet', 'cidr', 'netmask', 'ip', 'calculator'],
@@ -641,7 +641,7 @@ export const TOOL_REGISTRY = {
   },
   'port-checker': {
     name: 'Port Scanner',
-    description: 'Check common ports and services (browser-compatible)',
+    description: 'Scan common network ports and services for connectivity.',
     category: 'networking',
     icon: 'Radar',
     keywords: ['port', 'scanner', 'check', 'services', 'network'],
@@ -652,7 +652,7 @@ export const TOOL_REGISTRY = {
   },
   'svg-path-editor': {
     name: 'SVG Path Editor/Optimizer',
-    description: 'Edit, visualize, and optimize SVG path data',
+    description: 'Edit, visualize, and optimize vector SVG path data.',
     category: 'design',
     icon: 'Pen',
     keywords: ['svg', 'path', 'editor', 'optimize', 'visualize', 'vector'],
@@ -663,7 +663,7 @@ export const TOOL_REGISTRY = {
   },
   'color-contrast-checker': {
     name: 'Color Contrast Checker',
-    description: 'Check color contrast ratios for WCAG compliance',
+    description: 'Check color contrast ratios for WCAG A11y compliance.',
     category: 'design',
     icon: 'Eye',
     keywords: ['color', 'contrast', 'wcag', 'accessibility', 'a11y', 'compliance'],
@@ -674,7 +674,7 @@ export const TOOL_REGISTRY = {
   },
   'color-picker': {
     name: 'Color Picker',
-    description: 'Pick colors, tune RGB/HSL channels, and copy CSS values',
+    description: 'Pick colors, adjust color channels, and get CSS codes.',
     category: 'design',
     icon: 'Pipette',
     keywords: [
@@ -693,9 +693,41 @@ export const TOOL_REGISTRY = {
         (module) => module.ColorPicker
       ),
   },
+  'glassmorphism-generator': {
+    name: 'Glassmorphism Generator',
+    description: 'Design and preview glassmorphism CSS backdrop effects.',
+    category: 'design',
+    icon: 'Sparkles',
+    keywords: ['glassmorphism', 'glass', 'css', 'generator', 'backdrop-filter', 'ui', 'design', 'styles'],
+    component: () =>
+      import('@/components/tools/GlassmorphismGenerator').then(
+        (module) => module.GlassmorphismGenerator
+      ),
+  },
+  'box-shadow-generator': {
+    name: 'CSS Box Shadow Generator',
+    description: 'Design, layer, and preview custom CSS box shadows.',
+    category: 'design',
+    icon: 'Layers',
+    keywords: [
+      'css',
+      'shadow',
+      'box-shadow',
+      'generator',
+      'visualizer',
+      'tailwind',
+      'style',
+      'glow',
+      'neumorphism',
+    ],
+    component: () =>
+      import('@/components/tools/BoxShadowVisualizer').then(
+        (module) => module.BoxShadowVisualizer
+      ),
+  },
   'percentage-calculator': {
     name: 'Percentage Calculator',
-    description: 'Calculate percentages, increases, decreases, and percentage change',
+    description: 'Calculate percentage values, changes, and ratios.',
     category: 'calculators',
     icon: 'Percent',
     keywords: [
@@ -715,7 +747,7 @@ export const TOOL_REGISTRY = {
   },
   'unit-converter': {
     name: 'Unit Converter',
-    description: 'Convert between length, weight, temperature, time, speed, area, volume, and data units',
+    description: 'Convert between length, weight, data, and other units.',
     category: 'calculators',
     icon: 'Scale',
     keywords: [
@@ -738,7 +770,7 @@ export const TOOL_REGISTRY = {
   },
   'age-calculator': {
     name: 'Age Calculator',
-    description: 'Calculate exact age between dates, plus total days and next birthday',
+    description: 'Calculate age details, total days, and next birthday.',
     category: 'calculators',
     icon: 'Cake',
     keywords: [
@@ -758,7 +790,7 @@ export const TOOL_REGISTRY = {
   },
   'timezone-converter': {
     name: 'Timezone Converter',
-    description: 'Convert date and time values between IANA time zones',
+    description: 'Convert date and time values across global timezones.',
     category: 'calculators',
     icon: 'Clock3',
     keywords: [
@@ -778,7 +810,7 @@ export const TOOL_REGISTRY = {
   },
   'currency-converter': {
     name: 'Currency Converter',
-    description: 'Convert currencies using live reference exchange rates',
+    description: 'Convert currencies using live exchange rates.',
     category: 'calculators',
     icon: 'BadgeDollarSign',
     keywords: [
@@ -798,7 +830,7 @@ export const TOOL_REGISTRY = {
   },
   'bmi-calculator': {
     name: 'BMI Calculator',
-    description: 'Calculate adult BMI with metric or US customary units',
+    description: 'Calculate Body Mass Index using metric or US units.',
     category: 'calculators',
     icon: 'Scale',
     keywords: [
@@ -818,7 +850,7 @@ export const TOOL_REGISTRY = {
   },
   'date-difference-calculator': {
     name: 'Date Difference Calculator',
-    description: 'Calculate the exact difference between two dates',
+    description: 'Calculate the exact duration and days between two dates.',
     category: 'calculators',
     icon: 'CalendarRange',
     keywords: [
@@ -836,7 +868,42 @@ export const TOOL_REGISTRY = {
         (module) => module.DateDifferenceCalculator
       ),
   },
+  'clamp-calculator': {
+    name: 'CSS Clamp Calculator',
+    description: 'Generate responsive CSS clamp() functions for layouts.',
+    category: 'calculators',
+    icon: 'Maximize',
+    keywords: [
+      'css',
+      'clamp',
+      'fluid',
+      'responsive',
+      'typography',
+      'font size',
+      'rem',
+      'px',
+      'calculator',
+    ],
+    component: () =>
+      import('@/components/tools/ClampCalculator').then(
+        (module) => module.ClampCalculator
+      ),
+  },
 } as const satisfies Record<string, ToolRegistryEntry>;
+
+// Enforce strict limits on tool description lengths to ensure visual consistency in the UI
+const MIN_DESC_LIMIT = 40;
+const MAX_DESC_LIMIT = 65;
+
+for (const [id, tool] of Object.entries(TOOL_REGISTRY)) {
+  const length = tool.description.length;
+  if (length < MIN_DESC_LIMIT || length > MAX_DESC_LIMIT) {
+    throw new Error(
+      `Tool Description Limit Error: Description for tool "${id}" is ${length} characters. ` +
+      `It must be between ${MIN_DESC_LIMIT} and ${MAX_DESC_LIMIT} characters (inclusive).`
+    );
+  }
+}
 
 export type ToolId = keyof typeof TOOL_REGISTRY;
 
