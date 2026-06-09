@@ -167,6 +167,52 @@ const basePreviewCss = `
 .html-converter-preview th {
   background: #f9fafb;
 }
+
+/* Dark theme overrides */
+.html-converter-preview.dark-pdf {
+  color: #ffffff;
+  color-scheme: dark;
+}
+
+.html-converter-preview.dark-pdf p,
+.html-converter-preview.dark-pdf li,
+.html-converter-preview.dark-pdf td,
+.html-converter-preview.dark-pdf th,
+.html-converter-preview.dark-pdf dd,
+.html-converter-preview.dark-pdf dt,
+.html-converter-preview.dark-pdf figcaption {
+  color: #f3f4f6;
+}
+
+.html-converter-preview.dark-pdf a {
+  color: #60a5fa;
+}
+
+.html-converter-preview.dark-pdf h1,
+.html-converter-preview.dark-pdf h2,
+.html-converter-preview.dark-pdf h3 {
+  color: #ffffff;
+}
+
+.html-converter-preview.dark-pdf blockquote {
+  border-left-color: #4b5563;
+  color: #9ca3af;
+}
+
+.html-converter-preview.dark-pdf code,
+.html-converter-preview.dark-pdf pre {
+  background: #1f2937;
+  color: #f3f4f6;
+}
+
+.html-converter-preview.dark-pdf th,
+.html-converter-preview.dark-pdf td {
+  border-color: #374151;
+}
+
+.html-converter-preview.dark-pdf th {
+  background: #111827;
+}
 `;
 
 const pageFormats: Record<PageSize, [number, number]> = {
@@ -186,7 +232,7 @@ function textContent(node: Node): string {
 }
 
 function escapeMarkdown(value: string): string {
-  return value.replace(/([\\`*_{}\[\]()#+\-.!|>])/g, '\\$1');
+  return value.replace(/([\\\x60*_{}\[\]()#+\-.!|>])/g, '\\$1');
 }
 
 function inlineMarkdown(node: Node): string {
@@ -335,6 +381,16 @@ export function HtmlConverter() {
   const [margin, setMargin] = useState(16);
   const [scale, setScale] = useState(2);
   const [backgroundColor, setBackgroundColor] = useState('#ffffff');
+  const [pdfTheme, setPdfTheme] = useState<'light' | 'dark'>('light');
+
+  const handlePdfThemeChange = (theme: 'light' | 'dark') => {
+    setPdfTheme(theme);
+    if (theme === 'dark') {
+      setBackgroundColor('#000000');
+    } else {
+      setBackgroundColor('#ffffff');
+    }
+  };
   const [filename, setFilename] = useState('html-export');
   const [includePageNumbers, setIncludePageNumbers] = useState(false);
   const [applyPrintCss, setApplyPrintCss] = useState(true);
@@ -405,7 +461,7 @@ export function HtmlConverter() {
   </style>
 </head>
 <body>
-  <main class="html-converter-preview">
+  <main class="html-converter-preview ${pdfTheme === 'dark' ? 'dark-pdf' : ''}">
     ${input}
   </main>
 </body>
@@ -432,11 +488,15 @@ export function HtmlConverter() {
         return;
       }
 
+      const originalTitle = document.title;
+      document.title = safeFilename;
+
       frameWindow.focus();
       frameWindow.print();
 
       const cleanup = () => {
         setTimeout(() => {
+          document.title = originalTitle;
           iframe.remove();
           if (printFrameRef.current === iframe) {
             printFrameRef.current = null;
@@ -541,7 +601,7 @@ export function HtmlConverter() {
       for (let page = 1; page <= totalPages; page++) {
         pdf.setPage(page);
         pdf.setFontSize(9);
-        pdf.setTextColor(90);
+        pdf.setTextColor(pdfTheme === 'dark' ? 180 : 90);
         pdf.text(`Page ${page} of ${totalPages}`, pdfWidth / 2, pdfHeight - 6, {
           align: 'center',
         });
@@ -764,15 +824,36 @@ export function HtmlConverter() {
                   <Slider value={scale} onChange={setScale} min={1} max={4} step={1} />
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">PDF background</label>
-                  <Input
-                    type="color"
-                    value={backgroundColor}
-                    onChange={(event) => setBackgroundColor(event.currentTarget.value)}
-                    disabled={exporting}
-                    className="h-10 p-1"
-                  />
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">PDF theme</label>
+                    <Select
+                      value={pdfTheme}
+                      onValueChange={(value) => handlePdfThemeChange(value as 'light' | 'dark')}
+                      disabled={exporting}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="PDF theme" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="light">Light Mode</SelectItem>
+                          <SelectItem value="dark">Dark Mode</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">PDF background</label>
+                    <Input
+                      type="color"
+                      value={backgroundColor}
+                      onChange={(event) => setBackgroundColor(event.currentTarget.value)}
+                      disabled={exporting}
+                      className="h-10 p-1"
+                    />
+                  </div>
                 </div>
 
                 <div className="space-y-3">
@@ -848,7 +929,9 @@ export function HtmlConverter() {
               <style>{styleTag}</style>
               <div
                 ref={previewRef}
-                className="html-converter-preview mx-auto w-full overflow-hidden bg-white p-4 shadow-sm sm:p-6 lg:p-8"
+                className={`html-converter-preview mx-auto w-full overflow-hidden p-4 shadow-sm sm:p-6 lg:p-8 ${
+                  pdfTheme === 'dark' ? 'dark-pdf' : ''
+                }`}
                 style={previewPageStyle}
                 dangerouslySetInnerHTML={{ __html: input }}
               />
