@@ -355,7 +355,8 @@ export function ClampCalculator() {
 
   const activeDotCoords = useMemo(() => {
     if (!graphData || !svgCoords || !simulatedSize) return null;
-    return svgCoords.mapCoords(simulatedViewportWidth, simulatedSize.px);
+    const clampedV = Math.max(graphData.xMin, Math.min(graphData.xMax, simulatedViewportWidth));
+    return svgCoords.mapCoords(clampedV, simulatedSize.px);
   }, [graphData, svgCoords, simulatedViewportWidth, simulatedSize]);
 
   // Click on chart updates simulated viewport width
@@ -994,7 +995,7 @@ export function ClampCalculator() {
                   {calculations.activeProperty === 'font-size' ? (
                     <div
                       style={{ fontSize: `${simulatedSize.px}px` }}
-                      className="font-bold leading-tight text-foreground transition-all duration-75 text-center break-words"
+                      className="font-bold leading-tight text-foreground text-center break-words"
                     >
                       Fluid Typography
                     </div>
@@ -1002,7 +1003,7 @@ export function ClampCalculator() {
                     /* Handle padding block scale */
                     <div
                       style={{ padding: `${simulatedSize.px}px` }}
-                      className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 rounded text-center transition-all duration-75 font-semibold text-xs"
+                      className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 rounded text-center font-semibold text-xs"
                     >
                       <div className="bg-card py-2 border rounded font-mono text-[10px] text-muted-foreground">
                         Padding Box
@@ -1013,7 +1014,7 @@ export function ClampCalculator() {
                     <div className="bg-muted border rounded p-1">
                       <div
                         style={{ margin: `${simulatedSize.px}px` }}
-                        className="bg-emerald-500/20 text-emerald-600 rounded p-2 text-center text-xs font-semibold transition-all duration-75"
+                        className="bg-emerald-500/20 text-emerald-600 rounded p-2 text-center text-xs font-semibold"
                       >
                         Margin Box
                       </div>
@@ -1022,7 +1023,7 @@ export function ClampCalculator() {
                     /* Handle gap layout scale */
                     <div
                       style={{ gap: `${simulatedSize.px}px` }}
-                      className="grid grid-cols-2 bg-muted/50 p-2 border rounded transition-all duration-75"
+                      className="grid grid-cols-2 bg-muted/50 p-2 border rounded"
                     >
                       <div className="bg-card p-3 border rounded text-center text-xs font-semibold text-muted-foreground">
                         Box A
@@ -1045,7 +1046,7 @@ export function ClampCalculator() {
                               ? `${simulatedSize.px}px`
                               : '40px',
                         }}
-                        className="bg-emerald-500 border border-emerald-600 text-white rounded shadow-sm text-center flex items-center justify-center font-mono text-xs font-bold transition-all duration-75"
+                        className="bg-emerald-500 border border-emerald-600 text-white rounded shadow-sm text-center flex items-center justify-center font-mono text-xs font-bold"
                       >
                         {calculations.activeProperty === 'width' ? 'Width' : 'Height'}
                       </div>
