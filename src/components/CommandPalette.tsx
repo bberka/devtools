@@ -3,7 +3,25 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Command } from 'cmdk';
-import { Search, Clock, Star, ArrowRight } from 'lucide-react';
+import {
+  Search,
+  Clock,
+  Star,
+  ArrowRight,
+  RefreshCw,
+  Lock,
+  Sparkles,
+  FileCheck,
+  Type,
+  Wrench,
+  ShieldCheck,
+  Globe,
+  Palette,
+  Calculator,
+  FileText,
+  Image as ImageIcon,
+  type LucideIcon,
+} from 'lucide-react';
 import { TOOLS, CATEGORIES, searchTools } from '@/lib/utils/tools-config';
 import type { Tool, ToolCategory } from '@/lib/types';
 import { useCommandPalette } from '@/lib/contexts/CommandPaletteContext';
@@ -12,7 +30,91 @@ import { useRecentTools } from '@/lib/contexts/RecentToolsContext';
 import { getModifierKey, isModifierKey } from '@/lib/utils/keyboard';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogTitle } from './ui/dialog';
-import { Badge } from './ui/badge';
+import { cn } from '@/lib/utils/cn';
+
+const CATEGORY_ICONS: Record<string, LucideIcon> = {
+  RefreshCw,
+  Lock,
+  Sparkles,
+  FileCheck,
+  Type,
+  Wrench,
+  ShieldCheck,
+  Globe,
+  Palette,
+  Calculator,
+  FileText,
+  Image: ImageIcon,
+};
+
+interface CategoryStyle {
+  bg: string;
+  text: string;
+  border: string;
+}
+
+const CATEGORY_STYLES: Record<string, CategoryStyle> = {
+  converters: {
+    bg: 'bg-blue-500/10 dark:bg-blue-500/20',
+    text: 'text-blue-600 dark:text-blue-400',
+    border: 'border-blue-500/20 dark:border-blue-500/30',
+  },
+  'encoders-decoders': {
+    bg: 'bg-purple-500/10 dark:bg-purple-500/20',
+    text: 'text-purple-600 dark:text-purple-400',
+    border: 'border-purple-500/20 dark:border-purple-500/30',
+  },
+  generators: {
+    bg: 'bg-green-500/10 dark:bg-green-500/20',
+    text: 'text-green-600 dark:text-green-400',
+    border: 'border-green-500/20 dark:border-green-500/30',
+  },
+  'formatters-validators': {
+    bg: 'bg-orange-500/10 dark:bg-orange-500/20',
+    text: 'text-orange-600 dark:text-orange-400',
+    border: 'border-orange-500/20 dark:border-orange-500/30',
+  },
+  'text-tools': {
+    bg: 'bg-pink-500/10 dark:bg-pink-500/20',
+    text: 'text-pink-600 dark:text-pink-400',
+    border: 'border-pink-500/20 dark:border-pink-500/30',
+  },
+  utilities: {
+    bg: 'bg-cyan-500/10 dark:bg-cyan-500/20',
+    text: 'text-cyan-600 dark:text-cyan-400',
+    border: 'border-cyan-500/20 dark:border-cyan-500/30',
+  },
+  security: {
+    bg: 'bg-red-500/10 dark:bg-red-500/20',
+    text: 'text-red-600 dark:text-red-400',
+    border: 'border-red-500/20 dark:border-red-500/30',
+  },
+  networking: {
+    bg: 'bg-indigo-500/10 dark:bg-indigo-500/20',
+    text: 'text-indigo-600 dark:text-indigo-400',
+    border: 'border-indigo-500/20 dark:border-indigo-500/30',
+  },
+  design: {
+    bg: 'bg-violet-500/10 dark:bg-violet-500/20',
+    text: 'text-violet-600 dark:text-violet-400',
+    border: 'border-violet-500/20 dark:border-violet-500/30',
+  },
+  calculators: {
+    bg: 'bg-emerald-500/10 dark:bg-emerald-500/20',
+    text: 'text-emerald-600 dark:text-emerald-400',
+    border: 'border-emerald-500/20 dark:border-emerald-500/30',
+  },
+  'pdf-tools': {
+    bg: 'bg-red-600/10 dark:bg-red-600/20',
+    text: 'text-red-700 dark:text-red-400',
+    border: 'border-red-600/20 dark:border-red-600/30',
+  },
+  'image-tools': {
+    bg: 'bg-orange-600/10 dark:bg-orange-600/20',
+    text: 'text-orange-700 dark:text-orange-400',
+    border: 'border-orange-600/20 dark:border-orange-600/30',
+  },
+};
 
 export function CommandPalette() {
   const router = useRouter();
@@ -186,6 +288,27 @@ export function CommandPalette() {
     setOpen(false);
   };
 
+  const searchHeading = (
+    <span className="flex items-center gap-1.5">
+      <Search className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+      <span>Search Results</span>
+    </span>
+  );
+
+  const recentHeading = (
+    <span className="flex items-center gap-1.5">
+      <Clock className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+      <span>Recent</span>
+    </span>
+  );
+
+  const favoritesHeading = (
+    <span className="flex items-center gap-1.5">
+      <Star className="h-3.5 w-3.5 shrink-0 text-yellow-500 fill-yellow-500/20" />
+      <span>Favorites</span>
+    </span>
+  );
+
   return (
     <Dialog
       open={open}
@@ -237,56 +360,111 @@ export function CommandPalette() {
 
               {/* Search Results (Custom Ordered) */}
               {search && searchedTools.length > 0 && (
-                <Command.Group heading="Search Results">
-                  {searchedTools.map((tool) => (
-                    <Command.Item
-                      key={tool.id}
-                      value={tool.id}
-                      onSelect={() => handleNavigate(tool.id)}
-                      className="relative flex cursor-pointer select-none items-center rounded-sm px-3 py-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground"
-                    >
-                      <span className="flex-1">{tool.name}</span>
-                      <span className="mr-2 text-xs text-muted-foreground">
-                        {CATEGORIES[tool.category].name}
-                      </span>
-                    </Command.Item>
-                  ))}
+                <Command.Group heading={searchHeading}>
+                  {searchedTools.map((tool) => {
+                    const category = CATEGORIES[tool.category];
+                    const Icon = CATEGORY_ICONS[category.icon];
+                    const styles = CATEGORY_STYLES[tool.category] || {
+                      bg: 'bg-muted',
+                      text: 'text-muted-foreground',
+                      border: 'border-transparent',
+                    };
+                    return (
+                      <Command.Item
+                        key={tool.id}
+                        value={tool.id}
+                        onSelect={() => handleNavigate(tool.id)}
+                        className="relative flex cursor-pointer select-none items-center rounded-sm px-3 py-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground"
+                      >
+                        {Icon && (
+                          <Icon className={cn("mr-2 h-4 w-4 shrink-0", category.color)} />
+                        )}
+                        <span className="flex-1">{tool.name}</span>
+                        <span
+                          className={cn(
+                            "mr-2 inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase transition-colors shrink-0",
+                            styles.bg,
+                            styles.text,
+                            styles.border
+                          )}
+                        >
+                          {category.name}
+                        </span>
+                      </Command.Item>
+                    );
+                  })}
                 </Command.Group>
               )}
 
               {/* Recent Tools Group */}
               {recentToolsData.length > 0 && !search && (
-                <Command.Group heading="Recent">
-                  {recentToolsData.map((tool) => (
-                    <Command.Item
-                      key={tool.id}
-                      value={tool.id}
-                      onSelect={(value: string) => handleNavigate(value)}
-                      className="relative flex cursor-pointer select-none items-center rounded-sm px-3 py-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground"
-                    >
-                      <Clock className="mr-2 h-4 w-4 text-muted-foreground" />
-                      <span className="flex-1">{tool.name}</span>
-                      <ArrowRight className="ml-2 h-4 w-4 text-muted-foreground" />
-                    </Command.Item>
-                  ))}
+                <Command.Group heading={recentHeading}>
+                  {recentToolsData.map((tool) => {
+                    const category = CATEGORIES[tool.category];
+                    const styles = CATEGORY_STYLES[tool.category] || {
+                      bg: 'bg-muted',
+                      text: 'text-muted-foreground',
+                      border: 'border-transparent',
+                    };
+                    return (
+                      <Command.Item
+                        key={tool.id}
+                        value={tool.id}
+                        onSelect={(value: string) => handleNavigate(value)}
+                        className="relative flex cursor-pointer select-none items-center rounded-sm px-3 py-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground"
+                      >
+                        <Clock className="mr-2 h-4 w-4 text-muted-foreground shrink-0" />
+                        <span className="flex-1">{tool.name}</span>
+                        <span
+                          className={cn(
+                            "mr-2 inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase transition-colors shrink-0",
+                            styles.bg,
+                            styles.text,
+                            styles.border
+                          )}
+                        >
+                          {category.name}
+                        </span>
+                        <ArrowRight className="ml-2 h-4 w-4 text-muted-foreground shrink-0" />
+                      </Command.Item>
+                    );
+                  })}
                 </Command.Group>
               )}
 
               {/* Favorites Group */}
               {favoriteToolsData.length > 0 && !search && (
-                <Command.Group heading="Favorites">
-                  {favoriteToolsData.map((tool) => (
-                    <Command.Item
-                      key={tool.id}
-                      value={tool.id}
-                      onSelect={(value: string) => handleNavigate(value)}
-                      className="relative flex cursor-pointer select-none items-center rounded-sm px-3 py-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground"
-                    >
-                      <Star className="mr-2 h-4 w-4 fill-yellow-500 text-yellow-500" />
-                      <span className="flex-1">{tool.name}</span>
-                      <ArrowRight className="ml-2 h-4 w-4 text-muted-foreground" />
-                    </Command.Item>
-                  ))}
+                <Command.Group heading={favoritesHeading}>
+                  {favoriteToolsData.map((tool) => {
+                    const category = CATEGORIES[tool.category];
+                    const styles = CATEGORY_STYLES[tool.category] || {
+                      bg: 'bg-muted',
+                      text: 'text-muted-foreground',
+                      border: 'border-transparent',
+                    };
+                    return (
+                      <Command.Item
+                        key={tool.id}
+                        value={tool.id}
+                        onSelect={(value: string) => handleNavigate(value)}
+                        className="relative flex cursor-pointer select-none items-center rounded-sm px-3 py-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground"
+                      >
+                        <Star className="mr-2 h-4 w-4 fill-yellow-500 text-yellow-500 shrink-0" />
+                        <span className="flex-1">{tool.name}</span>
+                        <span
+                          className={cn(
+                            "mr-2 inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase transition-colors shrink-0",
+                            styles.bg,
+                            styles.text,
+                            styles.border
+                          )}
+                        >
+                          {category.name}
+                        </span>
+                        <ArrowRight className="ml-2 h-4 w-4 text-muted-foreground shrink-0" />
+                      </Command.Item>
+                    );
+                  })}
                 </Command.Group>
               )}
 
@@ -296,22 +474,49 @@ export function CommandPalette() {
                   if (categoryTools.length === 0) return null;
 
                   const category = CATEGORIES[categoryId];
+                  const CategoryIcon = CATEGORY_ICONS[category.icon];
+                  const heading = (
+                    <span className="flex items-center gap-1.5">
+                      {CategoryIcon && (
+                        <CategoryIcon className={cn("h-3.5 w-3.5 shrink-0", category.color)} />
+                      )}
+                      <span>{category.name}</span>
+                    </span>
+                  );
 
                   return (
-                    <Command.Group key={categoryId} heading={category.name}>
-                      {categoryTools.map((tool) => (
-                        <Command.Item
-                          key={tool.id}
-                          value={tool.id}
-                          onSelect={() => handleNavigate(tool.id)}
-                          className="relative flex cursor-pointer select-none items-center rounded-sm px-3 py-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground"
-                        >
-                          <span className="flex-1">{tool.name}</span>
-                          <span className="ml-2 text-xs text-muted-foreground">
-                            {category.name}
-                          </span>
-                        </Command.Item>
-                      ))}
+                    <Command.Group key={categoryId} heading={heading}>
+                      {categoryTools.map((tool) => {
+                        const Icon = CATEGORY_ICONS[category.icon];
+                        const styles = CATEGORY_STYLES[tool.category] || {
+                          bg: 'bg-muted',
+                          text: 'text-muted-foreground',
+                          border: 'border-transparent',
+                        };
+                        return (
+                          <Command.Item
+                            key={tool.id}
+                            value={tool.id}
+                            onSelect={() => handleNavigate(tool.id)}
+                            className="relative flex cursor-pointer select-none items-center rounded-sm px-3 py-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground"
+                          >
+                            {Icon && (
+                              <Icon className={cn("mr-2 h-4 w-4 shrink-0", category.color)} />
+                            )}
+                            <span className="flex-1">{tool.name}</span>
+                            <span
+                              className={cn(
+                                "mr-2 inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase transition-colors shrink-0",
+                                styles.bg,
+                                styles.text,
+                                styles.border
+                              )}
+                            >
+                              {category.name}
+                            </span>
+                          </Command.Item>
+                        );
+                      })}
                     </Command.Group>
                   );
                 }
