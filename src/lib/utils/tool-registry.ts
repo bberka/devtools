@@ -263,6 +263,17 @@ export const TOOL_REGISTRY = {
         (module) => module.CsvJsonConverter
       ),
   },
+  'markdown-to-docx': {
+    name: 'Markdown to DOCX Converter',
+    description: 'Convert Markdown to styled Word documents (.docx) format.',
+    category: 'converters',
+    icon: 'FileText',
+    keywords: ['markdown', 'docx', 'word', 'convert', 'pagination', 'spacing', 'page break'],
+    component: () =>
+      import('@/components/tools/MarkdownToDocx').then(
+        (module) => module.MarkdownToDocx
+      ),
+  },
   'timestamp-converter': {
     name: 'Unix Timestamp Converter',
     description: 'Convert Unix timestamps to readable date and time.',
