@@ -21,6 +21,7 @@ export interface Tool {
   keywords?: string[]; // For search
   featured?: boolean; // Show prominently
   score?: number; // Match score for search
+  hidden?: boolean; // If true, hide from lists but keep route
 }
 
 export interface CategoryInfo {

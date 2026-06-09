@@ -71,11 +71,113 @@ const markdown = new MarkdownIt({
   }
 });
 
+// Inject source line mapping plugin into markdown-it
+markdown.core.ruler.push('inject_line_numbers', (state) => {
+  state.tokens.forEach((token) => {
+    if (token.map && token.nesting >= 0) {
+      const line = token.map[0];
+      token.attrSet('data-source-line', String(line));
+    }
+  });
+});
+
 const md = markdown.use(texmath, {
   engine: katex,
   delimiters: 'dollars',
   katexOptions: { macros: { "\\RR": "\\mathbb{R}" } }
 });
+
+function getCaretYOffset(textarea: HTMLTextAreaElement, charIndex: number): number {
+  if (typeof window === 'undefined') return 0;
+  const styles = window.getComputedStyle(textarea);
+  const div = document.createElement('div');
+  
+  const propertiesToCopy = [
+    'direction',
+    'box-sizing',
+    'width',
+    'height',
+    'overflow-x',
+    'overflow-y',
+    'border-width',
+    'border-style',
+    'padding-top',
+    'padding-right',
+    'padding-bottom',
+    'padding-left',
+    'font-family',
+    'font-size',
+    'font-weight',
+    'font-style',
+    'font-variant',
+    'text-transform',
+    'word-spacing',
+    'letter-spacing',
+    'line-height',
+    'text-indent',
+  ];
+
+  propertiesToCopy.forEach((prop) => {
+    const value = styles.getPropertyValue(prop);
+    div.style.setProperty(prop, value);
+  });
+
+  div.style.position = 'absolute';
+  div.style.left = '-9999px';
+  div.style.top = '0';
+  div.style.whiteSpace = 'pre-wrap';
+  div.style.wordBreak = 'break-word';
+  div.style.width = `${textarea.clientWidth}px`;
+
+  const text = textarea.value;
+  const beforeText = text.substring(0, charIndex);
+  
+  const textNode = document.createTextNode(beforeText);
+  div.appendChild(textNode);
+
+  const span = document.createElement('span');
+  span.textContent = '|';
+  div.appendChild(span);
+
+  document.body.appendChild(div);
+  const offsetTop = span.offsetTop;
+  document.body.removeChild(div);
+
+  return offsetTop;
+}
+
+const scrollToLineInTextarea = (
+  textarea: HTMLTextAreaElement,
+  lineIndex: number,
+  charIndex: number
+) => {
+  textarea.focus();
+  textarea.setSelectionRange(charIndex, charIndex);
+
+  const caretYOffset = getCaretYOffset(textarea, charIndex);
+  const isScrollable = textarea.scrollHeight > textarea.clientHeight;
+  
+  if (isScrollable) {
+    const targetScrollTop = Math.max(0, caretYOffset - textarea.clientHeight / 3);
+    try {
+      textarea.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
+    } catch {
+      textarea.scrollTop = targetScrollTop;
+    }
+  }
+
+  setTimeout(() => {
+    const textareaRect = textarea.getBoundingClientRect();
+    const currentScrollTop = textarea.scrollTop;
+    const caretDocTop = window.scrollY + textareaRect.top + (caretYOffset - currentScrollTop);
+    const targetWindowScrollTop = caretDocTop - window.innerHeight / 3;
+
+    window.scrollTo({
+      top: Math.max(0, targetWindowScrollTop),
+      behavior: 'smooth',
+    });
+  }, 50);
+};
 
 const defaultMarkdown = `# Markdown Editor
 
@@ -105,6 +207,41 @@ export function MarkdownEditor() {
   const { copyToClipboard, isCopied } = useCopyToClipboard();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  const handlePreviewDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    const blockElement = target.closest('[data-source-line]');
+    if (!blockElement) return;
+
+    const lineAttr = blockElement.getAttribute('data-source-line');
+    if (lineAttr === null) return;
+
+    const lineIndex = parseInt(lineAttr, 10);
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    // Calculate char index in textarea
+    const lines = input.split('\n');
+    let charIndex = 0;
+    for (let i = 0; i < Math.min(lineIndex, lines.length); i++) {
+      charIndex += lines[i].length + 1; // +1 for '\n'
+    }
+
+    scrollToLineInTextarea(textarea, lineIndex, charIndex);
+  };
+
+  const renderMarkdown = (text: string) => {
+    try {
+      setOutput(md.render(text || ''));
+    } catch {
+      setOutput('<div class="text-destructive">Error rendering markdown</div>');
+    }
+  };
+
+  const handleInputChange = (text: string) => {
+    setInput(text);
+    renderMarkdown(text);
+  };
+
   useEffect(() => {
     renderMarkdown(input);
   }, []);
@@ -127,19 +264,6 @@ export function MarkdownEditor() {
       window.removeEventListener('resize', adjustHeight);
     };
   }, [input, fullPreview]);
-
-  const renderMarkdown = (text: string) => {
-    try {
-      setOutput(md.render(text || ''));
-    } catch (e) {
-      setOutput('<div class="text-destructive">Error rendering markdown</div>');
-    }
-  };
-
-  const handleInputChange = (text: string) => {
-    setInput(text);
-    renderMarkdown(text);
-  };
 
   const insertText = (before: string, after: string = '') => {
     const textarea = textareaRef.current;
@@ -242,11 +366,15 @@ export function MarkdownEditor() {
             <CardTitle className="text-sm font-medium flex items-center gap-2">
               <Eye className="h-4 w-4 text-muted-foreground" /> Preview
             </CardTitle>
+            <CardDescription>
+              Double-click a line in the preview to jump to that line in the editor
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div
-              className="prose prose-sm dark:prose-invert max-w-none min-h-[500px] p-4 border rounded-md bg-card"
+              className="prose prose-sm dark:prose-invert max-w-none min-h-[500px] p-4 border rounded-md bg-card cursor-pointer select-text"
               dangerouslySetInnerHTML={{ __html: output }}
+              onDoubleClick={handlePreviewDoubleClick}
             />
           </CardContent>
         </Card>

@@ -100,6 +100,7 @@ export const TOOLS: Tool[] = Object.entries(TOOL_REGISTRY).map(
     icon: tool.icon,
     keywords: [...(tool.keywords ?? [])],
     featured: 'featured' in tool ? tool.featured : undefined,
+    hidden: 'hidden' in tool ? tool.hidden : undefined,
   })
 );
 
@@ -109,7 +110,7 @@ export function getToolById(id: string): Tool | undefined {
 }
 
 export function getToolsByCategory(category: ToolCategory): Tool[] {
-  return TOOLS.filter((tool) => tool.category === category);
+  return TOOLS.filter((tool) => tool.category === category && !tool.hidden);
 }
 
 export function getAllCategories(): CategoryInfo[] {
@@ -211,13 +212,13 @@ export function calculateSearchScore(tool: Tool, query: string): number {
 export function searchTools(query: string): Tool[] {
   const cleanQuery = query.trim().toLowerCase();
 
-  if (!cleanQuery) return TOOLS.map(t => ({ ...t, score: undefined }));
+  if (!cleanQuery) return TOOLS.filter((t) => !t.hidden).map((t) => ({ ...t, score: undefined }));
 
   return TOOLS.map((tool) => ({
     ...tool,
     score: calculateSearchScore(tool, cleanQuery),
   }))
-    .filter((tool) => (tool.score ?? 0) > 0)
+    .filter((tool) => !tool.hidden && (tool.score ?? 0) > 0)
     .sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
 }
 
@@ -227,7 +228,7 @@ export function filterTools(
   favoritesOnly: boolean,
   favorites: string[]
 ): Tool[] {
-  let filtered = searchQuery ? searchTools(searchQuery) : TOOLS.map(t => ({ ...t, score: undefined }));
+  let filtered = searchQuery ? searchTools(searchQuery) : TOOLS.filter((t) => !t.hidden).map((t) => ({ ...t, score: undefined }));
 
   // Filter by category
   if (category) {

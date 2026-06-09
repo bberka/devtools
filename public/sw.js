@@ -18,6 +18,7 @@ const COMMON_TOOL_ROUTES = [
   '/tools/hash-generator',
   '/tools/uuid-generator',
   '/tools/password-generator',
+  '/tools/snowflake-id-generator',
   '/tools/jwt-decoder',
   '/tools/url-encoder',
   '/tools/markdown-preview',

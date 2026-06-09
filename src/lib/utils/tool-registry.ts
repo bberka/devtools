@@ -358,6 +358,17 @@ export const TOOL_REGISTRY = {
         (module) => module.UuidGenerator
       ),
   },
+  'snowflake-id-generator': {
+    name: 'Snowflake ID Generator & Decoder',
+    description: 'Generate customizable 64-bit Snowflake IDs and decode existing IDs to extract timestamp, machine info, and sequence.',
+    category: 'generators',
+    icon: 'Cpu',
+    keywords: ['snowflake', 'id', 'generator', 'decoder', 'parser', 'unique', 'twitter', 'discord', 'instagram'],
+    component: () =>
+      import('@/components/tools/SnowflakeGenerator').then(
+        (module) => module.SnowflakeGenerator
+      ),
+  },
   'password-generator': {
     name: 'Password Generator',
     description: 'Generate secure random passwords',
@@ -564,15 +575,28 @@ export const TOOL_REGISTRY = {
         (module) => module.AesEncryption
       ),
   },
+  'password-hasher': {
+    name: 'Password Hasher',
+    description: 'Hash and verify passwords with Bcrypt or Argon2 (Argon2id, Argon2i, Argon2d)',
+    category: 'security',
+    icon: 'ShieldCheck',
+    keywords: ['bcrypt', 'argon2', 'argon2id', 'argon2i', 'argon2d', 'hash', 'password', 'verify', 'security'],
+    featured: true,
+    component: () =>
+      import('@/components/tools/PasswordHasher').then(
+        (module) => module.PasswordHasher
+      ),
+  },
   'bcrypt-hasher': {
     name: 'Bcrypt Hasher',
     description: 'Hash and verify passwords with bcrypt',
     category: 'security',
     icon: 'ShieldCheck',
     keywords: ['bcrypt', 'hash', 'password', 'verify', 'security'],
+    hidden: true,
     component: () =>
-      import('@/components/tools/BcryptHasher').then(
-        (module) => module.BcryptHasher
+      import('@/components/tools/PasswordHasher').then(
+        (module) => module.PasswordHasher
       ),
   },
   'certificate-decoder': {

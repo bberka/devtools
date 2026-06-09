@@ -83,11 +83,113 @@ const markdown = new MarkdownIt({
   },
 });
 
+// Inject source line mapping plugin into markdown-it
+markdown.core.ruler.push('inject_line_numbers', (state) => {
+  state.tokens.forEach((token) => {
+    if (token.map && token.nesting >= 0) {
+      const line = token.map[0];
+      token.attrSet('data-source-line', String(line));
+    }
+  });
+});
+
 const md = markdown.use(texmath, {
   engine: katex,
   delimiters: 'dollars',
   katexOptions: { macros: { '\\RR': '\\mathbb{R}' } },
 });
+
+function getCaretYOffset(textarea: HTMLTextAreaElement, charIndex: number): number {
+  if (typeof window === 'undefined') return 0;
+  const styles = window.getComputedStyle(textarea);
+  const div = document.createElement('div');
+  
+  const propertiesToCopy = [
+    'direction',
+    'box-sizing',
+    'width',
+    'height',
+    'overflow-x',
+    'overflow-y',
+    'border-width',
+    'border-style',
+    'padding-top',
+    'padding-right',
+    'padding-bottom',
+    'padding-left',
+    'font-family',
+    'font-size',
+    'font-weight',
+    'font-style',
+    'font-variant',
+    'text-transform',
+    'word-spacing',
+    'letter-spacing',
+    'line-height',
+    'text-indent',
+  ];
+
+  propertiesToCopy.forEach((prop) => {
+    const value = styles.getPropertyValue(prop);
+    div.style.setProperty(prop, value);
+  });
+
+  div.style.position = 'absolute';
+  div.style.left = '-9999px';
+  div.style.top = '0';
+  div.style.whiteSpace = 'pre-wrap';
+  div.style.wordBreak = 'break-word';
+  div.style.width = `${textarea.clientWidth}px`;
+
+  const text = textarea.value;
+  const beforeText = text.substring(0, charIndex);
+  
+  const textNode = document.createTextNode(beforeText);
+  div.appendChild(textNode);
+
+  const span = document.createElement('span');
+  span.textContent = '|';
+  div.appendChild(span);
+
+  document.body.appendChild(div);
+  const offsetTop = span.offsetTop;
+  document.body.removeChild(div);
+
+  return offsetTop;
+}
+
+const scrollToLineInTextarea = (
+  textarea: HTMLTextAreaElement,
+  lineIndex: number,
+  charIndex: number
+) => {
+  textarea.focus();
+  textarea.setSelectionRange(charIndex, charIndex);
+
+  const caretYOffset = getCaretYOffset(textarea, charIndex);
+  const isScrollable = textarea.scrollHeight > textarea.clientHeight;
+  
+  if (isScrollable) {
+    const targetScrollTop = Math.max(0, caretYOffset - textarea.clientHeight / 3);
+    try {
+      textarea.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
+    } catch {
+      textarea.scrollTop = targetScrollTop;
+    }
+  }
+
+  setTimeout(() => {
+    const textareaRect = textarea.getBoundingClientRect();
+    const currentScrollTop = textarea.scrollTop;
+    const caretDocTop = window.scrollY + textareaRect.top + (caretYOffset - currentScrollTop);
+    const targetWindowScrollTop = caretDocTop - window.innerHeight / 3;
+
+    window.scrollTo({
+      top: Math.max(0, targetWindowScrollTop),
+      behavior: 'smooth',
+    });
+  }, 50);
+};
 
 const previewCss = `
 .markdown-print-preview {
@@ -280,7 +382,30 @@ export function MarkdownConverter() {
   const [exporting, setExporting] = useState(false);
   const [exportProgress, setExportProgress] = useState('');
   const previewRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const printFrameRef = useRef<HTMLIFrameElement | null>(null);
+
+  const handlePreviewDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    const blockElement = target.closest('[data-source-line]');
+    if (!blockElement) return;
+
+    const lineAttr = blockElement.getAttribute('data-source-line');
+    if (lineAttr === null) return;
+
+    const lineIndex = parseInt(lineAttr, 10);
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    // Calculate char index in textarea
+    const lines = input.split('\n');
+    let charIndex = 0;
+    for (let i = 0; i < Math.min(lineIndex, lines.length); i++) {
+      charIndex += lines[i].length + 1; // +1 for '\n'
+    }
+
+    scrollToLineInTextarea(textarea, lineIndex, charIndex);
+  };
 
   const renderMarkdown = (text: string) => {
     if (!text.trim()) {
@@ -670,6 +795,7 @@ export function MarkdownConverter() {
           </CardHeader>
           <CardContent className="flex flex-1 flex-col space-y-4 px-4 pb-4 pt-0 sm:px-6 sm:pb-6">
             <Textarea
+              ref={textareaRef}
               value={input}
               onChange={(event) => handleInputChange(event.currentTarget.value)}
               placeholder="# Enter your markdown here..."
@@ -773,36 +899,15 @@ export function MarkdownConverter() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Theme</label>
-                    <Select
-                      value={pdfTheme}
-                      onValueChange={(value) => handlePdfThemeChange(value as 'light' | 'dark')}
-                      disabled={exporting}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Theme" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectItem value="light">Light Mode</SelectItem>
-                          <SelectItem value="dark">Dark Mode</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Background</label>
-                    <input
-                      type="color"
-                      value={backgroundColor}
-                      onChange={(event) => setBackgroundColor(event.currentTarget.value)}
-                      disabled={exporting}
-                      className="h-10 w-full rounded-md border border-input bg-background p-1 cursor-pointer"
-                    />
-                  </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Background</label>
+                  <input
+                    type="color"
+                    value={backgroundColor}
+                    onChange={(event) => setBackgroundColor(event.currentTarget.value)}
+                    disabled={exporting}
+                    className="h-10 w-full rounded-md border border-input bg-background p-1 cursor-pointer"
+                  />
                 </div>
 
                 {showPdfOptions && (
@@ -849,18 +954,19 @@ export function MarkdownConverter() {
             <Eye className="h-5 w-5" />
             Preview
           </CardTitle>
-          <CardDescription>Rendered markdown used for export and print.</CardDescription>
+          <CardDescription>
+            Rendered markdown. Double-click a line to jump to that line in the editor
+          </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-1 flex-col px-4 pb-4 pt-0 sm:px-6 sm:pb-6">
           <div className="flex-1 rounded-md border bg-muted/30 p-3 sm:p-4">
             <style>{previewCss}</style>
             <div
               ref={previewRef}
-              className={`markdown-print-preview mx-auto w-full overflow-hidden p-4 shadow-sm sm:p-6 lg:p-8 ${
-                pdfTheme === 'dark' ? 'dark-pdf' : ''
-              }`}
+              className="markdown-print-preview mx-auto w-full overflow-hidden bg-white p-4 shadow-sm sm:p-6 lg:p-8 cursor-pointer select-text"
               style={previewPageStyle}
               dangerouslySetInnerHTML={{ __html: html }}
+              onDoubleClick={handlePreviewDoubleClick}
             />
           </div>
         </CardContent>
