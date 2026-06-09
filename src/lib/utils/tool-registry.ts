@@ -911,6 +911,39 @@ export const TOOL_REGISTRY = {
         (module) => module.ClampCalculator
       ),
   },
+  'pdf-editor': {
+    name: 'Edit PDF',
+    description: 'Rearrange, rotate, delete, and annotate PDF pages.',
+    category: 'pdf-tools',
+    icon: 'FilePenLine',
+    keywords: ['pdf', 'edit', 'annotate', 'signature', 'rotate', 'reorder', 'delete'],
+    component: () =>
+      import('@/components/tools/PdfEditor').then(
+        (module) => module.PdfEditor
+      ),
+  },
+  'pdf-compress': {
+    name: 'Compress PDF',
+    description: 'Reduce PDF file size by compressing images and structure.',
+    category: 'pdf-tools',
+    icon: 'FileDown',
+    keywords: ['pdf', 'compress', 'shrink', 'size', 'optimize'],
+    component: () =>
+      import('@/components/tools/PdfCompress').then(
+        (module) => module.PdfCompress
+      ),
+  },
+  'pdf-watermark': {
+    name: 'PDF Watermark',
+    description: 'Add text or image watermarks to your PDF pages easily.',
+    category: 'pdf-tools',
+    icon: 'Shield',
+    keywords: ['pdf', 'watermark', 'text', 'image', 'stamp', 'confidential'],
+    component: () =>
+      import('@/components/tools/PdfWatermark').then(
+        (module) => module.PdfWatermark
+      ),
+  },
 } as const satisfies Record<string, ToolRegistryEntry>;
 
 // Enforce strict limits on tool description lengths to ensure visual consistency in the UI
