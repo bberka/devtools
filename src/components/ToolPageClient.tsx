@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button';
 import { FavoriteButton } from '@/components/FavoriteButton';
 import { useRecentTools } from '@/lib/contexts/RecentToolsContext';
 import type { Tool } from '@/lib/types';
+import { useSettings } from '@/lib/contexts/SettingsContext';
+import { cn } from '@/lib/utils';
 
 export function ToolPageClient({
   children,
@@ -27,11 +29,18 @@ export function ToolPageClient({
     addRecentTool(tool.id);
   }, [addRecentTool, tool.id]);
 
+  const { fullWidth } = useSettings();
+
   return (
-    <div className="tool-page mx-auto max-w-6xl space-y-5 sm:space-y-6">
+    <div
+      className={cn(
+        'tool-page mx-auto space-y-5 sm:space-y-6',
+        fullWidth ? 'max-w-none' : 'max-w-6xl'
+      )}
+    >
       <div className="flex flex-col gap-4 border-b pb-6 sm:flex-row sm:items-center sm:justify-between sm:pb-6">
         <div className="flex items-start gap-3 sm:gap-4">
-          <Link href="/" className="shrink-0">
+          <Link href="/" scroll={false} className="shrink-0">
             <Button variant="ghost" size="icon" className="h-11 w-11 sm:h-10 sm:w-10">
               <ArrowLeft className="h-5 w-5" />
             </Button>

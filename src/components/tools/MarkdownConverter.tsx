@@ -1,6 +1,8 @@
 'use client';
 
-import { type CSSProperties, useRef, useState } from 'react';
+import { type CSSProperties, useEffect, useRef, useState } from 'react';
+import { cn } from '@/lib/utils';
+import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -40,6 +42,24 @@ const escapeHtml = (value: string) =>
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+
+const getFirstHeader = (htmlContent: string): string => {
+  if (typeof window === 'undefined') return '';
+  try {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlContent, 'text/html');
+    const header = doc.querySelector('h1, h2, h3, h4, h5, h6');
+    return header ? (header.textContent?.trim() || '') : '';
+  } catch (_) {
+    return '';
+  }
+};
+
+const getSafeFilename = (htmlContent: string, defaultName: string): string => {
+  const firstHeader = getFirstHeader(htmlContent);
+  if (!firstHeader) return defaultName;
+  return firstHeader.replace(/[\\/:*?"<>|]/g, ' ').replace(/\s+/g, ' ').trim() || defaultName;
+};
 
 hljs.registerLanguage('bash', bash);
 hljs.registerLanguage('css', css);
@@ -158,6 +178,48 @@ const previewCss = `
 .markdown-print-preview th {
   background: #f9fafb;
 }
+
+/* Dark theme overrides */
+.markdown-print-preview.dark-pdf {
+  color: #ffffff;
+  color-scheme: dark;
+}
+
+.markdown-print-preview.dark-pdf h1,
+.markdown-print-preview.dark-pdf h2,
+.markdown-print-preview.dark-pdf h3,
+.markdown-print-preview.dark-pdf h4,
+.markdown-print-preview.dark-pdf h5,
+.markdown-print-preview.dark-pdf h6 {
+  color: #ffffff;
+}
+
+.markdown-print-preview.dark-pdf a {
+  color: #60a5fa;
+}
+
+.markdown-print-preview.dark-pdf blockquote {
+  border-left-color: #4b5563;
+  color: #9ca3af;
+}
+
+.markdown-print-preview.dark-pdf :not(pre) > code {
+  background: #1f2937;
+  color: #f3f4f6;
+}
+
+.markdown-print-preview.dark-pdf pre {
+  background: #111827;
+}
+
+.markdown-print-preview.dark-pdf th,
+.markdown-print-preview.dark-pdf td {
+  border-color: #374151;
+}
+
+.markdown-print-preview.dark-pdf th {
+  background: #1f2937;
+}
 `;
 
 const pageFormats: Record<PageSize, [number, number]> = {
@@ -202,14 +264,45 @@ export function MarkdownConverter() {
   const [exportFormat, setExportFormat] = useState<ExportFormat>('pdf');
   const [pageSize, setPageSize] = useState<PageSize>('A4');
   const [orientation, setOrientation] = useState<Orientation>('portrait');
-  const [margin, setMargin] = useState(20);
+  const [margin, setMargin] = useState(16);
   const [scale, setScale] = useState(2);
   const [backgroundColor, setBackgroundColor] = useState('#ffffff');
+  const [pdfTheme, setPdfTheme] = useState<'light' | 'dark'>('light');
+
+  const handlePdfThemeChange = (theme: 'light' | 'dark') => {
+    setPdfTheme(theme);
+    if (theme === 'dark') {
+      setBackgroundColor('#000000');
+    } else {
+      setBackgroundColor('#ffffff');
+    }
+  };
   const [includePageNumbers, setIncludePageNumbers] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [exportProgress, setExportProgress] = useState('');
+  const [fullPreview, setFullPreview] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const printFrameRef = useRef<HTMLIFrameElement | null>(null);
+
+  // Auto-resize textarea to fit content
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const adjustHeight = () => {
+      textarea.style.height = 'auto';
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    };
+
+    const timer = setTimeout(adjustHeight, 0);
+
+    window.addEventListener('resize', adjustHeight);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', adjustHeight);
+    };
+  }, [input, fullPreview]);
 
   const renderMarkdown = (text: string) => {
     if (!text.trim()) {
@@ -240,14 +333,18 @@ export function MarkdownConverter() {
   };
 
   const exportPrintPdf = () => {
+    const firstHeader = getFirstHeader(html);
     const pageRule = `${pageLabels[pageSize]} ${orientation}`;
+    const highlightThemeUrl = pdfTheme === 'dark'
+      ? 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css'
+      : 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css';
     const printDocument = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>markdown-export</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+  <title>${firstHeader}</title>
+  <link rel="stylesheet" href="${highlightThemeUrl}">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.27/dist/katex.min.css">
   <style>
     @page {
@@ -279,7 +376,7 @@ export function MarkdownConverter() {
   </style>
 </head>
 <body>
-  <main class="markdown-print-preview">
+  <main class="markdown-print-preview ${pdfTheme === 'dark' ? 'dark-pdf' : ''}">
     ${html}
   </main>
 </body>
@@ -306,11 +403,15 @@ export function MarkdownConverter() {
         return;
       }
 
+      const originalTitle = document.title;
+      document.title = firstHeader || '';
+
       frameWindow.focus();
       frameWindow.print();
 
       const cleanup = () => {
         setTimeout(() => {
+          document.title = originalTitle;
           iframe.remove();
           if (printFrameRef.current === iframe) {
             printFrameRef.current = null;
@@ -336,13 +437,17 @@ export function MarkdownConverter() {
   };
 
   const exportHtml = () => {
+    const firstHeader = getFirstHeader(html);
+    const highlightThemeUrl = pdfTheme === 'dark'
+      ? 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css'
+      : 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css';
     const fullHtml = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Markdown Export</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+  <title>${firstHeader || 'Markdown Export'}</title>
+  <link rel="stylesheet" href="${highlightThemeUrl}">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.27/dist/katex.min.css">
   <style>
     body {
@@ -351,14 +456,15 @@ export function MarkdownConverter() {
       max-width: 800px;
       margin: 0 auto;
       padding: 2rem;
-      color: #111827;
+      color: ${pdfTheme === 'dark' ? '#ffffff' : '#111827'};
+      background: ${backgroundColor};
     }
 
     ${previewCss}
   </style>
 </head>
 <body>
-  <main class="markdown-print-preview">
+  <main class="markdown-print-preview ${pdfTheme === 'dark' ? 'dark-pdf' : ''}">
     ${html}
   </main>
 </body>
@@ -367,8 +473,9 @@ export function MarkdownConverter() {
     const blob = new Blob([fullHtml], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
+    const filename = getSafeFilename(html, 'markdown-export');
     link.href = url;
-    link.download = 'markdown-export.html';
+    link.download = `${filename}.html`;
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -377,8 +484,9 @@ export function MarkdownConverter() {
     const blob = new Blob([input], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
+    const filename = getSafeFilename(html, 'markdown-export');
     link.href = url;
-    link.download = 'markdown-export.txt';
+    link.download = `${filename}.txt`;
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -409,8 +517,9 @@ export function MarkdownConverter() {
           if (!blob) return;
           const url = URL.createObjectURL(blob);
           const link = document.createElement('a');
+          const filename = getSafeFilename(html, 'markdown-export');
           link.href = url;
-          link.download = `markdown-export.${format}`;
+          link.download = `${filename}.${format}`;
           link.click();
           URL.revokeObjectURL(url);
           setExportProgress('');
@@ -449,10 +558,15 @@ export function MarkdownConverter() {
       setExportProgress('Generating PDF...');
       await new Promise((resolve) => setTimeout(resolve, 50));
 
+      const firstHeader = getFirstHeader(html);
       const pdf = new jsPDF({
         orientation,
         unit: 'mm',
         format: pageFormats[pageSize],
+      });
+
+      pdf.setProperties({
+        title: firstHeader || '',
       });
 
       const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -505,7 +619,7 @@ export function MarkdownConverter() {
         for (let page = 1; page <= totalPages; page++) {
           pdf.setPage(page);
           pdf.setFontSize(9);
-          pdf.setTextColor(90);
+          pdf.setTextColor(pdfTheme === 'dark' ? 180 : 90);
           pdf.text(`Page ${page} of ${totalPages}`, pdfWidth / 2, pdfHeight - 6, {
             align: 'center',
           });
@@ -514,7 +628,8 @@ export function MarkdownConverter() {
 
       setExportProgress('Saving file...');
       await new Promise((resolve) => setTimeout(resolve, 50));
-      pdf.save('markdown-export.pdf');
+      const filename = getSafeFilename(html, 'markdown-export');
+      pdf.save(`${filename}.pdf`);
     } catch (error) {
       console.error('Error exporting PDF:', error);
       alert('Error exporting PDF. Please try again.');
@@ -566,37 +681,65 @@ export function MarkdownConverter() {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 items-stretch gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(360px,0.75fr)]">
-        <Card className="flex h-full flex-col">
+      {/* Premium Toggle Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border bg-card p-4 shadow-sm transition-all duration-300">
+        <div className="flex items-center gap-2.5">
+          <Eye className="h-5 w-5 text-primary animate-pulse" />
+          <div>
+            <h3 className="font-semibold text-foreground leading-none">Markdown Previewer</h3>
+            <p className="text-xs text-muted-foreground mt-1">
+              Toggle full preview mode to focus entirely on the rendered output
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3 rounded-lg bg-muted/50 p-1.5 px-3 border border-border/50">
+          <span className="text-xs font-medium text-muted-foreground sm:text-sm">
+            {fullPreview ? 'Full Preview' : 'Split View'}
+          </span>
+          <Switch
+            checked={fullPreview}
+            onCheckedChange={setFullPreview}
+            aria-label="Toggle full preview mode"
+          />
+        </div>
+      </div>
+
+      <div className={cn(
+        "grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(360px,0.75fr)]",
+        fullPreview ? "items-start" : "items-stretch"
+      )}>
+        {!fullPreview && (
+          <Card className="flex h-full flex-col transition-all duration-300">
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="h-5 w-5 text-muted-foreground" />
+                Markdown Input
+              </CardTitle>
+              <CardDescription>Write your markdown content.</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-1 flex-col space-y-4 px-4 pb-4 pt-0 sm:px-6 sm:pb-6">
+              <Textarea
+                ref={textareaRef}
+                value={input}
+                onChange={(event) => handleInputChange(event.currentTarget.value)}
+                placeholder="# Enter your markdown here..."
+                className="min-h-[420px] w-full resize-none overflow-hidden font-mono text-sm border focus-visible:ring-primary/20 focus-visible:border-primary transition-all duration-200"
+              />
+
+              <div className="flex flex-wrap gap-2">
+                <Button onClick={handleClear} variant="outline" size="sm">
+                  <Trash2 className="h-4 w-4" />
+                  Clear
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        <Card className={cn("flex h-full flex-col transition-all duration-300", fullPreview ? "xl:order-2" : "")}>
           <CardHeader className="p-4 sm:p-6">
             <CardTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5" />
-              Markdown Input
-            </CardTitle>
-            <CardDescription>Write your markdown content.</CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-1 flex-col space-y-4 px-4 pb-4 pt-0 sm:px-6 sm:pb-6">
-            <Textarea
-              value={input}
-              onChange={(event) => handleInputChange(event.currentTarget.value)}
-              placeholder="# Enter your markdown here..."
-              rows={18}
-              className="min-h-[420px] flex-1 resize-y font-mono text-sm xl:min-h-0"
-            />
-
-            <div className="flex flex-wrap gap-2">
-              <Button onClick={handleClear} variant="outline" size="sm">
-                <Trash2 className="h-4 w-4" />
-                Clear
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="flex h-full flex-col">
-          <CardHeader className="p-4 sm:p-6">
-            <CardTitle className="flex items-center gap-2">
-              <Printer className="h-5 w-5" />
+              <Printer className="h-5 w-5 text-muted-foreground" />
               Export Settings
             </CardTitle>
             <CardDescription>PDF uses browser print so text stays selectable.</CardDescription>
@@ -680,15 +823,36 @@ export function MarkdownConverter() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Background</label>
-                  <input
-                    type="color"
-                    value={backgroundColor}
-                    onChange={(event) => setBackgroundColor(event.currentTarget.value)}
-                    disabled={exporting}
-                    className="h-10 w-full rounded-md border border-input bg-background p-1"
-                  />
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Theme</label>
+                    <Select
+                      value={pdfTheme}
+                      onValueChange={(value) => handlePdfThemeChange(value as 'light' | 'dark')}
+                      disabled={exporting}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Theme" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="light">Light Mode</SelectItem>
+                          <SelectItem value="dark">Dark Mode</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Background</label>
+                    <input
+                      type="color"
+                      value={backgroundColor}
+                      onChange={(event) => setBackgroundColor(event.currentTarget.value)}
+                      disabled={exporting}
+                      className="h-10 w-full rounded-md border border-input bg-background p-1 cursor-pointer"
+                    />
+                  </div>
                 </div>
 
                 {showPdfOptions && (
@@ -727,28 +891,30 @@ export function MarkdownConverter() {
             </div>
           </CardContent>
         </Card>
-      </div>
 
-      <Card className="flex h-full flex-col">
-        <CardHeader className="p-4 sm:p-6">
-          <CardTitle className="flex items-center gap-2">
-            <Eye className="h-5 w-5" />
-            Preview
-          </CardTitle>
-          <CardDescription>Rendered markdown used for export and print.</CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-1 flex-col px-4 pb-4 pt-0 sm:px-6 sm:pb-6">
-          <div className="flex-1 rounded-md border bg-muted/30 p-3 sm:p-4">
-            <style>{previewCss}</style>
-            <div
-              ref={previewRef}
-              className="markdown-print-preview mx-auto w-full overflow-hidden bg-white p-4 shadow-sm sm:p-6 lg:p-8"
-              style={previewPageStyle}
-              dangerouslySetInnerHTML={{ __html: html }}
-            />
-          </div>
-        </CardContent>
-      </Card>
+        <Card className={cn("flex h-full flex-col transition-all duration-300", fullPreview ? "xl:order-1 xl:col-span-1" : "xl:col-span-2")}>
+          <CardHeader className="p-4 sm:p-6">
+            <CardTitle className="flex items-center gap-2">
+              <Eye className="h-5 w-5 text-muted-foreground" />
+              Preview
+            </CardTitle>
+            <CardDescription>Rendered markdown used for export and print.</CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-1 flex-col px-4 pb-4 pt-0 sm:px-6 sm:pb-6">
+            <div className="flex-1 rounded-md border bg-muted/30 p-3 sm:p-4">
+              <style>{previewCss}</style>
+              <div
+                ref={previewRef}
+                className={`markdown-print-preview mx-auto w-full overflow-hidden p-4 shadow-sm sm:p-6 lg:p-8 ${
+                  pdfTheme === 'dark' ? 'dark-pdf' : ''
+                }`}
+                style={previewPageStyle}
+                dangerouslySetInnerHTML={{ __html: html }}
+              />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
