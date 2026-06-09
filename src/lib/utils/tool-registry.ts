@@ -553,6 +553,28 @@ export const TOOL_REGISTRY = {
         (module) => module.GzipCompressor
       ),
   },
+  'text-to-speech': {
+    name: 'Text to Speech',
+    description: 'Convert text to spoken audio using browser speech synthesis.',
+    category: 'utilities',
+    icon: 'Volume2',
+    keywords: ['tts', 'text to speech', 'voice', 'speak', 'speech', 'read aloud', 'audio'],
+    component: () =>
+      import('@/components/tools/TextToSpeech').then(
+        (module) => module.TextToSpeech
+      ),
+  },
+  'speech-to-text': {
+    name: 'Speech to Text',
+    description: 'Transcribe voice or microphone input into text in real-time.',
+    category: 'utilities',
+    icon: 'Mic',
+    keywords: ['stt', 'speech to text', 'dictation', 'transcribe', 'voice typing', 'microphone', 'speech recognition'],
+    component: () =>
+      import('@/components/tools/SpeechToText').then(
+        (module) => module.SpeechToText
+      ),
+  },
   'rsa-key-generator': {
     name: 'RSA Key Pair Generator',
     description: 'Generate secure client-side RSA public/private key pairs.',
