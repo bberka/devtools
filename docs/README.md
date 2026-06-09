@@ -14,7 +14,7 @@ Static web app for everyday browser-side workflows: converting files, formatting
 
 - Client-side tool execution
 - Static export with `next build`
-- Search, category filtering, favorites, recent tools, compact mode, dark mode
+- Search, category filtering, favorites, recent tools, compact mode, full width mode, dark mode
 - Command palette with keyboard navigation
 - PWA install support
 - Responsive layout for desktop and mobile
@@ -23,16 +23,16 @@ Static web app for everyday browser-side workflows: converting files, formatting
 
 - Converters: 5 tools
 - Encoders & Decoders: 5 tools
-- Generators: 4 tools
+- Generators: 5 tools
 - Formatters & Validators: 6 tools
 - Text Tools: 7 tools
-- Utilities: 2 tools
+- Utilities: 4 tools
 - Security: 5 tools
 - Networking: 4 tools
-- Design: 4 tools
+- Design: 6 tools
 - PDF Tools: 8 tools
 - Image Tools: 9 tools
-- Calculators: 7 tools
+- Calculators: 8 tools
 
 
 See [ROADMAP.md](./ROADMAP.md) for planned work and expansion backlog.
@@ -41,7 +41,7 @@ See [ROADMAP.md](./ROADMAP.md) for planned work and expansion backlog.
 
 - Framework: [Next.js 16 App Router](https://nextjs.org/docs)
 - UI: [React 19](https://react.dev/)
-- Styling: [Tailwind CSS](https://tailwindcss.com/)
+- Styling: [Tailwind CSS v4](https://tailwindcss.com/)
 - Component patterns: [shadcn/ui](https://ui.shadcn.com/)
 - Icons: [Lucide React](https://lucide.dev/)
 - Static hosting: Cloudflare Pages via `out/`

@@ -1,6 +1,6 @@
 # Roadmap
 
-Live at [tools.berkaybayar.com](https://tools.berkaybayar.com/). 67 tools across 12 categories.
+Live at [tools.berkaybayar.com](https://tools.berkaybayar.com/). 72 tools across 12 categories.
 
 ## Immediate
 
@@ -16,15 +16,3 @@ Live at [tools.berkaybayar.com](https://tools.berkaybayar.com/). 67 tools across
 - Edit PDF
 - Compress PDF
 - PDF Watermark
-
-### Utilities
-
-- Text to Speech
-- Speech to Text
-
-## Lower Priority
-
-- Glassmorphism Generator
-- Box Shadow Visualizer
-- Clamp Calculator
-- Argon2 support in Bcrypt Hasher (or keep bcrypt-only)

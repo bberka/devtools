@@ -196,8 +196,6 @@ Automated tests are not implemented yet. Until they are added, manually test:
 - Add generated Open Graph images
 - Expand the next tool families: PDF, image, utilities, text, developer, and calculators
 - Split broader current tools into dedicated routes where that improves discovery and SEO
-- Decide whether the password hashing tool should add Argon2 support or stay bcrypt-only
-- Keep CSS/design tool ideas such as glassmorphism, box-shadow, and clamp as lower-priority backlog items
 
 ## Pull Request Checklist
 
