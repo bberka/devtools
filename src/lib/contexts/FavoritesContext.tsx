@@ -19,12 +19,11 @@ const FavoritesContext = createContext<FavoritesContextType | undefined>(
 );
 
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
-  const [favorites, setFavoritesState] = useState<string[]>(() => {
-    if (typeof window === 'undefined') return [];
-    return getFavorites();
-  });
+  const [favorites, setFavoritesState] = useState<string[]>([]);
 
   useEffect(() => {
+    setFavoritesState(getFavorites());
+
     // Listen for cross-tab changes
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'dev-toolbox:favorites') {

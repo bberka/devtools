@@ -21,10 +21,7 @@ export function RecentToolsProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [recentTools, setRecentTools] = useState<string[]>(() => {
-    if (typeof window === 'undefined') return [];
-    return getRecentTools();
-  });
+  const [recentTools, setRecentTools] = useState<string[]>([]);
 
   const syncRecentTools = useCallback(() => {
     const nextRecentTools = getRecentTools();
@@ -41,6 +38,8 @@ export function RecentToolsProvider({
   }, []);
 
   useEffect(() => {
+    syncRecentTools();
+
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'dev-toolbox:recent') {
         syncRecentTools();

@@ -26,16 +26,13 @@ interface SettingsContextType {
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
-  const [compactMode, setCompactModeState] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return getCompactMode();
-  });
-  const [fullWidth, setFullWidthState] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return getFullWidth();
-  });
+  const [compactMode, setCompactModeState] = useState(false);
+  const [fullWidth, setFullWidthState] = useState(false);
 
   useEffect(() => {
+    setCompactModeState(getCompactMode());
+    setFullWidthState(getFullWidth());
+
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'dev-toolbox:compact-mode') {
         setCompactModeState(getCompactMode());
