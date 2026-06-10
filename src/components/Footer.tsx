@@ -6,7 +6,7 @@ export function Footer() {
           {/* GitHub Links */}
           <div className="flex w-full flex-wrap items-stretch justify-center gap-3">
             <a
-              href="https://github.com/bberka/devtools"
+              href="https://github.com/bberka/lazytools.dev"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-border bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground sm:min-h-10 sm:w-auto"
@@ -27,7 +27,7 @@ export function Footer() {
             </a>
 
             <a
-              href="https://github.com/bberka/devtools/issues"
+              href="https://github.com/bberka/lazytools.dev/issues"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-border bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground sm:min-h-10 sm:w-auto"
@@ -50,7 +50,7 @@ export function Footer() {
             </a>
 
             <a
-              href="https://github.com/bberka/devtools/issues"
+              href="https://github.com/bberka/lazytools.dev/issues"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-border bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground sm:min-h-10 sm:w-auto"
@@ -73,7 +73,7 @@ export function Footer() {
             </a>
 
             <a
-              href="https://github.com/bberka/devtools/blob/master/CONTRIBUTING.md"
+              href="https://github.com/bberka/lazytools.dev/blob/master/CONTRIBUTING.md"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-border bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground sm:min-h-10 sm:w-auto"

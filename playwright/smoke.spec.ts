@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('DevTools Smoke Tests', () => {
+test.describe('LazyTools Smoke Tests', () => {
   
   test.beforeEach(async ({ page }) => {
     // Navigate to homepage before each test

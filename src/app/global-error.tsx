@@ -49,7 +49,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
       `* **URL**: ${typeof window !== 'undefined' ? window.location.href : 'unknown'}\n\n` +
       `*(Stack trace has been copied to your clipboard, please paste it here)*`
     );
-    window.open(`https://github.com/bberka/devtools/issues/new?title=${title}&body=${body}`, '_blank');
+    window.open(`https://github.com/bberka/lazytools.dev/issues/new?title=${title}&body=${body}`, '_blank');
   };
 
   return (

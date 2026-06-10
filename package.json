@@ -1,5 +1,5 @@
 {
-  "name": "devtools",
+  "name": "lazytools.dev",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -22,15 +22,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bberka/devtools.git"
+    "url": "git+https://github.com/bberka/lazytools.dev.git"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bberka/devtools/issues"
+    "url": "https://github.com/bberka/lazytools.dev/issues"
   },
-  "homepage": "https://github.com/bberka/devtools#readme",
+  "homepage": "https://github.com/bberka/lazytools.dev#readme",
   "dependencies": {
     "@iarna/toml": "^2.2.5",
     "@pdf-lib/fontkit": "^1.1.1",

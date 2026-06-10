@@ -1,6 +1,6 @@
 # Architecture Notes
 
-This document reflects the current application architecture for DevTools Collection after the completed move to Next.js App Router and static export.
+This document reflects the current application architecture for LazyTools Collection after the completed move to Next.js App Router and static export.
 
 ## Status
 

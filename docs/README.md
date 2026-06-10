@@ -1,4 +1,4 @@
-# DevTools Collection
+# LazyTools Collection
 
 > A privacy-first collection of browser-based developer and productivity tools built with Next.js App Router, React, shadcn-style components, Tailwind CSS, and static export.
 
@@ -56,8 +56,8 @@ See [ROADMAP.md](./ROADMAP.md) for planned work and expansion backlog.
 ### Install
 
 ```bash
-git clone https://github.com/bberka/devtools
-cd devtools
+git clone https://github.com/bberka/lazytools.dev
+cd lazytools.dev
 npm install
 ```
 

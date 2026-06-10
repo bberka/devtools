@@ -1,6 +1,6 @@
-# Contributing to DevTools Collection
+# Contributing to LazyTools Collection
 
-Thanks for helping improve DevTools Collection. This guide reflects the current Next.js + React implementation.
+Thanks for helping improve LazyTools Collection. This guide reflects the current Next.js + React implementation.
 
 ## Prerequisites
 
