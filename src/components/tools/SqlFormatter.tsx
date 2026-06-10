@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Check, Copy, Database, Trash2 } from 'lucide-react';
+import { Check, Copy, Database, Trash2, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -324,9 +324,30 @@ export function SqlFormatter() {
             </Button>
           </div>
 
-          {error && (
-            <div className="rounded-md bg-destructive/10 px-4 py-3 text-sm text-destructive">
-              <strong>Error:</strong> {error}
+          {/* Validation status diagnostics */}
+          {input.trim() && (
+            <div
+              className={`flex items-start gap-3 rounded-md px-4 py-3 text-sm ${
+                !error
+                  ? 'bg-green-500/10 text-green-700 dark:text-green-400 border border-green-500/20'
+                  : 'bg-destructive/10 text-destructive border border-destructive/20'
+              }`}
+            >
+              {!error ? (
+                <>
+                  <CheckCircle2 className="h-5 w-5 shrink-0 mt-0.5" />
+                  <div>
+                    <strong>Valid SQL:</strong> Formatted successfully under {DIALECT_OPTIONS.find(d => d.value === dialect)?.label ?? dialect} dialect.
+                  </div>
+                </>
+              ) : (
+                <>
+                  <AlertTriangle className="h-5 w-5 shrink-0 mt-0.5" />
+                  <div>
+                    <strong>Formatting Exception:</strong> {error}
+                  </div>
+                </>
+              )}
             </div>
           )}
         </CardContent>

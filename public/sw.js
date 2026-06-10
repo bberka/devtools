@@ -73,6 +73,14 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Bypass HMR hot-reloading and development server WebSocket connections
+  if (
+    url.pathname.includes('webpack-hmr') ||
+    (url.pathname.startsWith('/_next/') && !url.pathname.startsWith('/_next/static/'))
+  ) {
+    return;
+  }
+
   // Use Network-First for page navigations to prevent stale HTML hydration/reload loops when online.
   if (request.mode === 'navigate') {
     event.respondWith(networkFirst(request));

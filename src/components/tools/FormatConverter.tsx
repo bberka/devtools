@@ -16,7 +16,7 @@ import {
 import { Copy, Check, Code, Trash2, ArrowRightLeft } from 'lucide-react';
 import { useCopyToClipboard } from '@/hooks';
 
-type Format = 'json' | 'yaml' | 'xml' | 'csv';
+type Format = 'json' | 'yaml' | 'xml' | 'csv' | 'toml';
 type Delimiter = ',' | ';' | '\t' | '|';
 
 const DELIMITER_OPTIONS: Array<{ value: Delimiter; label: string }> = [
@@ -178,6 +178,8 @@ const getPlaceholder = (format: Format) => {
       return '<root>\n  <name>John</name>\n  <age>30</age>\n  <city>New York</city>\n</root>';
     case 'csv':
       return 'name,age,city\nJohn,30,New York';
+    case 'toml':
+      return 'name = "John"\nage = 30\ncity = "New York"';
   }
 };
 
@@ -224,9 +226,10 @@ export function FormatConverter() {
     }
 
     try {
-      const [yaml, xml] = await Promise.all([
+      const [yaml, xml, toml] = await Promise.all([
         fromFormat === 'yaml' || toFormat === 'yaml' ? import('js-yaml') : Promise.resolve(null),
         fromFormat === 'xml' || toFormat === 'xml' ? import('xml-js') : Promise.resolve(null),
+        fromFormat === 'toml' || toFormat === 'toml' ? import('@iarna/toml') : Promise.resolve(null),
       ]);
       let intermediate: unknown;
 
@@ -249,6 +252,13 @@ export function FormatConverter() {
         case 'csv':
           intermediate = convertCsvToIntermediate(text, delim, headersVal);
           break;
+        case 'toml': {
+          if (!toml) {
+            throw new Error('TOML converter failed to load');
+          }
+          intermediate = toml.parse(text);
+          break;
+        }
       }
 
       // Convert intermediate to output format
@@ -273,6 +283,19 @@ export function FormatConverter() {
         case 'csv':
           result = convertIntermediateToCsv(intermediate, delim, headersVal);
           break;
+        case 'toml': {
+          if (!toml) {
+            throw new Error('TOML converter failed to load');
+          }
+          let tomlObject = intermediate;
+          if (Array.isArray(tomlObject)) {
+            tomlObject = { items: tomlObject };
+          } else if (typeof tomlObject !== 'object' || tomlObject === null) {
+            tomlObject = { value: tomlObject };
+          }
+          result = toml.stringify(tomlObject as any);
+          break;
+        }
         default:
           result = '';
       }
@@ -335,6 +358,7 @@ export function FormatConverter() {
                 <SelectItem value="yaml">YAML</SelectItem>
                 <SelectItem value="xml">XML</SelectItem>
                 <SelectItem value="csv">CSV</SelectItem>
+                <SelectItem value="toml">TOML</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -356,6 +380,7 @@ export function FormatConverter() {
                 <SelectItem value="yaml">YAML</SelectItem>
                 <SelectItem value="xml">XML</SelectItem>
                 <SelectItem value="csv">CSV</SelectItem>
+                <SelectItem value="toml">TOML</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>

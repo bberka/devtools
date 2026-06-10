@@ -231,11 +231,11 @@ export const TOOL_REGISTRY = {
       ),
   },
   'json-yaml-xml': {
-    name: 'JSON / YAML / XML / CSV Converter',
-    description: 'Convert data seamlessly between JSON, YAML, XML, and CSV.',
+    name: 'JSON / YAML / XML / CSV / TOML Converter',
+    description: 'Convert data between JSON, YAML, XML, CSV, and TOML.',
     category: 'converters',
     icon: 'Code',
-    keywords: ['json', 'yaml', 'xml', 'csv', 'convert', 'converter', 'parse', 'stringify'],
+    keywords: ['json', 'yaml', 'xml', 'csv', 'toml', 'convert', 'converter', 'parse', 'stringify'],
     component: () =>
       import('@/components/tools/JsonYamlXmlConverter').then(
         (module) => module.JsonYamlXmlConverter
@@ -416,11 +416,11 @@ export const TOOL_REGISTRY = {
       ),
   },
   'sql-formatter': {
-    name: 'SQL Formatter',
-    description: 'Format SQL queries with multi-dialect database support.',
+    name: 'SQL Formatter & Validator',
+    description: 'Format and validate SQL queries for multiple dialects.',
     category: 'formatters-validators',
     icon: 'Database',
-    keywords: ['sql', 'format', 'database', 'query'],
+    keywords: ['sql', 'format', 'database', 'query', 'validate', 'validator', 'syntax'],
     component: () =>
       import('@/components/tools/SqlFormatter').then(
         (module) => module.SqlFormatter
@@ -451,22 +451,22 @@ export const TOOL_REGISTRY = {
       ),
   },
   'yaml-validator': {
-    name: 'YAML Validator',
-    description: 'Validate YAML syntax and inspect formatted outputs.',
+    name: 'YAML Formatter & Validator',
+    description: 'Format and validate YAML data with an interactive tree.',
     category: 'formatters-validators',
     icon: 'FileCode',
-    keywords: ['yaml', 'validate', 'validator', 'syntax', 'parse'],
+    keywords: ['yaml', 'format', 'validate', 'pretty', 'validator', 'tree', 'syntax', 'parse'],
     component: () =>
       import('@/components/tools/YamlValidator').then(
         (module) => module.YamlValidator
       ),
   },
   'xml-formatter': {
-    name: 'XML Formatter',
-    description: 'Format and prettify XML documents with custom spacing.',
+    name: 'XML Formatter & Validator',
+    description: 'Format and validate XML markup with an interactive tree.',
     category: 'formatters-validators',
     icon: 'FileCode',
-    keywords: ['xml', 'format', 'pretty'],
+    keywords: ['xml', 'format', 'pretty', 'validate', 'validator', 'tree', 'syntax'],
     component: () =>
       import('@/components/tools/XmlFormatter').then(
         (module) => module.XmlFormatter
@@ -478,6 +478,7 @@ export const TOOL_REGISTRY = {
     category: 'formatters-validators',
     icon: 'CheckCircle',
     keywords: ['xml', 'validate', 'syntax'],
+    hidden: true,
     component: () =>
       import('@/components/tools/XmlValidator').then(
         (module) => module.XmlValidator

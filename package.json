@@ -32,6 +32,7 @@
   },
   "homepage": "https://github.com/bberka/devtools#readme",
   "dependencies": {
+    "@iarna/toml": "^2.2.5",
     "@pdf-lib/fontkit": "^1.1.1",
     "@radix-ui/react-checkbox": "^1.3.3",
     "@radix-ui/react-dialog": "^1.1.16",
@@ -88,6 +89,7 @@
     "@playwright/test": "^1.49.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/blueimp-md5": "^2.18.2",
+    "@types/iarna__toml": "^2.0.5",
     "@types/js-yaml": "^4.0.9",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^25.0.3",
