@@ -21,16 +21,16 @@ Static web app for everyday browser-side workflows: converting files, formatting
 
 ## Tool Categories
 
-- Converters: 5 tools
+- Converters: 6 tools
 - Encoders & Decoders: 5 tools
 - Generators: 5 tools
 - Formatters & Validators: 6 tools
 - Text Tools: 7 tools
 - Utilities: 4 tools
-- Security: 5 tools
+- Security: 6 tools (1 hidden)
 - Networking: 4 tools
 - Design: 6 tools
-- PDF Tools: 8 tools
+- PDF Tools: 11 tools
 - Image Tools: 9 tools
 - Calculators: 8 tools
 

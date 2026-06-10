@@ -125,17 +125,17 @@ test.describe('DevTools Smoke Tests', () => {
     await page.waitForTimeout(1000);
 
     // Wait for the tool inputs to render
-    const inputArea = page.getByPlaceholder(/john/i);
+    const inputArea = page.getByPlaceholder(/ada/i);
     await expect(inputArea).toBeVisible();
 
     // Check default outputs are not set/showing empty output placeholder
-    const outputArea = page.getByPlaceholder(/Formatted JSON/i);
+    const outputArea = page.getByPlaceholder(/Formatted output/i);
     await expect(outputArea).toBeVisible();
     await expect(outputArea).toHaveValue('');
 
     // Input invalid JSON and verify error message
     await inputArea.fill('{"invalid": json');
-    const errorMessage = page.getByText(/error:/i);
+    const errorMessage = page.getByText(/Invalid JSON Syntax/i);
     await expect(errorMessage).toBeVisible();
 
     // Input valid JSON
