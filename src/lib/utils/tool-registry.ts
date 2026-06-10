@@ -425,11 +425,11 @@ export const TOOL_REGISTRY = {
       ),
   },
   'json-formatter': {
-    name: 'JSON Formatter',
-    description: 'Format, prettify, and validate JSON data strings.',
+    name: 'JSON Formatter & Validator',
+    description: 'Format, validate, and query JSON with an interactive tree.',
     category: 'formatters-validators',
     icon: 'Braces',
-    keywords: ['json', 'format', 'validate', 'pretty'],
+    keywords: ['json', 'format', 'validate', 'pretty', 'validator', 'tree', 'query', 'jsonpath'],
     featured: true,
     component: () =>
       import('@/components/tools/JsonFormatter').then(
@@ -442,6 +442,7 @@ export const TOOL_REGISTRY = {
     category: 'formatters-validators',
     icon: 'CheckCircle',
     keywords: ['json', 'validate', 'validator', 'syntax', 'parse'],
+    hidden: true,
     component: () =>
       import('@/components/tools/JsonValidator').then(
         (module) => module.JsonValidator
