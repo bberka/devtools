@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button } from '../ui/button';
 import { TooltipSimple } from '../ui/tooltip';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
@@ -17,6 +17,22 @@ import {
 } from '../ui/select';
 import { Copy, Check, RefreshCw, Shield, KeyRound } from 'lucide-react';
 import { useCopyToClipboard } from '@/hooks';
+
+interface ZxcvbnResult {
+  score: number;
+  feedback: {
+    warning?: string;
+    suggestions: string[];
+  };
+  crackTimesDisplay: {
+    offlineFastHashing1e10PerSecond: string;
+    offlineSlowHashing1e4PerSecond: string;
+    onlineNoThrottling10PerSecond: string;
+  };
+  entropyBits: number;
+}
+
+let isZxcvbnInitialized = false;
 
 type GenerationMode = 'random' | 'pin' | 'passphrase';
 type StrengthTone = 'text-red-500' | 'text-yellow-500' | 'text-green-500';
@@ -285,50 +301,78 @@ export function PasswordGenerator() {
 
   const counts = useMemo(() => getPasswordCounts(password), [password]);
 
-  const strength = useMemo(() => {
-    if (!password || password.includes('Increase') || password.includes('Enable') || password.includes('Length is')) {
-      return { label: '', tone: 'text-red-500' as StrengthTone, entropyBits: 0 };
-    }
-
-    let entropyBits = 0;
-    if (mode === 'random') {
-      const poolSize =
-        (uppercase ? (excludeAmbiguous ? CHARACTER_GROUPS.uppercase.replace(AMBIGUOUS_PATTERN, '').length : CHARACTER_GROUPS.uppercase.length) : 0) +
-        (lowercase ? (excludeAmbiguous ? CHARACTER_GROUPS.lowercase.replace(AMBIGUOUS_PATTERN, '').length : CHARACTER_GROUPS.lowercase.length) : 0) +
-        (numbers ? (excludeAmbiguous ? CHARACTER_GROUPS.numbers.replace(AMBIGUOUS_PATTERN, '').length : CHARACTER_GROUPS.numbers.length) : 0) +
-        (special ? CHARACTER_GROUPS.special.length : 0);
-      entropyBits = Math.round(length * Math.log2(Math.max(poolSize, 1)));
-    } else if (mode === 'pin') {
-      entropyBits = Math.round(pinLength * Math.log2(10));
-    } else {
-      entropyBits = Math.round(wordCount * Math.log2(PASSPHRASE_WORDS.length));
-      if (includePassphraseNumber) entropyBits += Math.round(Math.log2(900));
-      if (includePassphraseSymbol) entropyBits += Math.round(Math.log2(6));
-    }
-
-    if (entropyBits >= 80) return { label: 'Strong', tone: 'text-green-500' as StrengthTone, entropyBits };
-    if (entropyBits >= 50) return { label: 'Medium', tone: 'text-yellow-500' as StrengthTone, entropyBits };
-    return { label: 'Weak', tone: 'text-red-500' as StrengthTone, entropyBits };
-  }, [
-    excludeAmbiguous,
-    includePassphraseNumber,
-    includePassphraseSymbol,
-    length,
-    lowercase,
-    mode,
-    numbers,
-    password,
-    pinLength,
-    special,
-    uppercase,
-    wordCount,
-  ]);
-
   const hasError =
     password.includes('Increase') ||
     password.includes('Enable') ||
     password.includes('Length is') ||
     password.includes('cannot fill');
+
+  const [strengthAnalysis, setStrengthAnalysis] = useState<ZxcvbnResult | null>(null);
+  const [isEvaluating, setIsEvaluating] = useState(false);
+
+  useEffect(() => {
+    if (!password || hasError) {
+      setStrengthAnalysis(null);
+      return;
+    }
+
+    let isCurrent = true;
+    setIsEvaluating(true);
+
+    const evaluate = async () => {
+      try {
+        const [core, langCommon, langEn] = await Promise.all([
+          import('@zxcvbn-ts/core'),
+          import('@zxcvbn-ts/language-common'),
+          import('@zxcvbn-ts/language-en'),
+        ]);
+
+        if (!isCurrent) return;
+
+        if (!isZxcvbnInitialized) {
+          core.zxcvbnOptions.setOptions({
+            dictionary: {
+              ...langCommon.dictionary,
+              ...langEn.dictionary,
+            },
+            graphs: langCommon.adjacencyGraphs,
+            translations: langEn.translations,
+          });
+          isZxcvbnInitialized = true;
+        }
+
+        const result = core.zxcvbn(password);
+
+        if (!isCurrent) return;
+
+        setStrengthAnalysis({
+          score: result.score,
+          feedback: {
+            warning: result.feedback.warning || undefined,
+            suggestions: result.feedback.suggestions || [],
+          },
+          crackTimesDisplay: {
+            offlineFastHashing1e10PerSecond: result.crackTimesDisplay.offlineFastHashing1e10PerSecond,
+            offlineSlowHashing1e4PerSecond: result.crackTimesDisplay.offlineSlowHashing1e4PerSecond,
+            onlineNoThrottling10PerSecond: result.crackTimesDisplay.onlineNoThrottling10PerSecond,
+          },
+          entropyBits: Math.round(Math.log2(result.guesses)),
+        });
+      } catch (e) {
+        console.error('zxcvbn evaluation failed', e);
+      } finally {
+        if (isCurrent) {
+          setIsEvaluating(false);
+        }
+      }
+    };
+
+    void evaluate();
+
+    return () => {
+      isCurrent = false;
+    };
+  }, [password, hasError]);
 
   return (
     <div className="space-y-6">
@@ -540,11 +584,39 @@ export function PasswordGenerator() {
                 Output
               </CardTitle>
               <CardDescription>
-                {hasError ? 'Adjust the settings below to make this combination possible.' : `Estimated entropy: ${strength.entropyBits} bits`}
+                {hasError
+                  ? 'Adjust the settings below to make this combination possible.'
+                  : isEvaluating
+                    ? 'Evaluating strength...'
+                    : `Estimated entropy: ${strengthAnalysis?.entropyBits ?? 0} bits`}
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
-              {!hasError && <span className={`text-sm font-medium ${strength.tone}`}>{strength.label}</span>}
+              {!hasError && strengthAnalysis && !isEvaluating && (
+                <span
+                  className={`text-sm font-semibold ${
+                    strengthAnalysis.score === 4
+                      ? 'text-green-500'
+                      : strengthAnalysis.score === 3
+                        ? 'text-blue-500'
+                        : strengthAnalysis.score === 2
+                          ? 'text-yellow-500'
+                          : strengthAnalysis.score === 1
+                            ? 'text-orange-500'
+                            : 'text-red-500'
+                  }`}
+                >
+                  {strengthAnalysis.score === 4
+                    ? 'Strong'
+                    : strengthAnalysis.score === 3
+                      ? 'Good'
+                      : strengthAnalysis.score === 2
+                        ? 'Fair'
+                        : strengthAnalysis.score === 1
+                          ? 'Weak'
+                          : 'Very Weak'}
+                </span>
+              )}
               <TooltipSimple content={isCopied ? 'Copied!' : 'Copy output'}>
                 <Button
                   variant={isCopied ? 'default' : 'ghost'}
@@ -564,6 +636,67 @@ export function PasswordGenerator() {
             >
               {password}
             </div>
+
+            {/* Strength Progress Bar */}
+            {!hasError && !isEvaluating && strengthAnalysis && (
+              <div className="space-y-1.5">
+                <div className="flex gap-1.5 h-2 w-full bg-muted rounded-full overflow-hidden">
+                  {[0, 1, 2, 3].map((index) => {
+                    const score = strengthAnalysis.score;
+                    const isFilled = index < score;
+                    let fillClass = 'bg-muted';
+                    if (isFilled) {
+                      if (score <= 1) fillClass = 'bg-red-500';
+                      else if (score === 2) fillClass = 'bg-orange-500';
+                      else if (score === 3) fillClass = 'bg-yellow-500';
+                      else fillClass = 'bg-green-500';
+                    }
+                    return (
+                      <div
+                        key={index}
+                        className={`h-full flex-1 transition-all duration-300 ${fillClass}`}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Warnings and Suggestions */}
+            {!hasError && !isEvaluating && strengthAnalysis && (strengthAnalysis.feedback.warning || strengthAnalysis.feedback.suggestions.length > 0) && (
+              <div className="p-3.5 rounded-lg bg-yellow-500/10 border border-yellow-500/20 space-y-1.5">
+                {strengthAnalysis.feedback.warning && (
+                  <p className="text-xs font-semibold text-yellow-600 dark:text-yellow-500 flex items-center gap-1.5">
+                    ⚠️ {strengthAnalysis.feedback.warning}
+                  </p>
+                )}
+                {strengthAnalysis.feedback.suggestions.length > 0 && (
+                  <ul className="list-disc list-inside text-xs text-muted-foreground space-y-1 pl-1">
+                    {strengthAnalysis.feedback.suggestions.map((suggestion, idx) => (
+                      <li key={idx}>{suggestion}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )}
+
+            {/* Estimated time-to-crack metrics */}
+            {!hasError && !isEvaluating && strengthAnalysis && (
+              <div className="grid gap-3 sm:grid-cols-3">
+                <div className="rounded-xl border border-border/70 bg-muted/30 p-3">
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Fast Crack (Offline)</p>
+                  <p className="mt-1 font-mono text-sm leading-normal text-foreground">{strengthAnalysis.crackTimesDisplay.offlineFastHashing1e10PerSecond}</p>
+                </div>
+                <div className="rounded-xl border border-border/70 bg-muted/30 p-3">
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Slow Crack (Offline)</p>
+                  <p className="mt-1 font-mono text-sm leading-normal text-foreground">{strengthAnalysis.crackTimesDisplay.offlineSlowHashing1e4PerSecond}</p>
+                </div>
+                <div className="rounded-xl border border-border/70 bg-muted/30 p-3">
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Online Crack</p>
+                  <p className="mt-1 font-mono text-sm leading-normal text-foreground">{strengthAnalysis.crackTimesDisplay.onlineNoThrottling10PerSecond}</p>
+                </div>
+              </div>
+            )}
 
             {!hasError && mode === 'random' && (
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
