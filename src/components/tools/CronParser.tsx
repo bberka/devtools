@@ -5,6 +5,7 @@ import { AlertCircle, Calendar, Check, Clock, Copy, Settings2, Trash2 } from 'lu
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
 import {
   Select,
   SelectContent,
@@ -205,12 +206,22 @@ function expandField(field: string, min: number, max: number): Set<number> {
   return values;
 }
 
-function matchesCron(date: Date, parts: CronParts): boolean {
+function matchesCron(date: Date, parts: CronParts, tz: 'local' | 'utc' = 'local'): boolean {
   const minuteValues = expandField(parts.minute, 0, 59);
   const hourValues = expandField(parts.hour, 0, 23);
   const dayOfMonthValues = expandField(parts.dayOfMonth, 1, 31);
   const monthValues = expandField(parts.month, 1, 12);
   const dayOfWeekValues = expandField(parts.dayOfWeek, 0, 6);
+
+  if (tz === 'utc') {
+    return (
+      minuteValues.has(date.getUTCMinutes()) &&
+      hourValues.has(date.getUTCHours()) &&
+      dayOfMonthValues.has(date.getUTCDate()) &&
+      monthValues.has(date.getUTCMonth() + 1) &&
+      dayOfWeekValues.has(date.getUTCDay())
+    );
+  }
 
   return (
     minuteValues.has(date.getMinutes()) &&
@@ -243,7 +254,7 @@ function getRelativeTime(date: Date): string {
   return 'now';
 }
 
-function calculateNextRuns(parts: CronParts): NextRun[] {
+function calculateNextRuns(parts: CronParts, tz: 'local' | 'utc' = 'local'): NextRun[] {
   const runs: NextRun[] = [];
   const cursor = new Date();
   cursor.setSeconds(0, 0);
@@ -253,12 +264,22 @@ function calculateNextRuns(parts: CronParts): NextRun[] {
   const maxChecks = 60 * 24 * 366;
 
   while (runs.length < 5 && checked < maxChecks) {
-    if (matchesCron(cursor, parts)) {
-      runs.push({
-        date: cursor.toLocaleDateString(),
-        time: cursor.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        fromNow: getRelativeTime(cursor),
-      });
+    if (matchesCron(cursor, parts, tz)) {
+      if (tz === 'utc') {
+        const utcDateStr = cursor.toISOString().split('T')[0];
+        const utcTimeStr = cursor.toISOString().split('T')[1].substring(0, 5) + ' UTC';
+        runs.push({
+          date: utcDateStr,
+          time: utcTimeStr,
+          fromNow: getRelativeTime(cursor),
+        });
+      } else {
+        runs.push({
+          date: cursor.toLocaleDateString(),
+          time: cursor.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          fromNow: getRelativeTime(cursor),
+        });
+      }
     }
 
     cursor.setMinutes(cursor.getMinutes() + 1);
@@ -401,6 +422,7 @@ export function CronParser() {
   const [monthlyDay, setMonthlyDay] = useState('1');
   const [yearlyMonth, setYearlyMonth] = useState('1');
   const [yearlyDay, setYearlyDay] = useState('1');
+  const [timezoneMode, setTimezoneMode] = useState<'local' | 'utc'>('local');
   const { copyToClipboard, isCopied } = useCopyToClipboard();
 
   const builderExpression = useMemo(
@@ -443,7 +465,7 @@ export function CronParser() {
       const parsed = parseCronExpression(trimmed);
       setParts(parsed);
       setDescription(generateDescription(parsed));
-      setNextRuns(calculateNextRuns(parsed));
+      setNextRuns(calculateNextRuns(parsed, timezoneMode));
       setError('');
     } catch (parseError) {
       setError(parseError instanceof Error ? parseError.message : 'Invalid cron expression');
@@ -451,7 +473,7 @@ export function CronParser() {
       setDescription('');
       setNextRuns([]);
     }
-  }, [expression]);
+  }, [expression, timezoneMode]);
 
   useEffect(() => {
     if (builderMode !== 'custom' && builderExpression) {
@@ -815,9 +837,21 @@ export function CronParser() {
 
       {nextRuns.length > 0 && (
         <Card>
-          <CardHeader>
-            <CardTitle>Next Scheduled Runs</CardTitle>
-            <CardDescription>Upcoming execution times from your current local time</CardDescription>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
+            <div>
+              <CardTitle>Next Scheduled Runs</CardTitle>
+              <CardDescription>
+                Upcoming execution times ({timezoneMode === 'utc' ? 'UTC' : 'your local time'})
+              </CardDescription>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground font-medium">UTC Mode</span>
+              <Switch
+                checked={timezoneMode === 'utc'}
+                onCheckedChange={(checked) => setTimezoneMode(checked ? 'utc' : 'local')}
+                aria-label="Toggle UTC timezone mode"
+              />
+            </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">

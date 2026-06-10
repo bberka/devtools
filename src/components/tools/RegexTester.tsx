@@ -107,6 +107,204 @@ const RECIPES: PatternRecipe[] = [
   },
 ];
 
+interface RegexExplanation {
+  token: string;
+  description: string;
+  category: 'Anchor' | 'Quantifier' | 'Character Class' | 'Group' | 'Literal' | 'Meta';
+}
+
+function explainRegex(pattern: string): RegexExplanation[] {
+  const explanations: RegexExplanation[] = [];
+  if (!pattern) return explanations;
+  
+  let i = 0;
+  while (i < pattern.length) {
+    const char = pattern[i];
+    
+    // 1. Escaped characters
+    if (char === '\\' && i + 1 < pattern.length) {
+      const next = pattern[i + 1];
+      const escaped = '\\' + next;
+      
+      let description = `Literal character "${next}"`;
+      let category: RegexExplanation['category'] = 'Literal';
+      
+      switch (next) {
+        case 'd':
+          description = 'Any digit character (0-9)';
+          category = 'Character Class';
+          break;
+        case 'D':
+          description = 'Any non-digit character';
+          category = 'Character Class';
+          break;
+        case 'w':
+          description = 'Any word character (alphanumeric or underscore)';
+          category = 'Character Class';
+          break;
+        case 'W':
+          description = 'Any non-word character';
+          category = 'Character Class';
+          break;
+        case 's':
+          description = 'Any whitespace character (space, tab, newline)';
+          category = 'Character Class';
+          break;
+        case 'S':
+          description = 'Any non-whitespace character';
+          category = 'Character Class';
+          break;
+        case 'b':
+          description = 'A word boundary edge';
+          category = 'Anchor';
+          break;
+        case 'B':
+          description = 'A non-word boundary edge';
+          category = 'Anchor';
+          break;
+        case 'n':
+          description = 'Newline character';
+          category = 'Literal';
+          break;
+        case 'r':
+          description = 'Carriage return character';
+          category = 'Literal';
+          break;
+        case 't':
+          description = 'Tab character';
+          category = 'Literal';
+          break;
+        default:
+          if (['.', '*', '+', '?', '^', '$', '(', ')', '[', ']', '{', '}', '|', '\\'].includes(next)) {
+            description = `Escaped special meta-character "${next}" (matches literal "${next}")`;
+            category = 'Literal';
+          }
+          break;
+      }
+      
+      explanations.push({ token: escaped, description, category });
+      i += 2;
+      continue;
+    }
+    
+    // 2. Anchors
+    if (char === '^') {
+      explanations.push({ token: '^', description: 'Start of string (or line)', category: 'Anchor' });
+      i++;
+      continue;
+    }
+    if (char === '$') {
+      explanations.push({ token: '$', description: 'End of string (or line)', category: 'Anchor' });
+      i++;
+      continue;
+    }
+    
+    // 3. Dot (Any char)
+    if (char === '.') {
+      explanations.push({ token: '.', description: 'Any character except newline', category: 'Character Class' });
+      i++;
+      continue;
+    }
+    
+    // 4. Quantifiers: *, +, ?
+    if (char === '*') {
+      explanations.push({ token: '*', description: 'Repeat preceding element 0 or more times', category: 'Quantifier' });
+      i++;
+      continue;
+    }
+    if (char === '+') {
+      explanations.push({ token: '+', description: 'Repeat preceding element 1 or more times', category: 'Quantifier' });
+      i++;
+      continue;
+    }
+    if (char === '?') {
+      const prev = explanations[explanations.length - 1];
+      if (prev && prev.category === 'Quantifier') {
+        prev.token += '?';
+        prev.description += ' (lazy/non-greedy match)';
+      } else {
+        explanations.push({ token: '?', description: 'Preceding element is optional (matches 0 or 1 time)', category: 'Quantifier' });
+      }
+      i++;
+      continue;
+    }
+    
+    // 5. Quantifier range: {n}, {min, max}
+    if (char === '{') {
+      const endIdx = pattern.indexOf('}', i);
+      if (endIdx !== -1) {
+        const token = pattern.substring(i, endIdx + 1);
+        const inside = pattern.substring(i + 1, endIdx);
+        let description = `Repeat preceding element: ${inside} times`;
+        const parts = inside.split(',');
+        if (parts.length === 2) {
+          const min = parts[0].trim();
+          const max = parts[1].trim();
+          if (max === '') {
+            description = `Repeat preceding element: ${min} or more times`;
+          } else {
+            description = `Repeat preceding element: between ${min} and ${max} times`;
+          }
+        } else {
+          description = `Repeat preceding element: exactly ${inside} times`;
+        }
+        explanations.push({ token, description, category: 'Quantifier' });
+        i = endIdx + 1;
+        continue;
+      }
+    }
+    
+    // 6. Character sets: [abc], [a-z]
+    if (char === '[') {
+      const endIdx = pattern.indexOf(']', i);
+      if (endIdx !== -1) {
+        const token = pattern.substring(i, endIdx + 1);
+        let content = pattern.substring(i + 1, endIdx);
+        const isNegated = content.startsWith('^');
+        if (isNegated) content = content.substring(1);
+        
+        const desc = isNegated
+          ? `Any single character NOT in set: "${content}"`
+          : `Any single character in set: "${content}"`;
+          
+        explanations.push({ token, description: desc, category: 'Character Class' });
+        i = endIdx + 1;
+        continue;
+      }
+    }
+    
+    // 7. Groups
+    if (char === '(') {
+      if (pattern.startsWith('(?:', i)) {
+        explanations.push({ token: '(?:', description: 'Start of non-capturing group', category: 'Group' });
+        i += 3;
+      } else {
+        explanations.push({ token: '(', description: 'Start of capturing group', category: 'Group' });
+        i++;
+      }
+      continue;
+    }
+    if (char === ')') {
+      explanations.push({ token: ')', description: 'End of group', category: 'Group' });
+      i++;
+      continue;
+    }
+    
+    // 8. Alternation
+    if (char === '|') {
+      explanations.push({ token: '|', description: 'OR match (match left or right expression)', category: 'Meta' });
+      i++;
+      continue;
+    }
+    
+    // 9. Standard literals
+    explanations.push({ token: char, description: `Literal character "${char}"`, category: 'Literal' });
+    i++;
+  }
+  
+  return explanations;
+}
+
 export function RegexTester() {
   const [pattern, setPattern] = useState('');
   const [testString, setTestString] = useState('');
@@ -397,6 +595,37 @@ export function RegexTester() {
           </div>
         </CardContent>
       </Card>
+
+      {pattern && isValid && (
+        <Card className="border-primary/20 bg-primary/5">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <SearchCode className="h-4.5 w-4.5" />
+              Pattern Explanation
+            </CardTitle>
+            <CardDescription className="text-xs">
+              Breakdown of what each symbol in the expression matches.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto border rounded-md divide-y max-h-[300px] overflow-y-auto scrollbar-thin bg-background">
+              {explainRegex(pattern).map((exp, idx) => (
+                <div key={idx} className="grid grid-cols-[100px_1fr] items-start p-3 gap-4 text-sm hover:bg-muted/40 transition-colors">
+                  <div className="font-mono bg-muted px-1.5 py-0.5 rounded text-center break-all select-all font-semibold shrink-0 text-primary">
+                    {exp.token}
+                  </div>
+                  <div>
+                    <span className="inline-block text-[9px] font-bold uppercase tracking-wider text-muted-foreground mr-2 border rounded px-1.5 py-0.5 bg-muted/25">
+                      {exp.category}
+                    </span>
+                    <span>{exp.description}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>

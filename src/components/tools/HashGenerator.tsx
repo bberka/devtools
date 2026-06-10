@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useMemo } from 'react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Textarea } from '../ui/textarea';
+import { Input } from '../ui/input';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
-import { Copy, Check, Upload, FileText, X, File } from 'lucide-react';
+import { Copy, Check, Upload, FileText, X, File, ShieldAlert, CheckCircle2 } from 'lucide-react';
 import { useCopyToClipboard } from '@/hooks';
 
 type HashAlgorithm = 'MD5' | 'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512';
@@ -57,6 +58,10 @@ export function HashGenerator() {
   const [dragging, setDragging] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  
+  // Hash comparison state
+  const [compareHash, setCompareHash] = useState('');
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { copyToClipboard } = useCopyToClipboard();
 
@@ -107,6 +112,7 @@ export function HashGenerator() {
   const clearFile = () => {
     setFile(null);
     setHashes(EMPTY_HASHES);
+    setCompareHash('');
     setError('');
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
@@ -114,10 +120,24 @@ export function HashGenerator() {
   const switchMode = (m: 'text' | 'file') => {
     setMode(m);
     setHashes(EMPTY_HASHES);
+    setCompareHash('');
     setError('');
     if (m === 'text') { setFile(null); if (fileInputRef.current) fileInputRef.current.value = ''; }
     else { setInput(''); }
   };
+
+  // Check if comparison hash matches any calculated algorithm
+  const matchingAlgorithm = useMemo(() => {
+    const cleanCompare = compareHash.trim().toLowerCase();
+    if (!cleanCompare) return null;
+
+    for (const alg of ALGORITHMS) {
+      if (hashes[alg] && hashes[alg].toLowerCase() === cleanCompare) {
+        return alg;
+      }
+    }
+    return null;
+  }, [compareHash, hashes]);
 
   const hasAnyHash = ALGORITHMS.some((a) => hashes[a]);
 
@@ -131,7 +151,7 @@ export function HashGenerator() {
           </TabsTrigger>
           <TabsTrigger value="file" className="flex items-center gap-2">
             <File className="h-4 w-4" />
-            File
+            File Checksum
           </TabsTrigger>
         </TabsList>
       </Tabs>
@@ -196,27 +216,78 @@ export function HashGenerator() {
         <div className="text-sm text-muted-foreground px-1">Computing hashes...</div>
       )}
 
-      <div className="space-y-3">
-        {ALGORITHMS.map((algorithm) => (
-          <Card key={algorithm}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-base">{algorithm}</CardTitle>
-              <Button
-                variant={copiedHash === algorithm ? 'default' : 'ghost'}
-                size="icon"
-                onClick={() => handleCopy(algorithm)}
-                disabled={!hashes[algorithm]}
-              >
-                {copiedHash === algorithm ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-              </Button>
-            </CardHeader>
-            <CardContent>
-              <div className="p-3 rounded-md bg-muted font-mono text-sm break-all">
-                {hashes[algorithm] || (hasAnyHash ? '-' : <span className="text-muted-foreground">—</span>)}
+      {/* Checksum Comparison Card */}
+      {hasAnyHash && (
+        <Card className="border-primary/20 bg-primary/5">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-base">
+              Compare Checksum
+            </CardTitle>
+            <CardDescription className="text-xs">
+              Paste an expected hash string (MD5, SHA-1, SHA-256 etc.) to verify matching outputs.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <Input
+              value={compareHash}
+              onChange={(e) => setCompareHash((e.target as HTMLInputElement).value)}
+              placeholder="Paste checksum here..."
+              className="font-mono text-sm bg-background"
+            />
+            {compareHash.trim() && (
+              <div className="flex items-center gap-2 text-sm mt-1">
+                {matchingAlgorithm ? (
+                  <span className="flex items-center gap-1.5 text-green-600 dark:text-green-400 font-medium">
+                    <CheckCircle2 className="h-4 w-4 shrink-0" />
+                    Checksum verified! Matches {matchingAlgorithm} hash.
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1.5 text-yellow-600 dark:text-yellow-500 font-medium">
+                    <ShieldAlert className="h-4 w-4 shrink-0" />
+                    No match found in computed hashes.
+                  </span>
+                )}
               </div>
-            </CardContent>
-          </Card>
-        ))}
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Calculated Output List */}
+      <div className="space-y-3">
+        {ALGORITHMS.map((algorithm) => {
+          const isMatch = matchingAlgorithm === algorithm;
+          return (
+            <Card
+              key={algorithm}
+              className={isMatch ? 'border-green-500/50 bg-green-500/5 dark:bg-green-500/10 transition-colors' : 'transition-colors'}
+            >
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <div className="flex items-center gap-2">
+                  <CardTitle className="text-base">{algorithm}</CardTitle>
+                  {isMatch && (
+                    <span className="rounded-full bg-green-500/20 text-green-700 dark:text-green-300 px-2 py-0.5 text-xs font-semibold">
+                      Match Verified
+                    </span>
+                  )}
+                </div>
+                <Button
+                  variant={copiedHash === algorithm ? 'default' : 'ghost'}
+                  size="icon"
+                  onClick={() => handleCopy(algorithm)}
+                  disabled={!hashes[algorithm]}
+                >
+                  {copiedHash === algorithm ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                </Button>
+              </CardHeader>
+              <CardContent>
+                <div className="p-3 rounded-md bg-muted font-mono text-sm break-all">
+                  {hashes[algorithm] || (hasAnyHash ? '-' : <span className="text-muted-foreground">—</span>)}
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
     </div>
   );

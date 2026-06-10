@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "next dev",
     "start": "next start",
-    "build": "next build",
+    "build": "next build && node scripts/generate-sw-precache.js",
     "analyze": "cross-env ANALYZE=true next build --webpack",
     "preview": "next start",
     "typecheck": "tsc --noEmit",

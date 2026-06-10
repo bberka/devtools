@@ -294,6 +294,17 @@ export const TOOL_REGISTRY = {
     component: () =>
       import('@/components/tools/UrlEncoder').then((module) => module.UrlEncoder),
   },
+  'url-parser-builder': {
+    name: 'URL Parser & Builder',
+    description: 'Deconstruct, edit, and rebuild complex URL query parameters.',
+    category: 'encoders-decoders',
+    icon: 'Link2',
+    keywords: ['url', 'parser', 'builder', 'query', 'parameter', 'encode', 'decode'],
+    component: () =>
+      import('@/components/tools/UrlParserBuilder').then(
+        (module) => module.UrlParserBuilder
+      ),
+  },
   'html-encoder': {
     name: 'HTML Encoder/Decoder',
     description: 'Encode special characters to HTML entities and decode.',

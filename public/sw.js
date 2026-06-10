@@ -1,3 +1,9 @@
+try {
+  importScripts('/sw-precache.js');
+} catch (e) {
+  console.warn('[sw.js] Could not load /sw-precache.js, falling back to static list.');
+}
+
 const CACHE_VERSION = 'dev-tools-pwa-v1';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
@@ -12,7 +18,7 @@ const STATIC_ASSETS = [
   '/icon-maskable-512.png',
 ];
 
-const COMMON_TOOL_ROUTES = [
+const COMMON_TOOL_ROUTES = self.__precacheRoutes || [
   '/tools/base64-converter',
   '/tools/json-formatter',
   '/tools/hash-generator',
@@ -21,7 +27,7 @@ const COMMON_TOOL_ROUTES = [
   '/tools/snowflake-id-generator',
   '/tools/jwt-decoder',
   '/tools/url-encoder',
-  '/tools/markdown-preview',
+  '/tools/markdown-editor',
   '/tools/regex-tester',
   '/tools/color-converter',
 ];

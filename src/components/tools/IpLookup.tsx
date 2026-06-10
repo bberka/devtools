@@ -48,39 +48,78 @@ export function IpLookup() {
     return ipv6Pattern.test(ip);
   };
 
+  const fetchIPInfo = async (ip: string): Promise<IpInfo> => {
+    // 1. Try ipinfo.io
+    try {
+      const url = ip ? `https://ipinfo.io/${ip}/json` : 'https://ipinfo.io/json';
+      const response = await fetch(url);
+      if (response.ok) {
+        const data = await response.json();
+        return data as IpInfo;
+      }
+    } catch (e) {
+      console.warn('ipinfo.io query failed, trying freeipapi.com fallback...', e);
+    }
+
+    // 2. Try freeipapi.com
+    try {
+      const url = ip ? `https://freeipapi.com/api/json/${ip}` : 'https://freeipapi.com/api/json';
+      const response = await fetch(url);
+      if (response.ok) {
+        const data = await response.json();
+        return {
+          ip: data.ipAddress || data.ip || ip || '',
+          city: data.cityName,
+          region: data.regionName,
+          country: data.countryName,
+          loc: data.latitude && data.longitude ? `${data.latitude},${data.longitude}` : undefined,
+          org: data.isp || data.organization,
+          postal: data.zipCode,
+          timezone: data.timeZone,
+        };
+      }
+    } catch (e) {
+      console.warn('freeipapi.com query failed, trying ipapi.co fallback...', e);
+    }
+
+    // 3. Try ipapi.co
+    try {
+      const url = ip ? `https://ipapi.co/${ip}/json/` : 'https://ipapi.co/json/';
+      const response = await fetch(url);
+      if (response.ok) {
+        const data = await response.json();
+        return {
+          ip: data.ip || ip || '',
+          city: data.city,
+          region: data.region,
+          country: data.country_name,
+          loc: data.latitude && data.longitude ? `${data.latitude},${data.longitude}` : undefined,
+          org: data.org,
+          postal: data.postal,
+          timezone: data.timezone,
+        };
+      }
+    } catch (e) {
+      console.warn('ipapi.co query failed', e);
+    }
+
+    throw new Error('All IP geolocation lookup APIs failed. Please check your connection or try again later.');
+  };
+
   const lookupIP = async () => {
     setError('');
     setIpInfo(null);
 
     const ipToLookup = ipAddress.trim();
 
-    // If empty, lookup current IP
-    if (!ipToLookup) {
-      try {
-        const response = await fetch('https://ipinfo.io/json');
-        if (!response.ok) {
-          throw new Error('Failed to fetch IP information');
-        }
-        const data = await response.json();
-        setIpInfo(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to lookup IP address');
-      }
-      return;
-    }
-
-    // Validate IP format
-    if (!isValidIP(ipToLookup)) {
+    // Validate IP format if entered
+    if (ipToLookup && !isValidIP(ipToLookup)) {
       setError('Invalid IP address format');
       return;
     }
 
     try {
-      const response = await fetch(`https://ipinfo.io/${ipToLookup}/json`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch IP information');
-      }
-      const data = await response.json();
+      const data = await fetchIPInfo(ipToLookup);
 
       if (data.bogon) {
         setError('This is a private/reserved IP address (bogon)');
