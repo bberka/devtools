@@ -117,6 +117,16 @@ export function getAllCategories(): CategoryInfo[] {
   return Object.values(CATEGORIES);
 }
 
+function hasTokenPrefix(text: string, query: string): boolean {
+  const cleanText = text.toLowerCase();
+  const cleanQuery = query.toLowerCase();
+  const formattedText = cleanText
+    .replace(/([a-z])([0-9])/g, '$1 $2')
+    .replace(/([0-9])([a-z])/g, '$1 $2');
+  const tokens = formattedText.split(/[^a-z0-9]+/).filter(Boolean);
+  return tokens.some((token) => token.startsWith(cleanQuery));
+}
+
 export function calculateSearchScore(tool: Tool, query: string): number {
   const cleanQuery = query.trim().toLowerCase();
   if (!cleanQuery) return 0;
@@ -140,13 +150,13 @@ export function calculateSearchScore(tool: Tool, query: string): number {
   // 2. Starts with / Prefix matches (high priority)
   if (toolName.startsWith(cleanQuery)) {
     score += 40;
-  } else if (toolName.includes(cleanQuery)) {
+  } else if (hasTokenPrefix(toolName, cleanQuery)) {
     score += 20;
   }
 
   if (toolId.startsWith(cleanQuery)) {
     score += 30;
-  } else if (toolId.includes(cleanQuery)) {
+  } else if (hasTokenPrefix(toolId, cleanQuery)) {
     score += 15;
   }
 
@@ -154,7 +164,7 @@ export function calculateSearchScore(tool: Tool, query: string): number {
   for (const keyword of toolKeywords) {
     if (keyword.startsWith(cleanQuery)) {
       score += 25;
-    } else if (keyword.includes(cleanQuery)) {
+    } else if (hasTokenPrefix(keyword, cleanQuery)) {
       score += 10;
     }
   }
@@ -167,21 +177,21 @@ export function calculateSearchScore(tool: Tool, query: string): number {
       let wordScore = 0;
       if (toolName === word) {
         wordScore = Math.max(wordScore, 30);
-      } else if (toolName.includes(word)) {
+      } else if (hasTokenPrefix(toolName, word)) {
         wordScore = Math.max(wordScore, 10);
       }
 
       if (toolKeywords.includes(word)) {
         wordScore = Math.max(wordScore, 15);
-      } else if (toolKeywords.some((k) => k.includes(word))) {
+      } else if (toolKeywords.some((k) => hasTokenPrefix(k, word))) {
         wordScore = Math.max(wordScore, 5);
       }
 
-      if (toolDesc.includes(word)) {
+      if (hasTokenPrefix(toolDesc, word)) {
         wordScore = Math.max(wordScore, 5);
       }
 
-      if (toolCategory.includes(word)) {
+      if (hasTokenPrefix(toolCategory, word)) {
         wordScore = Math.max(wordScore, 3);
       }
 
@@ -197,17 +207,18 @@ export function calculateSearchScore(tool: Tool, query: string): number {
     }
   } else {
     // Single word description match
-    if (toolDesc.includes(cleanQuery)) {
+    if (hasTokenPrefix(toolDesc, cleanQuery)) {
       score += 10;
     }
     // Single word category match
-    if (toolCategory.includes(cleanQuery)) {
+    if (hasTokenPrefix(toolCategory, cleanQuery)) {
       score += 5;
     }
   }
 
   return score;
 }
+
 
 export function searchTools(query: string): Tool[] {
   const cleanQuery = query.trim().toLowerCase();
