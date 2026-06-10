@@ -231,11 +231,11 @@ export const TOOL_REGISTRY = {
       ),
   },
   'json-yaml-xml': {
-    name: 'JSON ↔ YAML ↔ XML',
-    description: 'Convert data seamlessly between JSON, YAML, and XML.',
+    name: 'JSON / YAML / XML / CSV Converter',
+    description: 'Convert data seamlessly between JSON, YAML, XML, and CSV.',
     category: 'converters',
     icon: 'Code',
-    keywords: ['json', 'yaml', 'xml', 'convert'],
+    keywords: ['json', 'yaml', 'xml', 'csv', 'convert', 'converter', 'parse', 'stringify'],
     component: () =>
       import('@/components/tools/JsonYamlXmlConverter').then(
         (module) => module.JsonYamlXmlConverter
@@ -247,6 +247,7 @@ export const TOOL_REGISTRY = {
     category: 'converters',
     icon: 'ArrowRightLeft',
     keywords: ['yaml', 'json', 'converter', 'serialize', 'parse'],
+    hidden: true,
     component: () =>
       import('@/components/tools/YamlJsonConverter').then(
         (module) => module.YamlJsonConverter
@@ -258,6 +259,7 @@ export const TOOL_REGISTRY = {
     category: 'converters',
     icon: 'FileSpreadsheet',
     keywords: ['csv', 'json', 'converter', 'spreadsheet', 'table', 'delimiter'],
+    hidden: true,
     component: () =>
       import('@/components/tools/CsvJsonConverter').then(
         (module) => module.CsvJsonConverter
