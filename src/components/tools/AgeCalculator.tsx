@@ -1,14 +1,10 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { CalendarDays, CalendarIcon, Check, Copy, Trash2 } from 'lucide-react';
-import { IMaskInput } from 'react-imask';
+import { CalendarDays, Check, Copy, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { cn } from '@/lib/utils/cn';
+import { DatePicker } from '@/components/ui/date-picker';
 import { useCopyToClipboard } from '@/hooks';
 
 type AgeBreakdown = {
@@ -161,8 +157,6 @@ function calculateAge(birthDateValue: string, targetDateValue: string): AgeBreak
 export function AgeCalculator() {
   const [birthDate, setBirthDate] = useState('1990-06-15');
   const [targetDate, setTargetDate] = useState(getTodayValue());
-  const [birthOpen, setBirthOpen] = useState(false);
-  const [targetOpen, setTargetOpen] = useState(false);
   const copyResult = useCopyToClipboard();
 
   const result = useMemo(() => {
@@ -233,79 +227,29 @@ export function AgeCalculator() {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <label className="mb-2 block text-sm font-medium">Birth date</label>
-              <div className="flex gap-2">
-                <Popover open={birthOpen} onOpenChange={setBirthOpen}>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" size="icon" className="shrink-0">
-                      <CalendarIcon className="h-4 w-4" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={birthDate ? (() => { const [y, m, d] = birthDate.split('-').map(Number); return new Date(y, m - 1, d); })() : undefined}
-                      onSelect={(date) => {
-                        if (!date) return;
-                        setBirthDate(`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`);
-                        setBirthOpen(false);
-                      }}
-                      disabled={(date) => {
-                        if (!targetDate) return false;
-                        const [y, m, d] = targetDate.split('-').map(Number);
-                        return date > new Date(y, m - 1, d);
-                      }}
-                    />
-                  </PopoverContent>
-                </Popover>
-                <IMaskInput
-                  mask="0000-00-00"
-                  value={birthDate}
-                  onAccept={(value) => setBirthDate(value)}
-                  placeholder="YYYY-MM-DD"
-                  className={cn(
-                    'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm font-mono',
-                    !parseDateInput(birthDate) && birthDate && 'border-destructive'
-                  )}
-                />
-              </div>
+              <DatePicker
+                value={birthDate}
+                onChange={setBirthDate}
+                disabled={(date) => {
+                  if (!targetDate) return false;
+                  const [y, m, d] = targetDate.split('-').map(Number);
+                  return date > new Date(y, m - 1, d);
+                }}
+                error={!parseDateInput(birthDate) && !!birthDate}
+              />
             </div>
             <div>
               <label className="mb-2 block text-sm font-medium">Age at</label>
-              <div className="flex gap-2">
-                <Popover open={targetOpen} onOpenChange={setTargetOpen}>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" size="icon" className="shrink-0">
-                      <CalendarIcon className="h-4 w-4" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={targetDate ? (() => { const [y, m, d] = targetDate.split('-').map(Number); return new Date(y, m - 1, d); })() : undefined}
-                      onSelect={(date) => {
-                        if (!date) return;
-                        setTargetDate(`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`);
-                        setTargetOpen(false);
-                      }}
-                      disabled={(date) => {
-                        if (!birthDate) return false;
-                        const [y, m, d] = birthDate.split('-').map(Number);
-                        return date < new Date(y, m - 1, d);
-                      }}
-                    />
-                  </PopoverContent>
-                </Popover>
-                <IMaskInput
-                  mask="0000-00-00"
-                  value={targetDate}
-                  onAccept={(value) => setTargetDate(value)}
-                  placeholder="YYYY-MM-DD"
-                  className={cn(
-                    'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm font-mono',
-                    !parseDateInput(targetDate) && targetDate && 'border-destructive'
-                  )}
-                />
-              </div>
+              <DatePicker
+                value={targetDate}
+                onChange={setTargetDate}
+                disabled={(date) => {
+                  if (!birthDate) return false;
+                  const [y, m, d] = birthDate.split('-').map(Number);
+                  return date < new Date(y, m - 1, d);
+                }}
+                error={!parseDateInput(targetDate) && !!targetDate}
+              />
             </div>
           </div>
 

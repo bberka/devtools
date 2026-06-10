@@ -1,15 +1,11 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Calendar as CalendarIcon, CalendarRange, Check, Copy, Trash2 } from 'lucide-react';
-import { IMaskInput } from 'react-imask';
+import { CalendarRange, Check, Copy, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { DatePicker } from '@/components/ui/date-picker';
 import { useCopyToClipboard } from '@/hooks';
-import { cn } from '@/lib/utils/cn';
 
 type DifferenceBreakdown = {
   years: number;
@@ -123,8 +119,6 @@ function calculateDifference(
 export function DateDifferenceCalculator() {
   const [startDate, setStartDate] = useState('2024-01-01');
   const [endDate, setEndDate] = useState(getTodayValue());
-  const [startOpen, setStartOpen] = useState(false);
-  const [endOpen, setEndOpen] = useState(false);
   const copyResult = useCopyToClipboard();
 
   const result = useMemo(() => {
@@ -195,79 +189,29 @@ export function DateDifferenceCalculator() {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <label className="mb-2 block text-sm font-medium">Start date</label>
-              <div className="flex gap-2">
-                <Popover open={startOpen} onOpenChange={setStartOpen}>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" size="icon" className="shrink-0">
-                      <CalendarIcon className="h-4 w-4" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={startDate ? (() => { const [y, m, d] = startDate.split('-').map(Number); return new Date(y, m - 1, d); })() : undefined}
-                      onSelect={(date) => {
-                        if (!date) return;
-                        setStartDate(`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`);
-                        setStartOpen(false);
-                      }}
-                      disabled={(date) => {
-                        if (!endDate) return false;
-                        const [y, m, d] = endDate.split('-').map(Number);
-                        return date > new Date(y, m - 1, d);
-                      }}
-                    />
-                  </PopoverContent>
-                </Popover>
-                <IMaskInput
-                  mask="0000-00-00"
-                  value={startDate}
-                  onAccept={(value) => setStartDate(value)}
-                  placeholder="YYYY-MM-DD"
-                  className={cn(
-                    'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm font-mono',
-                    !parseDateInput(startDate) && startDate && 'border-destructive'
-                  )}
-                />
-              </div>
+              <DatePicker
+                value={startDate}
+                onChange={setStartDate}
+                disabled={(date) => {
+                  if (!endDate) return false;
+                  const [y, m, d] = endDate.split('-').map(Number);
+                  return date > new Date(y, m - 1, d);
+                }}
+                error={!parseDateInput(startDate) && !!startDate}
+              />
             </div>
             <div>
               <label className="mb-2 block text-sm font-medium">End date</label>
-              <div className="flex gap-2">
-                <Popover open={endOpen} onOpenChange={setEndOpen}>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" size="icon" className="shrink-0">
-                      <CalendarIcon className="h-4 w-4" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={endDate ? (() => { const [y, m, d] = endDate.split('-').map(Number); return new Date(y, m - 1, d); })() : undefined}
-                      onSelect={(date) => {
-                        if (!date) return;
-                        setEndDate(`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`);
-                        setEndOpen(false);
-                      }}
-                      disabled={(date) => {
-                        if (!startDate) return false;
-                        const [y, m, d] = startDate.split('-').map(Number);
-                        return date < new Date(y, m - 1, d);
-                      }}
-                    />
-                  </PopoverContent>
-                </Popover>
-                <IMaskInput
-                  mask="0000-00-00"
-                  value={endDate}
-                  onAccept={(value) => setEndDate(value)}
-                  placeholder="YYYY-MM-DD"
-                  className={cn(
-                    'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm font-mono',
-                    !parseDateInput(endDate) && endDate && 'border-destructive'
-                  )}
-                />
-              </div>
+              <DatePicker
+                value={endDate}
+                onChange={setEndDate}
+                disabled={(date) => {
+                  if (!startDate) return false;
+                  const [y, m, d] = startDate.split('-').map(Number);
+                  return date < new Date(y, m - 1, d);
+                }}
+                error={!parseDateInput(endDate) && !!endDate}
+              />
             </div>
           </div>
 

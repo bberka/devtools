@@ -1,12 +1,11 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { ArrowRightLeft, CalendarIcon, Check, Clock3, Copy, Trash2 } from 'lucide-react';
-import { IMaskInput } from 'react-imask';
+import { ArrowRightLeft, Check, Clock3, Copy, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { DatePicker } from '@/components/ui/date-picker';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   Select,
@@ -300,7 +299,6 @@ export function TimezoneConverter() {
   const [targetSearch, setTargetSearch] = useState('');
   const [sourceOpen, setSourceOpen] = useState(false);
   const [targetOpen, setTargetOpen] = useState(false);
-  const [calendarOpen, setCalendarOpen] = useState(false);
   const copyResult = useCopyToClipboard();
 
   const filteredSourceOptions = useMemo(() => {
@@ -415,42 +413,14 @@ export function TimezoneConverter() {
         <CardContent className="space-y-4">
           <div>
             <label className="mb-2 block text-sm font-medium">Date and time</label>
-            <div className="flex gap-2">
-              <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" size="icon" className="shrink-0">
-                    <CalendarIcon className="h-4 w-4" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={(() => {
-                      if (!inputValue) return undefined;
-                      const [y, m, d] = inputValue.slice(0, 10).split('-').map(Number);
-                      return new Date(y, m - 1, d);
-                    })()}
-                    onSelect={(date) => {
-                      if (!date) return;
-                      const y = date.getFullYear();
-                      const m = String(date.getMonth() + 1).padStart(2, '0');
-                      const d = String(date.getDate()).padStart(2, '0');
-                      const time = inputValue.length >= 16 ? inputValue.slice(11, 16) : '00:00';
-                      setInputValue(`${y}-${m}-${d}T${time}`);
-                      setCalendarOpen(false);
-                    }}
-                  />
-                </PopoverContent>
-              </Popover>
-              <IMaskInput
-                mask="0000-00-00"
+            <div className="flex gap-2 items-center">
+              <DatePicker
                 value={inputValue.slice(0, 10)}
-                onAccept={(datePart) => {
+                onChange={(datePart) => {
                   const time = inputValue.length >= 16 ? inputValue.slice(11, 16) : '00:00';
                   setInputValue(`${datePart}T${time}`);
                 }}
-                placeholder="YYYY-MM-DD"
-                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm font-mono w-36"
+                className="w-40"
               />
               <div className="flex items-center gap-1">
                 <Select
