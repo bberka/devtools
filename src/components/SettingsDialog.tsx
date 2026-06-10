@@ -36,13 +36,13 @@ export function SettingsDialog() {
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <TooltipSimple content="Settings">
+      <TooltipSimple content="Settings">
+        <DialogTrigger asChild>
           <Button variant="ghost" size="icon" aria-label="Open settings">
             <Settings className="h-5 w-5" />
           </Button>
-        </TooltipSimple>
-      </DialogTrigger>
+        </DialogTrigger>
+      </TooltipSimple>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Settings</DialogTitle>
