@@ -22,8 +22,8 @@ import {
   Image as ImageIcon,
   type LucideIcon,
 } from 'lucide-react';
-import { TOOLS, CATEGORIES, searchTools } from '@/lib/utils/tools-config';
-import type { Tool, ToolCategory } from '@/lib/types';
+import { TOOLS, TAGS, searchTools } from '@/lib/utils/tools-config';
+import type { Tool, ToolTag } from '@/lib/types';
 import { useCommandPalette } from '@/lib/contexts/CommandPaletteContext';
 import { useFavorites } from '@/lib/contexts/FavoritesContext';
 import { useRecentTools } from '@/lib/contexts/RecentToolsContext';
@@ -33,7 +33,7 @@ import { Dialog, DialogContent, DialogTitle } from './ui/dialog';
 import { cn } from '@/lib/utils/cn';
 import { TooltipSimple } from './ui/tooltip';
 
-const CATEGORY_ICONS: Record<string, LucideIcon> = {
+const TAG_ICONS: Record<string, LucideIcon> = {
   RefreshCw,
   Lock,
   Sparkles,
@@ -48,13 +48,13 @@ const CATEGORY_ICONS: Record<string, LucideIcon> = {
   Image: ImageIcon,
 };
 
-interface CategoryStyle {
+interface TagStyle {
   bg: string;
   text: string;
   border: string;
 }
 
-const CATEGORY_STYLES: Record<string, CategoryStyle> = {
+const TAG_STYLES: Record<string, TagStyle> = {
   converters: {
     bg: 'bg-blue-500/10 dark:bg-blue-500/20',
     text: 'text-blue-600 dark:text-blue-400',
@@ -236,9 +236,9 @@ export function CommandPalette() {
       .filter((tool): tool is Tool => Boolean(tool));
   }, [favorites]);
 
-  // Group remaining tools by category
+  // Group remaining tools by tag
   const groupedTools = useMemo(() => {
-    const groups: Record<ToolCategory, Tool[]> = {
+    const groups: Record<ToolTag, Tool[]> = {
       converters: [],
       'encoders-decoders': [],
       generators: [],
@@ -256,10 +256,14 @@ export function CommandPalette() {
     // Get all tool IDs that are already in recent or favorites
     const displayedIds = new Set([...recentTools, ...favorites]);
 
-    // Add remaining tools to groups
+    // Add remaining tools to groups based on all their tags
     TOOLS.forEach((tool) => {
       if (!displayedIds.has(tool.id)) {
-        groups[tool.category].push(tool);
+        tool.tags.forEach((tag) => {
+          if (groups[tag]) {
+            groups[tag].push(tool);
+          }
+        });
       }
     });
 
@@ -363,13 +367,9 @@ export function CommandPalette() {
               {search && searchedTools.length > 0 && (
                 <Command.Group heading={searchHeading}>
                   {searchedTools.map((tool) => {
-                    const category = CATEGORIES[tool.category];
-                    const Icon = CATEGORY_ICONS[category.icon];
-                    const styles = CATEGORY_STYLES[tool.category] || {
-                      bg: 'bg-muted',
-                      text: 'text-muted-foreground',
-                      border: 'border-transparent',
-                    };
+                    const firstTag = tool.tags[0];
+                    const mainTagInfo = TAGS[firstTag];
+                    const Icon = TAG_ICONS[mainTagInfo?.icon];
                     return (
                       <Command.Item
                         key={tool.id}
@@ -378,19 +378,32 @@ export function CommandPalette() {
                         className="relative flex cursor-pointer select-none items-center rounded-sm px-3 py-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground"
                       >
                         {Icon && (
-                          <Icon className={cn("mr-2 h-4 w-4 shrink-0", category.color)} />
+                          <Icon className={cn("mr-2 h-4 w-4 shrink-0", mainTagInfo.color)} />
                         )}
                         <span className="flex-1">{tool.name}</span>
-                        <span
-                          className={cn(
-                            "mr-2 inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase transition-colors shrink-0",
-                            styles.bg,
-                            styles.text,
-                            styles.border
-                          )}
-                        >
-                          {category.name}
-                        </span>
+                        <div className="flex items-center gap-1 shrink-0">
+                          {tool.tags.map((tagId) => {
+                            const tag = TAGS[tagId];
+                            const styles = TAG_STYLES[tagId] || {
+                              bg: 'bg-muted',
+                              text: 'text-muted-foreground',
+                              border: 'border-transparent',
+                            };
+                            return (
+                              <span
+                                key={tagId}
+                                className={cn(
+                                  "inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase transition-colors",
+                                  styles.bg,
+                                  styles.text,
+                                  styles.border
+                                )}
+                              >
+                                {tag.name}
+                              </span>
+                            );
+                          })}
+                        </div>
                       </Command.Item>
                     );
                   })}
@@ -401,12 +414,6 @@ export function CommandPalette() {
               {recentToolsData.length > 0 && !search && (
                 <Command.Group heading={recentHeading}>
                   {recentToolsData.map((tool) => {
-                    const category = CATEGORIES[tool.category];
-                    const styles = CATEGORY_STYLES[tool.category] || {
-                      bg: 'bg-muted',
-                      text: 'text-muted-foreground',
-                      border: 'border-transparent',
-                    };
                     return (
                       <Command.Item
                         key={tool.id}
@@ -416,16 +423,29 @@ export function CommandPalette() {
                       >
                         <Clock className="mr-2 h-4 w-4 text-muted-foreground shrink-0" />
                         <span className="flex-1">{tool.name}</span>
-                        <span
-                          className={cn(
-                            "mr-2 inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase transition-colors shrink-0",
-                            styles.bg,
-                            styles.text,
-                            styles.border
-                          )}
-                        >
-                          {category.name}
-                        </span>
+                        <div className="flex items-center gap-1 shrink-0">
+                          {tool.tags.map((tagId) => {
+                            const tag = TAGS[tagId];
+                            const styles = TAG_STYLES[tagId] || {
+                              bg: 'bg-muted',
+                              text: 'text-muted-foreground',
+                              border: 'border-transparent',
+                            };
+                            return (
+                              <span
+                                key={tagId}
+                                className={cn(
+                                  "inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase transition-colors",
+                                  styles.bg,
+                                  styles.text,
+                                  styles.border
+                                )}
+                              >
+                                {tag.name}
+                              </span>
+                            );
+                          })}
+                        </div>
                         <ArrowRight className="ml-2 h-4 w-4 text-muted-foreground shrink-0" />
                       </Command.Item>
                     );
@@ -437,12 +457,6 @@ export function CommandPalette() {
               {favoriteToolsData.length > 0 && !search && (
                 <Command.Group heading={favoritesHeading}>
                   {favoriteToolsData.map((tool) => {
-                    const category = CATEGORIES[tool.category];
-                    const styles = CATEGORY_STYLES[tool.category] || {
-                      bg: 'bg-muted',
-                      text: 'text-muted-foreground',
-                      border: 'border-transparent',
-                    };
                     return (
                       <Command.Item
                         key={tool.id}
@@ -452,16 +466,29 @@ export function CommandPalette() {
                       >
                         <Star className="mr-2 h-4 w-4 fill-yellow-500 text-yellow-500 shrink-0" />
                         <span className="flex-1">{tool.name}</span>
-                        <span
-                          className={cn(
-                            "mr-2 inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase transition-colors shrink-0",
-                            styles.bg,
-                            styles.text,
-                            styles.border
-                          )}
-                        >
-                          {category.name}
-                        </span>
+                        <div className="flex items-center gap-1 shrink-0">
+                          {tool.tags.map((tagId) => {
+                            const tag = TAGS[tagId];
+                            const styles = TAG_STYLES[tagId] || {
+                              bg: 'bg-muted',
+                              text: 'text-muted-foreground',
+                              border: 'border-transparent',
+                            };
+                            return (
+                              <span
+                                key={tagId}
+                                className={cn(
+                                  "inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase transition-colors",
+                                  styles.bg,
+                                  styles.text,
+                                  styles.border
+                                )}
+                              >
+                                {tag.name}
+                              </span>
+                            );
+                          })}
+                        </div>
                         <ArrowRight className="ml-2 h-4 w-4 text-muted-foreground shrink-0" />
                       </Command.Item>
                     );
@@ -469,52 +496,60 @@ export function CommandPalette() {
                 </Command.Group>
               )}
 
-              {/* All Tools Grouped by Category */}
-              {!search && (Object.entries(groupedTools) as Array<[ToolCategory, Tool[]]>).map(
-                ([categoryId, categoryTools]) => {
-                  if (categoryTools.length === 0) return null;
+              {/* All Tools Grouped by Tag */}
+              {!search && (Object.entries(groupedTools) as Array<[ToolTag, Tool[]]>).map(
+                ([tagId, tagTools]) => {
+                  if (tagTools.length === 0) return null;
 
-                  const category = CATEGORIES[categoryId];
-                  const CategoryIcon = CATEGORY_ICONS[category.icon];
+                  const tag = TAGS[tagId];
+                  const TagIcon = TAG_ICONS[tag.icon];
                   const heading = (
                     <span className="flex items-center gap-1.5">
-                      {CategoryIcon && (
-                        <CategoryIcon className={cn("h-3.5 w-3.5 shrink-0", category.color)} />
+                      {TagIcon && (
+                        <TagIcon className={cn("h-3.5 w-3.5 shrink-0", tag.color)} />
                       )}
-                      <span>{category.name}</span>
+                      <span>{tag.name}</span>
                     </span>
                   );
 
                   return (
-                    <Command.Group key={categoryId} heading={heading}>
-                      {categoryTools.map((tool) => {
-                        const Icon = CATEGORY_ICONS[category.icon];
-                        const styles = CATEGORY_STYLES[tool.category] || {
-                          bg: 'bg-muted',
-                          text: 'text-muted-foreground',
-                          border: 'border-transparent',
-                        };
+                    <Command.Group key={tagId} heading={heading}>
+                      {tagTools.map((tool) => {
+                        const Icon = TAG_ICONS[tag.icon];
                         return (
                           <Command.Item
-                            key={tool.id}
+                            key={`${tagId}-${tool.id}`}
                             value={tool.id}
                             onSelect={() => handleNavigate(tool.id)}
                             className="relative flex cursor-pointer select-none items-center rounded-sm px-3 py-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground"
                           >
                             {Icon && (
-                              <Icon className={cn("mr-2 h-4 w-4 shrink-0", category.color)} />
+                              <Icon className={cn("mr-2 h-4 w-4 shrink-0", tag.color)} />
                             )}
                             <span className="flex-1">{tool.name}</span>
-                            <span
-                              className={cn(
-                                "mr-2 inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase transition-colors shrink-0",
-                                styles.bg,
-                                styles.text,
-                                styles.border
-                              )}
-                            >
-                              {category.name}
-                            </span>
+                            <div className="flex items-center gap-1 shrink-0">
+                              {tool.tags.map((tId) => {
+                                const t = TAGS[tId];
+                                const styles = TAG_STYLES[tId] || {
+                                  bg: 'bg-muted',
+                                  text: 'text-muted-foreground',
+                                  border: 'border-transparent',
+                                };
+                                return (
+                                  <span
+                                    key={tId}
+                                    className={cn(
+                                      "inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase transition-colors",
+                                      styles.bg,
+                                      styles.text,
+                                      styles.border
+                                    )}
+                                  >
+                                    {t.name}
+                                  </span>
+                                );
+                              })}
+                            </div>
                           </Command.Item>
                         );
                       })}

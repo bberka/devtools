@@ -20,18 +20,18 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
-import { CategoryFilter } from './CategoryFilter';
+import { TagFilter } from './TagFilter';
 import { FavoriteButton } from './FavoriteButton';
 import { SearchBar } from './SearchBar';
 import { Card, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { CATEGORIES, filterTools, TOOLS } from '@/lib/utils/tools-config';
+import { TAGS, filterTools, TOOLS } from '@/lib/utils/tools-config';
 import { useFavorites } from '@/lib/contexts/FavoritesContext';
 import { useSettings } from '@/lib/contexts/SettingsContext';
 import { cn } from '@/lib/utils/cn';
-import type { Tool, ToolCategory } from '@/lib/types';
+import type { Tool, ToolTag } from '@/lib/types';
 
-const CATEGORY_ICONS: Record<string, LucideIcon> = {
+const TAG_ICONS: Record<string, LucideIcon> = {
   RefreshCw,
   Lock,
   Sparkles,
@@ -50,17 +50,17 @@ export function HomeContent() {
   const { favorites } = useFavorites();
   const { compactMode } = useSettings();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<ToolCategory | null>(null);
+  const [selectedTag, setSelectedTag] = useState<ToolTag | null>(null);
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
 
   const filteredTools = useMemo(
     () =>
-      filterTools(searchQuery, selectedCategory, showFavoritesOnly, favorites),
-    [favorites, searchQuery, selectedCategory, showFavoritesOnly]
+      filterTools(searchQuery, selectedTag, showFavoritesOnly, favorites),
+    [favorites, searchQuery, selectedTag, showFavoritesOnly]
   );
 
   const groupedTools = useMemo(() => {
-    const groups: Record<ToolCategory, Tool[]> = {
+    const groups: Record<ToolTag, Tool[]> = {
       converters: [],
       'encoders-decoders': [],
       generators: [],
@@ -76,7 +76,11 @@ export function HomeContent() {
     };
 
     filteredTools.forEach((tool) => {
-      groups[tool.category].push(tool);
+      tool.tags.forEach((tag) => {
+        if (groups[tag]) {
+          groups[tag].push(tool);
+        }
+      });
     });
 
     return groups;
@@ -95,13 +99,13 @@ export function HomeContent() {
   useEffect(() => {
     try {
       const savedSearch = sessionStorage.getItem('home-search-query');
-      const savedCategory = sessionStorage.getItem('home-selected-category');
+      const savedTag = sessionStorage.getItem('home-selected-tag');
       const savedFavoritesOnly = sessionStorage.getItem('home-favorites-only');
       const savedScroll = sessionStorage.getItem('home-scroll-y');
 
       if (savedSearch !== null) setSearchQuery(savedSearch);
-      if (savedCategory !== null) {
-        setSelectedCategory(savedCategory ? (savedCategory as ToolCategory) : null);
+      if (savedTag !== null) {
+        setSelectedTag(savedTag ? (savedTag as ToolTag) : null);
       }
       if (savedFavoritesOnly !== null) {
         setShowFavoritesOnly(savedFavoritesOnly === 'true');
@@ -125,10 +129,10 @@ export function HomeContent() {
     if (!isInitializedRef.current) return;
     try {
       sessionStorage.setItem('home-search-query', searchQuery);
-      sessionStorage.setItem('home-selected-category', selectedCategory || '');
+      sessionStorage.setItem('home-selected-tag', selectedTag || '');
       sessionStorage.setItem('home-favorites-only', showFavoritesOnly.toString());
     } catch (e) {}
-  }, [searchQuery, selectedCategory, showFavoritesOnly]);
+  }, [searchQuery, selectedTag, showFavoritesOnly]);
 
   // Restore scroll position when list is rendered and page height matches
   useEffect(() => {
@@ -191,7 +195,7 @@ export function HomeContent() {
   useEffect(() => {
     const handleReset = () => {
       setSearchQuery('');
-      setSelectedCategory(null);
+      setSelectedTag(null);
       setShowFavoritesOnly(false);
       try {
         sessionStorage.setItem('home-scroll-y', '0');
@@ -209,7 +213,7 @@ export function HomeContent() {
     const nextShowFavorites = !showFavoritesOnly;
     setShowFavoritesOnly(nextShowFavorites);
     if (nextShowFavorites) {
-      setSelectedCategory(null);
+      setSelectedTag(null);
     }
     try {
       sessionStorage.setItem('home-scroll-y', '0');
@@ -217,9 +221,9 @@ export function HomeContent() {
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
   };
 
-  const handleCategoryChange = (category: ToolCategory | null) => {
-    setSelectedCategory(category);
-    if (category) {
+  const handleTagChange = (tag: ToolTag | null) => {
+    setSelectedTag(tag);
+    if (tag) {
       setShowFavoritesOnly(false);
     }
     try {
@@ -242,11 +246,11 @@ export function HomeContent() {
       </div>
 
       <div className="flex justify-center">
-        <CategoryFilter
-          selectedCategory={selectedCategory}
+        <TagFilter
+          selectedTag={selectedTag}
           showFavoritesOnly={showFavoritesOnly}
           favoritesCount={favorites.length}
-          onCategoryChange={handleCategoryChange}
+          onTagChange={handleTagChange}
           onFavoritesToggle={handleFavoritesToggle}
         />
       </div>
@@ -264,7 +268,7 @@ export function HomeContent() {
           {filteredTools.length > 0 ? (
             <ToolGrid compactMode={compactMode}>
               {filteredTools.map((tool) => (
-                <ToolCard key={tool.id} tool={tool} compactMode={compactMode} showCategory={true} />
+                <ToolCard key={tool.id} tool={tool} compactMode={compactMode} showTags={true} />
               ))}
             </ToolGrid>
           ) : (
@@ -277,7 +281,7 @@ export function HomeContent() {
       )}
 
       {favoriteTools.length > 0 &&
-        !selectedCategory &&
+        !selectedTag &&
         !showFavoritesOnly &&
         !searchQuery && (
           <section>
@@ -300,36 +304,36 @@ export function HomeContent() {
 
       {!showFavoritesOnly && !searchQuery && (
         <div className={cn(compactMode ? 'space-y-4 sm:space-y-5' : 'space-y-6 sm:space-y-8')}>
-          {(Object.entries(groupedTools) as Array<[ToolCategory, Tool[]]>).map(
-            ([categoryId, categoryTools]) => {
-            if (categoryTools.length === 0) return null;
+          {(Object.entries(groupedTools) as Array<[ToolTag, Tool[]]>).map(
+            ([tagId, tagTools]) => {
+              if (tagTools.length === 0) return null;
 
-            const category = CATEGORIES[categoryId];
-            const Icon = CATEGORY_ICONS[category.icon];
+              const tag = TAGS[tagId];
+              const Icon = TAG_ICONS[tag.icon];
 
-            return (
-              <section key={categoryId}>
-                <h2
-                  className={cn(
-                    'mb-3 font-bold sm:mb-4 flex items-center gap-2.5',
-                    compactMode ? 'text-lg sm:text-xl' : 'text-xl sm:text-2xl',
-                    category.color
-                  )}
-                >
-                  {Icon && <Icon className="h-5 w-5 sm:h-6 sm:w-6 shrink-0" />}
-                  <span>{category.name}</span>
-                </h2>
-                <ToolGrid compactMode={compactMode}>
-                  {categoryTools.map((tool) => (
-                    <ToolCard
-                      key={tool.id}
-                      tool={tool}
-                      compactMode={compactMode}
-                    />
-                  ))}
-                </ToolGrid>
-              </section>
-            );
+              return (
+                <section key={tagId}>
+                  <h2
+                    className={cn(
+                      'mb-3 font-bold sm:mb-4 flex items-center gap-2.5',
+                      compactMode ? 'text-lg sm:text-xl' : 'text-xl sm:text-2xl',
+                      tag.color
+                    )}
+                  >
+                    {Icon && <Icon className="h-5 w-5 sm:h-6 sm:w-6 shrink-0" />}
+                    <span>{tag.name}</span>
+                  </h2>
+                  <ToolGrid compactMode={compactMode}>
+                    {tagTools.map((tool) => (
+                      <ToolCard
+                        key={tool.id}
+                        tool={tool}
+                        compactMode={compactMode}
+                      />
+                    ))}
+                  </ToolGrid>
+                </section>
+              );
             }
           )}
         </div>
@@ -356,7 +360,7 @@ export function HomeContent() {
       {filteredTools.length === 0 && !showFavoritesOnly && !searchQuery && (
         <EmptyState
           title="No tools matched your filters"
-          description="Try a different search or category."
+          description="Try a different search or tag."
         />
       )}
     </div>
@@ -385,14 +389,13 @@ function ToolGrid({
 function ToolCard({
   tool,
   compactMode,
-  showCategory = false,
+  showTags = false,
 }: {
   tool: Tool;
   compactMode: boolean;
-  showCategory?: boolean;
+  showTags?: boolean;
 }) {
-  const category = CATEGORIES[tool.category];
-  const Icon = CATEGORY_ICONS[category.icon];
+  const toolTags = tool.tags.map((tagId) => TAGS[tagId]).filter(Boolean);
   return (
     <Link href={`/tools/${tool.id}`} className="group block h-full">
       <Card className={cn(
@@ -404,17 +407,23 @@ function ToolCard({
         >
           <div className={cn("flex justify-between gap-2", compactMode ? "items-center" : "items-start")}>
             <div className="space-y-1">
-              {showCategory && (
-                <div className="flex items-center flex-wrap gap-1.5 mb-1">
-                  <span
-                    className={cn(
-                      'inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider',
-                      category.color
-                    )}
-                  >
-                    {Icon && <Icon className="h-3 w-3 shrink-0" />}
-                    <span>{category.name}</span>
-                  </span>
+              {showTags && toolTags.length > 0 && (
+                <div className="flex items-center flex-wrap gap-1.5 mb-1.5">
+                  {toolTags.map((tag) => {
+                    const Icon = TAG_ICONS[tag.icon];
+                    return (
+                      <span
+                        key={tag.id}
+                        className={cn(
+                          'inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider',
+                          tag.color
+                        )}
+                      >
+                        {Icon && <Icon className="h-3 w-3 shrink-0" />}
+                        <span>{tag.name}</span>
+                      </span>
+                    );
+                  })}
                 </div>
               )}
               <CardTitle

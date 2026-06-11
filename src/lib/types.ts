@@ -1,4 +1,4 @@
-export type ToolCategory =
+export type ToolTag =
   | 'converters'
   | 'encoders-decoders'
   | 'generators'
@@ -16,7 +16,7 @@ export interface Tool {
   id: string; // slug-style: 'base64-encoder'
   name: string; // Display name: 'Base64 Encoder/Decoder'
   description: string; // Short description
-  category: ToolCategory;
+  tags: ToolTag[];
   icon?: string; // Lucide icon name
   keywords?: string[]; // For search
   featured?: boolean; // Show prominently
@@ -24,8 +24,8 @@ export interface Tool {
   hidden?: boolean; // If true, hide from lists but keep route
 }
 
-export interface CategoryInfo {
-  id: ToolCategory;
+export interface TagInfo {
+  id: ToolTag;
   name: string; // Display name
   icon: string; // Lucide icon name
   description: string;
@@ -47,6 +47,6 @@ export interface ToolSettings {
 
 export interface FilterState {
   searchQuery: string;
-  selectedCategory: ToolCategory | null;
+  selectedTag: ToolTag | null;
   showFavoritesOnly: boolean;
 }

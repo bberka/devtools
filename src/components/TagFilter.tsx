@@ -18,19 +18,19 @@ import {
 } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
-import { CATEGORIES, getToolsByCategory } from '@/lib/utils/tools-config';
-import type { ToolCategory } from '@/lib/types';
+import { TAGS, getToolsByTag } from '@/lib/utils/tools-config';
+import type { ToolTag } from '@/lib/types';
 import { cn } from '@/lib/utils/cn';
 
-interface CategoryFilterProps {
-  selectedCategory: ToolCategory | null;
+interface TagFilterProps {
+  selectedTag: ToolTag | null;
   showFavoritesOnly: boolean;
   favoritesCount: number;
-  onCategoryChange: (category: ToolCategory | null) => void;
+  onTagChange: (tag: ToolTag | null) => void;
   onFavoritesToggle: () => void;
 }
 
-const CATEGORY_ICONS: Record<string, LucideIcon> = {
+const TAG_ICONS: Record<string, LucideIcon> = {
   RefreshCw,
   Lock,
   Sparkles,
@@ -52,7 +52,7 @@ interface StyleSet {
   textSelected: string;
 }
 
-const CATEGORY_STYLES: Record<string, StyleSet> = {
+const TAG_STYLES: Record<string, StyleSet> = {
   converters: {
     borderSelected: 'border-blue-500/50 dark:border-blue-400/50',
     bgSelected: 'bg-blue-500/10 dark:bg-blue-500/20',
@@ -127,14 +127,14 @@ const CATEGORY_STYLES: Record<string, StyleSet> = {
   },
 };
 
-export function CategoryFilter({
-  selectedCategory,
+export function TagFilter({
+  selectedTag,
   showFavoritesOnly,
   favoritesCount,
-  onCategoryChange,
+  onTagChange,
   onFavoritesToggle,
-}: CategoryFilterProps) {
-  const categories = Object.values(CATEGORIES);
+}: TagFilterProps) {
+  const tags = Object.values(TAGS);
 
   return (
     <div className="flex w-full flex-wrap justify-center gap-2.5 sm:gap-3">
@@ -168,11 +168,11 @@ export function CategoryFilter({
         </Badge>
       </Button>
 
-      {categories.map((category) => {
-        const toolCount = getToolsByCategory(category.id).length;
-        const isSelected = selectedCategory === category.id;
-        const Icon = CATEGORY_ICONS[category.icon];
-        const styles = CATEGORY_STYLES[category.id] || {
+      {tags.map((tag) => {
+        const toolCount = getToolsByTag(tag.id).length;
+        const isSelected = selectedTag === tag.id;
+        const Icon = TAG_ICONS[tag.icon];
+        const styles = TAG_STYLES[tag.id] || {
           borderSelected: 'border-primary/50',
           bgSelected: 'bg-primary/10',
           bgHover: 'hover:bg-primary/5',
@@ -181,9 +181,9 @@ export function CategoryFilter({
 
         return (
           <Button
-            key={category.id}
+            key={tag.id}
             variant="outline"
-            onClick={() => onCategoryChange(isSelected ? null : category.id)}
+            onClick={() => onTagChange(isSelected ? null : tag.id)}
             className={cn(
               'h-11 px-4 gap-2 text-sm rounded-xl font-medium transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]',
               isSelected
@@ -196,11 +196,11 @@ export function CategoryFilter({
                 className={cn(
                   'h-4 w-4 shrink-0 transition-transform duration-300',
                   isSelected ? 'scale-110' : '',
-                  isSelected ? styles.textSelected : category.color
+                  isSelected ? styles.textSelected : tag.color
                 )}
               />
             )}
-            <span>{category.name}</span>
+            <span>{tag.name}</span>
             <Badge
               variant="secondary"
               className={cn(

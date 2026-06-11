@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { TOOLS, getToolById, CATEGORIES } from '@/lib/utils/tools-config';
+import { TOOLS, getToolById, TAGS } from '@/lib/utils/tools-config';
 import { getToolComponentLoader } from '@/lib/utils/tool-registry';
 import { ToolPageClient } from '@/components/ToolPageClient';
 
@@ -28,11 +28,12 @@ export async function generateMetadata({
     };
   }
 
-  const category = CATEGORIES[tool.category];
+  const toolTags = tool.tags.map((tagId) => TAGS[tagId]).filter(Boolean);
+  const tagNames = toolTags.map((tag) => tag.name);
   const keywords = [
     tool.name,
     ...(tool.keywords || []),
-    category.name,
+    ...tagNames,
     'developer tool',
     'online tool',
     'free tool',

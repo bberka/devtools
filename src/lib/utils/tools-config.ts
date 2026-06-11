@@ -1,8 +1,8 @@
-import type { Tool, CategoryInfo, ToolCategory } from '../types';
+import type { Tool, TagInfo, ToolTag } from '../types';
 import { TOOL_REGISTRY } from './tool-registry';
 
-// Category definitions
-export const CATEGORIES: Record<ToolCategory, CategoryInfo> = {
+// Tag definitions
+export const TAGS: Record<ToolTag, TagInfo> = {
   converters: {
     id: 'converters',
     name: 'Converters',
@@ -96,7 +96,7 @@ export const TOOLS: Tool[] = Object.entries(TOOL_REGISTRY).map(
     id,
     name: tool.name,
     description: tool.description,
-    category: tool.category,
+    tags: tool.tags,
     icon: tool.icon,
     keywords: [...(tool.keywords ?? [])],
     featured: 'featured' in tool ? tool.featured : undefined,
@@ -109,12 +109,12 @@ export function getToolById(id: string): Tool | undefined {
   return TOOLS.find((tool) => tool.id === id);
 }
 
-export function getToolsByCategory(category: ToolCategory): Tool[] {
-  return TOOLS.filter((tool) => tool.category === category && !tool.hidden);
+export function getToolsByTag(tag: ToolTag): Tool[] {
+  return TOOLS.filter((tool) => tool.tags.includes(tag) && !tool.hidden);
 }
 
-export function getAllCategories(): CategoryInfo[] {
-  return Object.values(CATEGORIES);
+export function getAllTags(): TagInfo[] {
+  return Object.values(TAGS);
 }
 
 function hasTokenPrefix(text: string, query: string): boolean {
@@ -136,7 +136,7 @@ export function calculateSearchScore(tool: Tool, query: string): number {
   const toolId = tool.id.toLowerCase();
   const toolDesc = tool.description.toLowerCase();
   const toolKeywords = (tool.keywords || []).map((k) => k.toLowerCase());
-  const toolCategory = tool.category.toLowerCase();
+  const toolTags = (tool.tags || []).map((t) => t.toLowerCase());
 
   // 1. Exact matches (highest priority)
   if (toolName === cleanQuery) {
@@ -191,7 +191,7 @@ export function calculateSearchScore(tool: Tool, query: string): number {
         wordScore = Math.max(wordScore, 5);
       }
 
-      if (hasTokenPrefix(toolCategory, word)) {
+      if (toolTags.some((t) => hasTokenPrefix(t, word))) {
         wordScore = Math.max(wordScore, 3);
       }
 
@@ -210,15 +210,14 @@ export function calculateSearchScore(tool: Tool, query: string): number {
     if (hasTokenPrefix(toolDesc, cleanQuery)) {
       score += 10;
     }
-    // Single word category match
-    if (hasTokenPrefix(toolCategory, cleanQuery)) {
+    // Single word tag match
+    if (toolTags.some((t) => hasTokenPrefix(t, cleanQuery))) {
       score += 5;
     }
   }
 
   return score;
 }
-
 
 export function searchTools(query: string): Tool[] {
   const cleanQuery = query.trim().toLowerCase();
@@ -235,15 +234,15 @@ export function searchTools(query: string): Tool[] {
 
 export function filterTools(
   searchQuery: string,
-  category: ToolCategory | null,
+  tag: ToolTag | null,
   favoritesOnly: boolean,
   favorites: string[]
 ): Tool[] {
   let filtered = searchQuery ? searchTools(searchQuery) : TOOLS.filter((t) => !t.hidden).map((t) => ({ ...t, score: undefined }));
 
-  // Filter by category
-  if (category) {
-    filtered = filtered.filter((tool) => tool.category === category);
+  // Filter by tag
+  if (tag) {
+    filtered = filtered.filter((tool) => tool.tags.includes(tag));
   }
 
   // Filter by favorites

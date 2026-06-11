@@ -6,8 +6,8 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useCommandPalette } from '@/lib/contexts/CommandPaletteContext';
-import { CATEGORIES } from '@/lib/utils/tools-config';
-import type { ToolCategory } from '@/lib/types';
+import { TAGS } from '@/lib/utils/tools-config';
+import type { ToolTag } from '@/lib/types';
 import { cn } from '@/lib/utils/cn';
 import {
   RefreshCw,
@@ -29,7 +29,7 @@ import {
   Compass,
 } from 'lucide-react';
 
-const CATEGORY_ICONS: Record<string, typeof RefreshCw> = {
+const TAG_ICONS: Record<string, typeof RefreshCw> = {
   RefreshCw,
   Lock,
   Sparkles,
@@ -44,7 +44,7 @@ const CATEGORY_ICONS: Record<string, typeof RefreshCw> = {
   Image: ImageIcon,
 };
 
-const CATEGORY_STYLES: Record<string, { border: string; bg: string; hover: string; text: string; glow: string }> = {
+const TAG_STYLES: Record<string, { border: string; bg: string; hover: string; text: string; glow: string }> = {
   converters: {
     border: 'border-blue-500/20 dark:border-blue-400/20',
     bg: 'bg-blue-500/5',
@@ -139,9 +139,9 @@ export default function NotFound() {
     document.title = 'Page Not Found | LazyTools';
   }, []);
 
-  const handleCategoryClick = (categoryId: ToolCategory) => {
+  const handleTagClick = (tagId: ToolTag) => {
     try {
-      sessionStorage.setItem('home-selected-category', categoryId);
+      sessionStorage.setItem('home-selected-tag', tagId);
       sessionStorage.setItem('home-search-query', '');
       sessionStorage.setItem('home-favorites-only', 'false');
       sessionStorage.setItem('home-scroll-y', '0');
@@ -205,17 +205,17 @@ export default function NotFound() {
           </Button>
         </div>
 
-        {/* Category Shortcuts Section */}
+        {/* Tag Shortcuts Section */}
         <div className="pt-6 border-t border-border/40 space-y-5">
           <div className="flex items-center justify-center gap-2 text-sm font-semibold text-muted-foreground uppercase tracking-wider">
             <Compass className="h-4 w-4 text-primary" />
-            <span>Browse Tool Categories</span>
+            <span>Browse Tool Tags</span>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-            {Object.values(CATEGORIES).map((cat) => {
-              const Icon = CATEGORY_ICONS[cat.icon] || HelpCircle;
-              const styles = CATEGORY_STYLES[cat.id] || {
+            {Object.values(TAGS).map((tag) => {
+              const Icon = TAG_ICONS[tag.icon] || HelpCircle;
+              const styles = TAG_STYLES[tag.id] || {
                 border: 'border-border',
                 bg: 'bg-card',
                 hover: 'hover:border-primary',
@@ -225,8 +225,8 @@ export default function NotFound() {
 
               return (
                 <button
-                  key={cat.id}
-                  onClick={() => handleCategoryClick(cat.id)}
+                  key={tag.id}
+                  onClick={() => handleTagClick(tag.id)}
                   className={cn(
                     'group flex flex-col items-center justify-center p-4 rounded-2xl border text-center transition-all duration-300 hover:scale-[1.03] active:scale-[0.97]',
                     styles.border,
@@ -239,7 +239,7 @@ export default function NotFound() {
                     <Icon className="h-5 w-5" />
                   </div>
                   <span className="text-xs font-semibold tracking-tight leading-tight group-hover:text-foreground">
-                    {cat.name}
+                    {tag.name}
                   </span>
                 </button>
               );
