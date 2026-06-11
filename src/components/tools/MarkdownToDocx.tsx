@@ -941,35 +941,6 @@ export function MarkdownToDocx() {
 
   return (
     <div className="space-y-6">
-      {/* Header Info */}
-      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between border-b pb-4">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">Markdown to DOCX Converter</h2>
-          <p className="text-sm text-muted-foreground">
-            Convert Markdown text to fully styled Word documents with custom page rules, paragraph spacing, and keep-with-next constraints.
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={handleClear} disabled={exporting}>
-            <Trash2 className="h-4 w-4 mr-2" />
-            Clear
-          </Button>
-          <Button onClick={handleDownloadDocx} disabled={exporting || blocks.length === 0} className="bg-primary hover:bg-primary/90">
-            {exporting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Compiling...
-              </>
-            ) : (
-              <>
-                <Download className="h-4 w-4 mr-2" />
-                Download Word (.docx)
-              </>
-            )}
-          </Button>
-        </div>
-      </div>
-
       <div className="grid grid-cols-1 items-stretch gap-6 xl:grid-cols-[1.1fr_0.9fr]">
         {/* Left pane: Editor & Settings */}
         <Card className="flex flex-col border shadow-sm">
@@ -1243,13 +1214,32 @@ export function MarkdownToDocx() {
                 </div>
               </TabsContent>
 
-              <div className="flex-1 flex flex-col min-h-[300px]">
+              <div className="flex-1 flex flex-col min-h-[300px] gap-3">
                 <Textarea
                   value={input}
                   onChange={(e) => handleInputChange(e.target.value)}
                   placeholder="Enter your Markdown here..."
                   className="flex-1 min-h-[300px] font-mono text-sm leading-relaxed p-4 resize-y bg-background border shadow-xs focus-visible:ring-1 focus-visible:ring-primary"
                 />
+                <div className="flex flex-wrap gap-2 justify-end">
+                  <Button variant="outline" onClick={handleClear} disabled={exporting}>
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Clear
+                  </Button>
+                  <Button onClick={handleDownloadDocx} disabled={exporting || blocks.length === 0} className="bg-primary hover:bg-primary/90">
+                    {exporting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Compiling...
+                      </>
+                    ) : (
+                      <>
+                        <Download className="h-4 w-4 mr-2" />
+                        Download Word (.docx)
+                      </>
+                    )}
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Tabs>
